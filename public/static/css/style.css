@@ -1,0 +1,141 @@
+body{background-color:#f5f5f5;}
+.seafood{width:100%;min-height:17rem;padding-bottom:0.1rem;
+    background-image:url(../images/lctkbg.jpg);background-repeat:no-repeat;background-size:100% 100%;}
+.seafood .header{width:100%;height:5.77rem;background-image:url(../images/lctktu.gif);background-repeat:no-repeat;
+    background-size:100% 100%;}
+.seafood .clause{font-size:0.3rem;color:#333333;font-weight:bold;width:6.79rem;background-color:#fff;
+    margin:-0.01rem 0.36rem 0 0.35rem;padding:0 0.42rem;line-height:2;box-sizing:border-box;-webkit-box-sizing:border-box;
+    padding-bottom:0.48rem;border-radius:0 0 0.15rem 0.15rem;position:relative;}
+.seafood .clause .but{font-size:0.44rem;font-weight:bold;color:#fff;background: linear-gradient(top,#ffe08e 0%,#f8d425 100%);
+    background: -webkit-linear-gradient(top, #ffe08e 0%,#f8d425 100%);
+    background: -moz-linear-gradient(top,#ffe08e 0%,#f8d425 100%);width:5.24rem;height:0.91rem;text-align:center;
+    line-height:0.81rem;margin:0.3rem auto 0 auto;box-shadow:0 0.12rem 0 #fca828;-webkit-box-shadow:0 0.12rem 0 #fca828;
+    border-radius:50rem;text-shadow:0 0.05rem 0 #ff601a;-webkit-text-shadow:0 0.05rem 0 #ff601a;}
+.seafood .clause:before {
+    content: ' ';
+    position: absolute;
+    width: 0.36rem;
+    height: 0.36rem;
+    border-radius: 50%;
+    background-color:#ae3fb9;
+    top: 0;
+    margin-left: -0.18rem;
+    left: 0;
+    margin-bottom: -0.18rem;
+}
+.seafood .clause:after {
+    content: ' ';
+    position: absolute;
+    width: 0.36rem;
+    height: 0.36rem;
+    border-radius: 50%;
+    background-color: #f93275;
+    right: 0;
+    top: 0;
+    margin-right: -0.18rem;
+    margin-bottom: -0.18rem;
+}
+.seafood .big-title{font-size:0.36rem;color:#fff;font-weight:bold;width:4.67rem;height:1.16rem;
+    background-image:url(../images/lctktitle.png);background-repeat:no-repeat;background-size:100% 100%;
+    margin:0.26rem auto 0.43rem auto;line-height:1.52rem;text-align:center;}
+.seafood .list{padding:0 0.32rem;margin-top:0.45rem;}
+.seafood .list .item{width:100%;height:1.89rem;background-color:#fff;border-radius:0.2rem;align-items:center;
+    -webkit-align-items:center;justify-content:space-between;-webkit-justify-content:space-between;
+    padding:0 0.35rem 0 0.15rem;box-sizing:border-box;margin-bottom:0.2rem;-webkit-box-sizing:border-box;}
+.seafood .list .item .pictrue{width:1.55rem;height:1.55rem;border-radius:0.2rem;}
+.seafood .list .item .pictrue img{width:100%;height:100%;border-radius:0.2rem;}
+.seafood .list .item .text{width:4.46rem;font-size:0.3rem;color:#222222;font-weight:bold;}
+.seafood .list .item .text .money{font-size:0.36rem;color:#fc0f0f;margin-top:0.4rem;text-align:right;}
+.seafood2 .header{background-image:url(../images/lctktu2.gif);}
+.seafood2 .list .item .text{font-size:0.36rem;}
+.index .banner{width:100%;height:4.2rem;overflow:hidden;position:relative;}
+.index .banner .swiper-pagination-bullet{background:#fff;opacity:1;width:0.12rem;height:0.12rem;border-radius:50%;}
+.index .banner .swiper-pagination-bullet-active{background-color:#ff3548!important;}
+.index .banner .swiper-pagination{bottom: 0!important;}
+.index .block{background-color:#fff;padding-bottom:0.48rem;}
+.index .block .banner2{width:100%;overflow:hidden;position:relative;}
+.index .block .banner2 .swiper-pagination{align-items:center;-webkit-align-items:center;bottom:0!important;
+    justify-content:center;-webkit-justify-content:center;}
+.index .block .banner2 .swiper-pagination-bullet{background:#ffc2c8;opacity:1;width:0.12rem;height:0.12rem;border-radius:50%;}
+.index .block .banner2 .swiper-pagination-bullet-active{background-color:#ff3548!important;width:0.18rem;height:0.07rem;
+border-radius:0.1rem;}
+.index .pink{margin:0.2rem 0.20rem 0.35rem 0.20rem;padding:0.20rem;width:7.10rem;box-sizing:border-box;-webkit-box-sizing:border-box;
+    justify-content:space-between;-webkit-justify-content:space-between;background-color:#fff;
+    box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;-webkit-box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;border-radius:0.10rem;}
+.index .pink .pictrue{width:2rem;height:2rem;border-radius:0.15rem;}
+.index .pink .pictrue img{width:100%;height:100%;border-radius:0.15rem;}
+.index .pink .text-pic{width:4.45rem;font-size:0.24rem;color:#cccccc;}
+.index .pink .text-pic .name{font-size:0.30rem;color:#282828;margin-bottom:0.1rem;}
+.index .pink .text-pic .people{margin-left:0.68rem;}
+.index .pink .text-pic .money{font-size:0.30rem;color:#ff3548;margin-top:0.18rem;align-items:flex-end;-webkit-align-items:flex-end;
+    -webkit-justify-content:space-between;justify-content:space-between;}
+.index .pink .text-pic .money .regiment{width:1.30rem;height:0.50rem;background-color:#ff3548;border-radius:50rem;
+    color:#fff;font-size:0.24rem;text-align:center;line-height:0.50rem;}
+.index .block .wx-swiper-dots.wx-swiper-dots-horizontal{margin-bottom:-0.15rem;display:flex;align-items:center;-webkit-align-items:center;
+    margin-top:1rem;}
+.index .block .wx-swiper-dot-active{width:0.18rem !important;height:0.07rem !important;border-radius:50rem !important;}
+.index .category{padding:0 0.20rem;-webkit-align-items:center;-webkit-justify-content:space-between;align-items:center;
+    justify-content:space-between;margin-top:0.26rem;}
+.index .category .item{width:2.18rem;height:2.52rem;position:relative;}
+.index .category .item img{width:100%;height:100%;}
+.index .category .item .label{width:1.02rem;height:0.42rem;background-image:url(../images/litklable1.png);
+    background-repeat:no-repeat;background-size:100% 100%;position:absolute;left:0;top:0;}
+.index .category .item .label.label2{width:1.41rem;background-image:url(../images/litklable2.png);}
+.index .category .item .label.label3{width:1.26rem;background-image:url(../images/litklable3.png);}
+.index .shop{margin:0.40rem 0.20rem 0 0.20rem;padding:0.22rem 0.20rem 0.30rem 0.20rem;width:7.10rem;box-sizing:border-box;
+    -webkit-box-sizing:border-box;-webkit-justify-content:space-between;justify-content:space-between;
+    box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;-webkit-box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;border-radius:0.10rem;
+    height:2.10rem;}
+.index .shop .title{font-size:0.24rem;color:#cccccc;}
+.index .shop .conter{margin:0.18rem 0.20rem 0 0.20rem;align-items:center;justify-content:space-between;-webkit-align-items:center;
+    -webkit-justify-content:space-between;}
+.index .shop .conter .text-pic{width:5.25rem;align-items:center;justify-content:space-between;-webkit-align-items:center;
+    -webkit-justify-content:space-between;}
+.index .shop .conter .text-pic .pictrue{width:1.14rem;height:1.14rem;border-radius:50%;}
+.index .shop .conter .text-pic .pictrue img{width:100%;height:100%;border-radius:50%;}
+.index .shop .conter .text-pic .text{width:3.70rem;font-size:0.30rem;color:#666666;}
+.index .shop .conter .text-pic .text .name{color:#282828;margin-bottom:0.10rem;}
+.index .shop .conter .follow{font-size:0.30rem;color:#73c274;width:1.26rem;height:0.56rem;border:0.02rem solid #73c274;
+    border-radius:0.08rem;text-align:center;line-height:0.56rem;box-sizing:border-box;-webkit-box-sizing:border-box;}
+.index .member .left{width:3.50rem;height:4.58rem;background-color:#fff;padding:0 0.20rem;box-sizing:border-box;
+    -webkit-box-sizing:border-box;}
+.index .member .left .title{align-items:center;-webkit-align-items:center;font-size:0.30rem;color:#282828;
+    margin-top:0.22rem;}
+.index .member .left .title .iconn{width:0.40rem;height:0.40rem;background-image:url(../images/litkhuiyuan.png);
+    background-repeat:no-repeat;background-size:100% 100%;margin-right:0.12rem;}
+.index .member{margin-top:0.17rem;justify-content:space-between;-webkit-justify-content:space-between;}
+.index .member .left .pictrue{width:2.83rem;height:2.64rem;}
+.index .member .left .pictrue img{width:2.83rem;height:2.64rem;margin:0.87rem auto 0 auto;}
+.index .member .right{flex-direction:column;-webkit-flex-direction:column;-webkit-justify-content:space-between;
+    justify-content:space-between;}
+.index .member .right .top{background-color:#fff;padding:0.20rem 0.20rem 0 0.20rem;width:3.98rem;height:2.28rem;
+    box-sizing:border-box;-webkit-box-sizing:border-box;position:relative;}
+.index .member .right .top .title{align-items:center;-webkit-align-items:center;font-size:0.30rem;color:#282828;}
+.index .member .right .top .title .iconn{width:0.40rem;height:0.40rem;background-image:url(../images/litkhuiyuan2.png);
+    background-repeat:no-repeat;background-size:100% 100%;margin-right:0.12rem;}
+.index .member .right .bottom .title .iconn{background-image:url(../images/litkhuiyuan3.png);}
+.index .member .right .top .conter{font-size:0.24rem;color:#999999;margin-top:0.13rem;}
+.index .member .right .top .pictrue{width:1.61rem;height:0.96rem;position:absolute;bottom:0;right:0.12rem;}
+.index .member .right .top .pictrue img{width:100%;height:100%;}
+.index .member .right .bottom{background-color:#fff;}
+.index .like{margin-top:0.14rem;background-color:#fff;}
+.index .like .title{font-size:0.26rem;color:#666666;align-items:center;-webkit-align-items:center;-webkit-justify-content:center;
+    justify-content:center;height:1.08rem;}
+.index .like .title .linee{width:0.63rem;height:0.01rem;background-color:#666666;}
+.index .like .title .name{margin:0 0.17rem;}
+.index .list{padding:0 0.20rem;align-items:center;-webkit-align-items:center;-webkit-justify-content:space-between;
+    justify-content:space-between;flex-flow:wrap;-webkit-flex-flow:wrap;}
+.index .list .item{width:3.48rem;margin-bottom:0.14rem;}
+.index .list .item .pictrue{width:100%;height:3.48rem;}
+.index .list .item .pictrue img{width:100%;height:100%;border-radius:0.15rem 0.15rem 0 0;}
+.index .list .item .text{width:100%;height:1.40rem;border-radius:0 0 0.15rem 0.15rem;box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;
+    padding:0.10rem 0.15rem 0.20rem 0.15rem;box-sizing:border-box;-webkit-box-shadow:0.02rem 0 0.20rem 0.05rem #f3f3f3;
+    -webkit-box-sizing:border-box;}
+.index .list .item .text .name{font-size:0.26rem;color:#282828;line-height: 1.3;}
+.index .list .item .text .money{font-size:0.20rem;color:#dc001a;align-items:center;justify-content:space-between;
+    margin-top:0.08rem;-webkit-align-items:center;-webkit-justify-content:space-between;}
+.index .list .item .text .money .num{font-size:0.30rem;font-weight:bold;}
+.index .list .item .text .money .people{font-size:0.20rem;color:#999999;}
+
+
+

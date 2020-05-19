@@ -1,0 +1,119 @@
+{extend name="public/container"}
+{block name="title"}{$userInfo.nickname} - 个人资料{/block}
+{block name="head_top"}
+<link href="{__WAP_PATH}zsff/mui/plugin/picker/css/mui.picker.css" rel="stylesheet">
+<link href="{__WAP_PATH}zsff/mui/plugin/picker/css/mui.poppicker.css" rel="stylesheet">
+<link href="{__WAP_PATH}zsff/mui/plugin/picker/css/mui.dtpicker.css" rel="stylesheet">
+<script src="{__WAP_PATH}zsff/mui/mui.js"></script>
+<script src="{__WAP_PATH}zsff/mui/plugin/picker/js/mui.picker.js"></script>
+<script src="{__WAP_PATH}zsff/mui/plugin/picker/js/mui.poppicker.js"></script>
+<script src="{__WAP_PATH}zsff/mui/plugin/picker/js/mui.dtpicker.js"></script>
+<style>
+    .quit{text-align: center;padding:0.2rem;background-color: #f9e067;border-radius: 0.15rem;margin: 0.2rem}
+</style>
+{/block}
+{block name="content"}
+<div class="personal-infor-set" id="app">
+    <div class="header acea-row row-between-wrapper" v-cloak="">
+        <div>头像</div>
+        <div class="acea-row row-middle" @click="upload">
+            <div class="pictrue"><img :src="userInfo.avatar"></div>
+            <input type="file" style="display: none" ref="avatar" accept="image/*">
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+    </div>
+    <div class="list" v-cloak="">
+        <div class="item acea-row row-between-wrapper">
+            <div>昵称</div>
+            <div class="acea-row">
+                <input type="text" name="nickname" class="name" autocomplete="off" v-model="userInfo.nickname">
+            </div>
+        </div>
+        <div class="item acea-row row-between-wrapper">
+            <div>手机号</div>
+            <a class="acea-row" href="{:Url('save_phone')}">
+                <div class="name" v-text="userInfo.phone"></div>
+                <div class="iconfont icon-icon-yxj-arrow-right"></div>
+            </a>
+        </div>
+        <!--<div class="item acea-row row-between-wrapper">
+            <div>所属分类</div>
+            <div class="acea-row" @click="open_grade">
+                <div class="name">{{grade.text}}</div>
+                <span class="iconfont icon-icon-yxj-arrow-right"></span>
+            </div>
+        </div>-->
+        <div class="quit" @click="save_user_info">保存</div>
+    </div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var userInfo={:json_encode($userInfo)},isWechat={$isWechat ? 'true': 'false'};
+    var picker =new mui.PopPicker();
+    require(['vue','helper','store'],function(Vue,$h,app){
+        new Vue({
+            el:'#app',
+            data:{
+                userInfo:userInfo,
+                gradeList:[],
+                grade:{}
+            },
+            watch:{
+                'userInfo.nickname':function (n) {
+                    document.title=n+' - 个人资料';
+                }
+            },
+            methods:{
+                open_grade:function(){
+                    var that=this;
+                    picker.setData(that.gradeList);
+                    picker.show(function(selectItems){
+                        that.grade=selectItems[0];
+                    });
+                },
+                upload:function(){
+                    var that=this;
+                    if(isWechat){
+                        mapleWx($jssdk(),function(){
+                            app.wechatUploadImg(this,1,function(res){
+                                that.userInfo.avatar = res[0];
+                            });
+                        });
+                    }else{
+                        $(this.$refs.avatar).click();
+                    }
+                },
+                save_user_info:function () {
+                    var that=this;
+                    app.basePost($h.U({c:'my',a:'save_user_info'}),{
+                        avatar:that.userInfo.avatar,
+                        nickname:that.userInfo.nickname,
+                        grade_id:that.grade.value
+                    },function (res) {
+                        $h.pushMsgOnce(res.data.msg)
+                    })
+                }
+            },
+            mounted:function () {
+                var that=this;
+                app.baseGet($h.U({c:'my',a:'get_grade'}),function (res) {
+                    that.gradeList=res.data.data;
+                    $.each(that.gradeList,function (index,item) {
+                        if(item.value==that.userInfo.grade_id) that.grade=item;
+                    })
+                });
+                $(this.$refs.avatar).change(function (e) {
+                    var formdata=new FormData();
+                    if(e.target.files[0]){
+                        formdata.append('file',e.target.files[0]);
+                        app.basePost($h.U({c:'index',a:'upload'}),formdata,function (res) {
+                            that.userInfo.avatar =res.data.data.url;
+                        })
+                    }
+                })
+            }
+        });
+    })
+</script>
+{/block}

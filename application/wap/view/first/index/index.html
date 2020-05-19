@@ -1,0 +1,396 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+{block name='head'}
+<style>
+    .index .studyCourse .title .more {
+        font-size: 0.25rem;
+        color: #999;
+        display: inherit;
+    }
+
+    .index .studyCourse .title .titleCon {
+        width: 4rem;
+    }
+
+    .free{font-weight:400;font-size:.24rem;color:#ffba25;}
+</style>
+{/block}
+{block name="content"}
+<div class="indexNew" id="app" v-cloak="">
+    <!--关注-->
+    {if !$subscribe}
+    <div class="thematic-details" v-cloak="">
+        <div class="follow acea-row row-between-wrapper">
+            <div class="picTxt acea-row row-between-wrapper">
+                <div class="pictrue"><img
+                        src="{if $confing.site_logo}{$confing.site_logo}{else}/wap/first/zsff/images/crmeb.png{/if}">
+                </div>
+                <div class="text">
+                    <div class="name line1">{$confing.site_name}</div>
+                    <div class="line1">{$confing.seo_title}</div>
+                </div>
+            </div>
+            <div class="followBnt" @click=" is_code = true">关注</div>
+        </div>
+    </div>
+    {/if}
+    <!--搜索-->
+    <div class="header acea-row row-center-wrapper">
+        <a class="search acea-row row-center-wrapper" href="{:Url('search')}"><span
+                class="iconfont icon-sousuo"></span>输入你想要找的课程名称</a>
+    </div>
+    <!--幻灯片-->
+    <div class="banner">
+        <div class="swiper-container swiper-banner" v-cloak="">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(item,index) in swiperlist" @click="goBannerLink(item.url)">
+                    <img :src="item.pic" />
+                </div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <!--导航-->
+    <div class="nav acea-row" v-cloak="">
+        <a class="item" v-for="(item,index) in navList" :href="getNavHref(item,1)">
+            <div class="pictrue"><img :src="item.icon"></div>
+            <div class="text">{{item.title}}</div>
+        </a>
+    </div>
+    <!--活动区域-->
+    <div class="activity acea-row row-top row-between" v-if="activity.length || activityOne.id">
+        <a class="left" :href="activityOne.wap_link">
+            <div class="title line1" v-text="activityOne.title"></div>
+            <div class="info line1" v-text="activityOne.info"></div>
+            <div class="pictrue"><img :src="activityOne.pic"></div>
+        </a>
+        <div class="right" v-if="activity.length">
+            <a class="item acea-row row-between-wrapper" v-for="item in activity" :href="item.wap_link">
+                <div class="text">
+                    <div class="title line1" v-text="item.title"></div>
+                    <div class="info line1" v-text="item.info">考研强助力</div>
+                </div>
+                <div class="pictrue"><img :src="item.pic"></div>
+            </a>
+        </div>
+    </div>
+    <!--直播-->
+    <div class="broadcast" v-if="liveList.length">
+        <div class="public_title acea-row row-between-wrapper">
+            <div class="name">热门直播</div>
+            <!--<div class="more acea-row row-middle">更多直播<img src="images/more.png"></div>-->
+        </div>
+        <div class="swiper-container swiperScroll">
+            <div class="swiper-wrapper">
+                <a class="swiper-slide item" v-for="item in liveList" :href="getDetails(2,item.id)">
+                    <div class="pictrue">
+                        <img :src="item.image">
+                        <div class="state acea-row row-center-wrapper" v-if="item.status == 1">
+                            <img src="/wap/first/zsff/images/live01.png">
+                            <div class="stateTxt">直播中</div>
+                        </div>
+                        <div class="state return acea-row row-center-wrapper" v-else-if="item.status == 2">
+                            <img src="/wap/first/zsff/images/returnVisit.png">
+                            <div class="stateTxt">回放</div>
+                        </div>
+                        <div class="state make acea-row row-center-wrapper" v-else-if="item.status == 3">
+                            <img src="/wap/first/zsff/images/live_time.png">
+                            <div class="stateTxt">直播时间 {{item.start_play_time}}</div>
+                        </div>
+                    </div>
+                    <div class="text">
+                        <div class="name line1" v-text="item.title"></div>
+                        <div class="info"><span class="red">{{item.browse_count}}</span>人正在学习</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!--自定义排版开始-->
+    <div v-for="(item,index) in recommend" v-if="recommend.length" v-cloak>
+        <!--左右切换-->
+        <div class="curriculum" v-if="item.typesetting == 4 && item.list.length" style="margin-top:.59rem;">
+            <div class="public_title acea-row row-between-wrapper">
+                <div class="name" v-text="item.title"></div>
+                <div class="spot acea-row row-middle">
+                    <div class="item" :class="item.courseIndex == i ? 'on' : '' " v-for="i in item.ceilCount">
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-container" :class="'swiper-course-'+index" :data-index="index">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(vv,inx) in item.data">
+                        <div class="public_list">
+                            <a class="item acea-row row-between-wrapper" v-for="val in vv.value"
+                                :href="getDetails(item.type,val.link_id)">
+                                <div class="pictrue">
+                                    <img :src="val.image">
+                                    <div class="num acea-row row-center-wrapper">{{val.browse_count}}人已学习</div>
+                                </div>
+                                <div class="text">
+                                    <div class="title acea-row row-middle">
+                                        <div class="name line1">{{val.title}}</div>
+                                    </div>
+                                    <div class="labelList">
+                                        <span class="labelItem" v-for="label in val.label">{{label}}</span>
+                                    </div>
+                                    <div class="money">￥{{val.money}}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="seeAll acea-row row-center-wrapper" :href="getNavHref(item)">查看全部<img
+                    src="/wap/first/zsff/images/horn.png"></a>
+        </div>
+        <!--大图-->
+        <div class="essential" v-if="item.typesetting == 1 && item.list.length" style="margin-top:.38rem;">
+            <div class="public_title acea-row row-between-wrapper">
+                <div class="name" v-text="item.title"></div>
+                <a class="more acea-row row-middle" :href="getNavHref(item)">查看更多<img
+                        src="/wap/first/zsff/images/more.png"></a>
+            </div>
+            <div class="list">
+                <a class="item" v-for="val in item.list" :href="getDetails(item.type,val.link_id)">
+                    <div class="pictrue"><img :src="val.image"><div class="label">{{val.special_type_name}}</div></div>
+                    <div class="text">
+                        <div class="title acea-row row-middle">
+                           <!-- <div class="label">{{val.subject_name}}</div>-->
+                            <div class="name line1" v-text="val.title"></div>
+                        </div>
+                        <div class="info acea-row row-between-wrapper" style="height:.45rem;line-height:.45rem;">
+                            <div class="labelList">
+                                <span class="labelItem" v-for="label in val.label">{{label}}</span>
+                            </div>
+                            <div class="money" v-if="val.money > 0 && val.pay_type == 1">
+                                <span class="yen">￥</span>{{val.money}}
+                            </div>
+                            <div class="free" v-else>免费</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!--小图-->
+        <div class="interest" v-if="item.typesetting == 3 && item.list.length" style="margin-top:.41rem;">
+            <div class="public_title acea-row row-between-wrapper">
+                <div class="name" v-text="item.title"></div>
+                <a class="more acea-row row-middle" :href="getNavHref(item)">查看更多<img
+                        src="/wap/first/zsff/images/more.png"></a>
+            </div>
+            <div class="public_list">
+                <a class="item acea-row row-between-wrapper" v-for="val in item.list"
+                    :href="getDetails(item.type,val.link_id)">
+                    <div class="pictrue">
+                        <img :src="val.image">
+                        <div class="label">{{val.special_type_name}}</div>
+                    </div>
+                    <div class="text">
+                        <div class="title acea-row row-middle">
+                            <div class="name line1" v-text="val.title"></div>
+                        </div>
+                        <div class="labelList" style="height:.4rem;line-height:.4rem;">
+                            <span class="labelItem" v-for="label in val.label">{{label}}</span>
+                        </div>
+                        <div class="acea-row row-middle row-between" style="height:.45rem;">
+                            <div class="money" v-if="val.pay_type == 1 && val.money > 0"><span class="yen">¥</span>{{val.money}}</div>
+                            <div class="free" v-else>免费</div>
+                            <div class="num">{{val.browse_count}}人已学习</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!--宫图-->
+        <div class="interest english" v-if="item.typesetting == 2 && item.list.length" style="margin-top:.39rem;margin-bottom:-.29rem;">
+            <div class="public_title acea-row row-between-wrapper">
+                <div class="name" v-text="item.title"></div>
+                <a class="more acea-row row-middle" :href="getNavHref(item)">
+                    查看更多<img src="/wap/first/zsff/images/more.png">
+                </a>
+            </div>
+            <div class="list acea-row row-between-wrapper">
+                <a class="item" v-for="val in item.list" :href="getDetails(item.type,val.link_id)">
+                    <div class="pictrue"><img :src="val.image"></div>
+                    <div class="text">
+                        <div class="title acea-row row-middle">
+                            <div class="name line1" v-text="val.title"></div>
+                        </div>
+                        <div class="info acea-row row-between-wrapper">
+                            <div class="labelList" style="width:100%;height:.4rem;line-height:.4rem;">
+                                <span class="labelItem" v-for="label in val.label">{{label}}</span>
+                            </div>
+                        </div>
+                        <div class="info acea-row row-between-wrapper money-info" style="height:.45rem;">
+                            <div class="free" v-if="val.pay_type == 0 || val.pay_type == 2">免费</div>
+                            <div class="money" v-if="val.pay_type == 1">
+                                <span class="yen">￥</span>{{val.money}}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+    <!--关注二维码-->
+    {if !$subscribe}
+    <div class="mask" style="align-items:center;display: flex;" v-show="is_code" @click="is_code=false" v-cloak="">
+        <img src="{$code_url}" alt="" style="width: 5rem;height: 5rem;margin: 0 auto;">
+    </div>
+    {/if}
+    <div style="height: 1.0rem"></div>
+    {include file="public/store_menu"}
+</div>
+
+<script type="text/javascript">
+    var banner = {$banner}, activity = {$activity}, liveList = {$liveList};
+    require(['vue', 'helper', 'store'], function (Vue, $h, storeApi) {
+        new Vue({
+            el: '#app',
+            data: {
+                liveList: liveList,
+                swiperlist: banner,
+                recommend: [],
+                navList: [],
+                loading: false,
+                loadTitle: '',
+                loading: "",
+                loadend: false,
+                page: 1,
+                limit: 10,
+                is_code: false,
+                activity: activity,
+                activityOne: {},
+            },
+            mounted: function () {
+                var that = this;
+                that.$nextTick(function () {
+                    var myBanner = new Swiper('.swiper-banner', {
+                        pagination: '.swiper-pagination',
+                        paginationClickable: false,
+                        autoplay: 2500,
+                        speed: 1000,
+                        loop: true,
+                        effect: "coverflow",
+                        slidesPerView: "auto",
+                        centeredSlides: true,
+                        coverflow: {
+                            rotate: 0, // 旋转的角度
+                            stretch: -20, // 拉伸   图片间左右的间距和密集度
+                            depth: 100, // 深度   切换图片间上下的间距和密集度
+                            modifier: 2, // 修正值 该值越大前面的效果越明显
+                            slideShadows: false // 页面阴影效果
+                        },
+                        observer: true,
+                        observeParents: true,
+                        autoplayDisableOnInteraction: false
+                    });
+                })
+              
+                if (this.activity.length) {
+                    var activityOne = this.activity.shift();
+                    that.$set(that, "activityOne", activityOne);
+                }
+                this.get_content_recommend();
+                this.get_recommend();
+            },
+            methods: {
+                getDetails: function (type, id) {
+                    return type == 1 ? $h.U({ c: 'article', a: 'details', q: { id: id } }) : $h.U({
+                        c: 'special',
+                        a: 'details',
+                        q: { id: id }
+                    });
+                },
+                getNavHref: function (item, bo) {
+                    if (item.type == 3) {
+                        return item.link;
+                    } else {
+                        if (bo) {
+                            return $h.U({ c: 'special', a: 'special_cate', q: { cate_id: item.grade_id } });
+                        }
+                        return $h.U({
+                            c: 'index',
+                            a: 'unified_list',
+                            q: { type: item.type, title: item.title, recommend_id: item.id }
+                        });
+                    }
+                },
+                get_recommend: function () {
+                    storeApi.baseGet($h.U({ c: 'index', a: 'get_recommend' }), function (res) {
+                        this.$set(this, 'navList', res.data.data);
+                    }.bind(this))
+                },
+                goBannerLink: function (url) {
+                    if (url && url != '#') window.location.href = url;
+                },
+                initSwiper: function () {
+                    var that = this;
+                    this.$nextTick(function () {
+                        var swiperScroll = new Swiper('.swiperScroll', {
+                            freeMode: true,
+                            freeModeMomentum: true,
+                            slidesPerView: "auto",
+                            observer: true,
+                            observeParents: true
+                        });
+                        for (var index in that.recommend) {
+                            if (that.recommend[index].typesetting == 4 && that.recommend[index].list.length) {
+                                var className = '.swiper-course-' + index;
+                                new Swiper(className, {
+                                    speed: 1000,
+                                    watchOverflow: true,
+                                    paginationClickable: false,
+                                    autoplayDisableOnInteraction: false,
+                                    onSlideChangeStart: function (swiper) {
+                                        var inx = $(className).data('index');
+                                        that.$set(that.recommend[inx], 'courseIndex', swiper.activeIndex + 1);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                },
+                get_content_recommend: function () {
+                    if (this.loading) return;
+                    if (this.loadend) return;
+                    this.loadTitle = '';
+                    this.loading = true;
+                    storeApi.baseGet($h.U({
+                        c: 'index',
+                        a: 'get_content_recommend',
+                        q: { page: this.page, limit: this.limit }
+                    }), function (res) {
+                        var list = res.data.data.recommend;
+                        var recommend = $h.SplitArray(list, this.recommend);
+                        this.loading = false;
+                        this.page = res.data.data.page;
+                        this.loadend = list.length < this.limit;
+                        this.loadTitle = this.loadend ? '我是有底线的' : '上拉加载更多';
+                        this.$set(this, 'recommend', recommend);
+                        this.initSwiper();
+                        this.EventUtil();
+                    }.bind(this), function (res) {
+                        this.loadTitle = '加载更多';
+                        this.loading = false;
+                    }.bind(this));
+                },
+                EventUtil: function () {
+                    this.$nextTick(function () {
+                        $h.EventUtil.listenTouchDirection(document, function () {
+                            this.loading == false && this.get_content_recommend();
+                        }.bind(this), false);
+                    })
+                }
+            }
+        });
+    })
+</script>
+{/block}

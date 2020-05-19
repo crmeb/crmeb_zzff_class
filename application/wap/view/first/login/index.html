@@ -1,0 +1,117 @@
+{extend name="public/container"}
+{block name="head_top"}
+<style>
+    .mask h4{padding-top: 1rem;padding-bottom: 1rem;margin-top: 1rem;color: #ffffff;font-size: 0.5rem;text-align: center;}
+    .mask .code{width: 100%;display: flex;align-items: center}
+    .mask .code .image{height: 5rem;width: 5rem;margin: 0 auto;}
+    .mask a{display: inherit;text-align: center; font-size: 0.28rem;color: #fff;width: 2.5rem;height: 0.6rem;background-color: #509efb;line-height: 0.6rem;border-radius: 0.5rem;margin: 1rem auto;}
+</style>
+{/block}
+{block name="title"}立即登陆{/block}
+{block name="content"}
+<div id="app" v-cloak="">
+    <div class="entry up">
+        <div class="title">手机号登录</div>
+        <div class="entry-list">
+            <div class="item"><input type="number" v-model="phone" placeholder="请输入手机号"></div>
+            <div class="item item1 acea-row row-between-wrapper">
+                <input type="number" v-model="code_num" placeholder="请输入验证码">
+                <button class="code" :disabled="active" :class="active == true?'on':''" @click="code">{{timetext}}</button>
+            </div>
+        </div>
+        <div class="select-btn">
+            <div class="checkbox-wrapper"><label class="well-check"><input type="checkbox" v-model="agree" name="" value="1" checked="checked"><i class="icon"></i>已阅读并同意 <a :href="goagree()">[{{site_name}}付费用户协议]</a></label></div>
+        </div>
+        <div class="enterBnt acea-row row-center-wrapper" @click="login">登录</div>
+    </div>
+    <div class="mask" @touchmove.prevent></div>
+    <div class="mask" @touchmove.prevent style="z-index: 100;" v-show="isfollow">
+        <h4>立即绑定微信公众号用户</h4>
+        <div class="code">
+            <img :src="codeUrl" class="image" alt="">
+        </div>
+        <a class="button" target="_blank" href="{:Url('wap/index/index')}">跳过直接去首页</a>
+    </div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var ref ='{$ref}',site_name = '{$Auth_site_name}';
+    require(['vue','helper','store','reg-verify'],function(Vue,$h,app) {
+        new Vue({
+            el:'#app',
+            data:{
+                timetext:'获取验证码',
+                active:false,
+                phone:'',
+                code_num:'',
+                codeUrl:'',
+                isfollow:false,
+                agree:1,
+                site_name:site_name
+            },
+            methods:{
+                goagree:function(){
+                    return $h.U({c:"index",a:'agree'});
+                },
+                login:function(){
+                    var that=this;
+                    if(!this.phone) return $h.pushMsgOnce('请输入手机号码');
+                    if(!$reg.isPhone(this.phone)) return $h.pushMsgOnce('您输入的手机号码不正确');
+                    if(!that.code_num) return $h.pushMsgOnce('请输入验证码');
+                    if(!that.agree) return $h.pushMsgOnce('请同意'+that.site_name+'付费用户协议');
+                    $h.loadFFF();
+                    app.basePost($h.U({c:'login',a:'phone_check'}),{phone:this.phone,code:this.code_num},function (res) {
+                        $h.loadClear();
+                        $h.showMsg({
+                            title:res.data.msg,
+                            icon:'success',
+                            success:function (){
+                                if(res.data.data.isfollow){
+                                    window.location.href=ref ? ref : $h.U({c:'index',a:'index'});
+                                }else{
+                                    that.isfollow=true;
+                                    that.codeUrl=res.data.data.url;
+                                }
+                            }
+                        });
+                    },function () {
+                        $h.loadClear();
+                    });
+                },
+                code:function () {
+                    var that = this;
+                    if(!that.phone) return $h.pushMsgOnce('请输入手机号码');
+                    if(!$reg.isPhone(that.phone)) return $h.pushMsgOnce('请输入正确的手机号码');
+                    that.active = true;
+                    var n = 60;
+                    app.baseGet($h.U({c:'public_api',a:'code',q:{phone:that.phone}}),function (res){
+                        var data=res.data.data;
+                        if(data.Message=='OK' || data.Code=='OK'){
+                            var run =setInterval(function(){
+                                n--;
+                                if(n<0){
+                                    clearInterval(run);
+                                }
+                                that.timetext = "剩余 "+n+"s";
+                                if(that.timetext<"剩余 "+0+"s"){
+                                    that.active = false;
+                                    that.timetext = "重发";
+                                }
+                            },1000);
+                        }else{
+                            $h.pushMsgOnce(data.Message);
+                            that.active =false;
+                        }
+                    },function (res) {
+                        that.active =false;
+                    });
+                },
+            },
+            mounted:function () {
+
+            }
+        })
+    })
+</script>
+{/block}

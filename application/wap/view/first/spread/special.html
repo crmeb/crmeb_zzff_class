@@ -1,0 +1,138 @@
+{extend name="public/container"}
+{block name='title'}专题推广{/block}
+{block name="head_top"}
+<script src="/wap/first/zsff/js/scroll.js"></script>
+<script src="/wap/first/zsff/js/navbarscroll.js"></script>
+{/block}
+{block name="content"}
+<div class="thematic-promotion " id="app" v-cloak="" ref="app">
+    <div class="goodsClass">
+        <div class="header" style="height: 1.0rem">
+            <div class="wrapper" id="wrapper">
+                <div class="scroller">
+                    <ul>
+                        <li v-for="item in gradeList" :data-id="item.value">
+                            <a href="javascript:void(0)" v-text="item.text"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<nav class="acea-row row-middle" ref="storeMenu">-->
+        <!--<div class="item" :class="where.grade_id==nav.value ?'ont':''" v-for="nav in gradeList" @click=" where.grade_id = nav.value ">-->
+            <!--{{nav.text}}-->
+            <!--<div class="on" v-show="where.grade_id==nav.value"></div>-->
+        <!--</div>-->
+    <!--</nav>-->
+
+    <div class="swiper-details" v-for="item in specialList" ref="list" v-if="item.list.length">
+        <div class="title line1 acea-row row-middle" v-text="item.name"></div>
+        <div class="video-listn">
+            <div class="item acea-row row-between-wrapper" v-for="val in item.list">
+                <div class="pictrue"><img :src="val.image"></div>
+                <div class="underline">
+                    <div class="text acea-row row-between row-column">
+                        <div class="name line1" v-text="val.title"></div>
+                        <div class="num acea-row row-middle">¥ {{val.money}} <div class="earn">赚¥{{val.spread_money}}</div></div>
+                    </div>
+                </div>
+                <a class="toPromote acea-row row-center-wrapper" :href="goSpreadUrl(val)">去推广</a>
+            </div>
+        </div>
+    </div>
+
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+
+
+</div>
+{/block}
+{block name="foot"}
+<script>
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                gradeList:[{text:'全部',value:0}],
+                where:{
+                    grade_id:0,
+                    page:1,
+                    limit:10,
+                },
+                specialList:[],
+                loadend:false,
+                loading:false,
+                loadTitle:'上拉加载更多'
+            },
+            watch:{
+                'where.grade_id':function (n) {
+                    this.loadend=false;
+                    this.where.page=1;
+                    this.$set(this,'specialList',[]);
+                    this.getSpecialSpread();
+                }
+            },
+            mounted:function(){
+                this.get_grade_list();
+                this.getSpecialSpread();
+            },
+            methods:{
+                goSpreadUrl:function(value){
+                    return $h.U({c:'Spread',a:'poster_special',q:{special_id:value.id}});
+                },
+                get_grade_list:function () {
+                    var that=this;
+                    app.baseGet($h.U({c:'Spread',a:'get_grade_list'}),function (res) {
+                        var list=res.data.data;
+                        var gradeList=$h.SplitArray(list,that.gradeList);
+                        that.$set(that,'gradeList',gradeList);
+                        that.$nextTick(function () {
+                            $('#wrapper').navbarscroll({
+                                defaultSelect: 0,
+                                scrollerWidth: 5,
+                                fingerClick: 1,
+                                endClickScroll: function (obj) {
+                                    that.where.grade_id = obj.data('id');
+                                }
+                            });
+                        })
+                    });
+                },
+                getSpecialSpread:function () {
+                    var that=this;
+                    if(that.loadend) return;
+                    if(that.loading) return;
+                    that.loadTitle='';
+                    that.loading=true;
+                    app.baseGet($h.U({c:'Spread',a:'getSpecialSpread',q:that.where}),function (res) {
+                        var list=res.data.data.data;
+                        var specialList=$h.SplitArray(list,that.specialList);
+                        that.loadend=list.length < that.where.limit;
+                        that.loadTitle=that.loadend ? '已全部加载':'上拉加载更多';
+                        that.where.page=res.data.data.page;
+                        that.loading=false;
+                        that.$set(that,'specialList',specialList);
+                        that.$nextTick(function (){
+                            that.bScrollInit();
+                        });
+                    },function () {
+                        that.loading=false;
+                        that.loadTitle='上拉加载更多';
+                    });
+                },
+                //滑动底部加载
+                bScrollInit:function(){
+                    var that=this;
+                    $h.EventUtil.listenTouchDirection(document,function (){
+                        that.loading == false && that.getSpecialSpread();
+                    },false);
+                }
+            }
+        });
+    })
+</script>
+{/block}

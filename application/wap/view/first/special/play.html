@@ -1,0 +1,32 @@
+{extend name="public/container"}
+{block name="head_top"}
+<link rel="stylesheet" type="text/css" href="{__WAP_PATH}zsff/css/video-js.min.css"/>
+<script src="{__WAP_PATH}zsff/js/video.min.js"></script>
+<script src="{__WAP_PATH}zsff/js/video.zh.js"></script>
+<script src="{__WAP_PATH}zsff/js/md5.js"></script>
+<style>
+    .video-js{
+        height: 100% !important;
+        width: 100% !important;
+    }
+    .video-js .vjs-big-play-button{
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="thematic-details">
+    <div class="swiper-conter" style="height: 360px">
+        <video id="play" class="video-js" controls="controls">
+            <source src="{$link}"></source>
+        </video>
+    </div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var myPlayer = videojs('play');
+</script>
+{/block}

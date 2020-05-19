@@ -1,0 +1,17 @@
+<!--crmEb-->
+<script type="text/javascript">
+    $(function () {
+        if(window.overallShare){
+            var wechat_share=<?php echo isset($overallShareWechat) ? $overallShareWechat : '{}'; ?>,uid=<?php echo isset($userInfo['uid']) && $userInfo['uid'] ? $userInfo['uid'] : 0;?>;
+            mapleWx($jssdk(), function () {
+                this.onMenuShareAll({
+                    title:wechat_share.wechat_share_title,
+                    desc: wechat_share.wechat_share_synopsis,
+                    imgUrl: wechat_share.wechat_share_img,
+                    link: location.href.indexOf('?') == -1 ? location.href+'?spread_uid='+uid  : location.href + '&spread_uid='+ uid,
+                });
+            });
+        }
+    })
+
+</script>

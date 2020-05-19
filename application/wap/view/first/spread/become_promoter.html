@@ -1,0 +1,90 @@
+{extend name="public/container"}
+{block name='head_top'}
+<style>
+    body{background-color:#f2f2f2;}
+</style>
+{/block}
+{block name='title'}成为推广人{/block}
+{block name="content"}
+<div class="become-promoter" id="app">
+    <div class="phone">
+        <ul class="list">
+            <li class="item"><input type="text" placeholder="输入手机号" v-model="phone"></li>
+            <li class="item itemCode acea-row row-between-wrapper">
+                <input type="number" placeholder="输入验证码" v-model="code_num">
+                <button class="code acea-row row-center-wrapper" :disabled="active" :class="active == true?'on':''" @click="code" v-text="timetext">获取验证码</button>
+            </li>
+        </ul>
+        <div class="bnt acea-row row-center-wrapper" @click="save_promoter">加入推广人</div>
+    </div>
+    <div class="rule">
+        <div class="title">推广细则</div>
+        {$promoter_content}
+    </div>
+</div>
+{/block}
+{block name="foot"}
+<script>
+    var spread_uid={$spread_uid};
+    require(['vue','helper','store','reg-verify'],function(Vue,$h,app,$reg) {
+        new Vue({
+            el: '#app',
+            data: {
+                active:false,
+                timetext:'获取验证码',
+                phone:'',
+                code_num:'',
+            },
+            methods:{
+                save_promoter:function(){
+                    var that=this;
+                    if(!this.phone) return $h.pushMsgOnce('请输入手机号码');
+                    if(!$reg.isPhone(this.phone)) return $h.pushMsgOnce('您输入的手机号码不正确');
+                    if(!that.code_num) return $h.pushMsgOnce('请输入验证码');
+                    $h.loadFFF();
+                    app.basePost($h.U({c:'spread',a:'save_promoter',q:{s_spread_uid:spread_uid}}),{phone:this.phone,code:this.code_num},function (res) {
+                        $h.loadClear();
+                        $h.showMsg({
+                            title:res.data.msg,
+                            icon:'success',
+                            success:function () {
+                                window.location.href=$h.U({c:'index',a:'index'});
+                            }
+                        });
+                    },function () {
+                        $h.loadClear();
+                    });
+                },
+                code:function () {
+                    var that = this;
+                    if(!that.phone) return $h.pushMsgOnce('请输入手机号码');
+                    if(!$reg.isPhone(that.phone)) return $h.pushMsgOnce('请输入正确的手机号码');
+                    that.active = true;
+                    var n = 60;
+                    app.baseGet($h.U({c:'public_api',a:'code',q:{phone:that.phone}}),function (res){
+                        var data=res.data.data;
+                        if(data.Message=='OK' || data.Code=='OK'){
+                            var run =setInterval(function(){
+                                n--;
+                                if(n<0){
+                                    clearInterval(run);
+                                }
+                                that.timetext = "剩余 "+n+"s";
+                                if(that.timetext<"剩余 "+0+"s"){
+                                    that.active = false;
+                                    that.timetext = "重发";
+                                }
+                            },1000);
+                        }else{
+                            $h.pushMsgOnce(data.Message);
+                            that.active =false;
+                        }
+                    },function (res) {
+                        that.active =false;
+                    });
+                }
+            }
+        });
+    })
+</script>
+{/block}

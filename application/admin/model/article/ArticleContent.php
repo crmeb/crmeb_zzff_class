@@ -1,0 +1,1 @@
+<?phpnamespace app\admin\model\article;use traits\ModelTrait;use basic\ModelBasic;/** * Class ArticleContent * @package app\admin\model\wechat */class ArticleContent extends ModelBasic {    use ModelTrait;}

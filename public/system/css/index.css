@@ -1,0 +1,1126 @@
+@charset "UTF-8";
+
+.base_mainContent {
+	background-color: #efeff4
+}
+
+.base_mainContent .myShop {
+	margin-top: 0
+}
+
+.dataBox {
+	padding: 20px;
+	/*background-color: #fff;
+	margin-bottom: 40px*/
+}
+
+.dataBox .topAlert {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 12px;
+	border-radius: 2px;
+	background-color: #fff1df;
+	border: solid 1px #f5dab6;
+	color: #666;
+	padding-left: 10px;
+	margin-bottom: 20px
+}
+
+.dataBox .myShop {
+	/*height: 56px;*/
+	width: 100%;
+	/*padding-bottom: 20px;*/
+	padding:20px;
+	/*border-bottom: 1px solid #ececec*/
+	background: #fff;
+}
+
+.dataBox .myShop .shopFitment {
+	margin-right: 20px
+}
+
+.dataBox .myShop .content {
+	/*float: left*/
+	
+	height:auto;
+}
+
+.dataBox .myShop .content p {
+	line-height: 20px;
+	display: inline-block;
+	margin: 8px 8px 0 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #353535
+}
+
+.dataBox .myShop .content div {
+	display: inline-block
+}
+
+.dataBox .myShop .content .version {
+	vertical-align: text-bottom;
+	cursor: default;
+	display: inline-block;
+	border-radius: 1px;
+	background-color: #5e99f7;
+	color: #fff;
+	font-size: 12px;
+	padding: 0 5px;
+	line-height: 20px;
+	margin-right: 20px
+}
+
+.dataBox .myShop .content a {
+	line-height: 20px
+}
+
+.dataBox .myShop .btnContent {
+	float: right;
+	position: relative
+}
+
+.dataBox .myShop .btnContent .qrcodeArea {
+	display: none;
+	position: absolute;
+	top: 50px;
+	right: 0;
+	overflow: hidden;
+	width: 180px;
+	height: 220px;
+	padding: 20px 30px;
+	border-radius: 2px;
+	background-color: #fff;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+	border: solid 1px #dbdbdb;
+	text-align: center
+}
+
+.dataBox .myShop .btnContent .qrcodeArea .text {
+	line-height: 20px;
+	font-size: 12px;
+	color: #243042
+}
+
+.dataBox .myShop .btnContent .qrcodeArea .codeContent {
+	text-align: center;
+	margin: 10px 0
+}
+
+.dataBox .myShop .btnContent .qrcodeArea .href a {
+	text-decoration: underline!important;
+	color: #2a75ed;
+	font-size: 12px
+}
+
+.dataBox .shopData .content {
+	/*background: #f9f9f9;*/
+	height: 150px;
+	width: 100%;
+	padding: 20px 0 50px;
+}
+
+ .titleText p {
+	border-left: 2px solid #2a75ed;
+	padding-left: 9px
+}
+
+.dataBox .shopData .shopInfo {
+	float: left;
+	width: 60%;
+	background: #fff;
+}
+
+.dataBox .shopData .shopInfo .content {
+	padding: 20px 0 50px;
+}
+
+.dataBox .shopData .shopInfo .content .item {
+	float: left;
+	height: 100%;
+	width: 25%;
+	text-align: center;
+	border-left: 1px solid #eee
+}
+
+.dataBox .shopData .shopInfo .content .item .dataNum {
+	margin-top: 13px;
+	font-size: 36px;
+	color: #33bb49;
+}
+.dataBox .shopData .shopInfo .content .item:last-child .dataNum{
+	color:#ff3f5a;
+}
+.dataBox .shopData .shopInfo .content .item .dataText {
+	font-size: 12px;
+	color: #888
+}
+
+/*.dataBox .shopData .shopInfo .content .item:first-child {
+	width: 20%;
+	border-left: none
+}*/
+
+/*.dataBox .shopData .shopInfo .content .item:last-child {
+	width: 30%
+}*/
+
+.dataBox .shopData .shopAccount {
+	float: right;
+	width: 38.8%;
+	background: #fff;
+	
+}
+.shopData{margin-top: 20px;}
+.dataBox .shopData .shopAccount .content .item {
+	width: 100%
+}
+
+.dataBox .shopData .shopAccount .content .item .data {
+	float: left;
+	padding-left: 5%;
+	width: 100%;
+	height: 70px;
+	margin: 15px 0;
+	text-align: center
+}
+
+.dataBox .shopData .shopAccount .content .item .data .dataNum {
+	font-size: 36px;
+	color: #3e3e3e
+}
+
+.dataBox .shopData .shopAccount .content .item .data .dataText {
+	margin: 0 0 7px;
+	font-size: 12px;
+	color: #888
+}
+
+/*.dataBox .shopData .shopAccount .content .item .lastData {
+	border-left: 1px solid #eee
+}*/
+
+.dataBox .shopData .shopAccount .content .item .bottomBtn {
+	margin: 11px 9% 35px 0;
+	float: right;
+	width: 44px;
+	height: 22px;
+	border-radius: 2px;
+	line-height: 20px;
+	text-align: center;
+	font-size: 10px
+}
+
+.dataBox .shopData .shopAccount .content .item .recharge {
+	background: #2a75ed;
+	border: solid 1px #2a75ed;
+	color: #fff
+}
+
+.dataBox .shopData .shopAccount .content .item .record {
+	background: #fafbfc;
+	border: solid 1px #e5e7eb;
+	color: #353535;
+	position: absolute;
+	top:20px;
+	right: 0;
+}
+
+.association .itemBox,.commonFun .itemBox {
+	display: block;
+	float: left;
+	width: 25%;
+	/*height: 100px;*/
+	background-color: #fff;
+	/*margin: 0 0 20px 0;*/
+	padding: 50px 30px 50px 40px;
+}
+
+.association .itemBox div,.commonFun .itemBox div {
+	display: inline-block;
+	width:70%;
+}
+
+.association .itemBox img,.commonFun .itemBox img {
+	vertical-align: top;
+	width: 42px;
+	height: 42px;
+	margin-right: 5px
+}
+
+.association .itemBox span,.commonFun .itemBox span {
+	margin-top: -2px;
+	display: inline-block;
+	line-height: 24px;
+	color: #353535;
+	font-size: 18px
+}
+
+.association .itemBox p,.commonFun .itemBox p {
+	margin-top: 5px;
+	font-size: 12px;
+	color: #888
+}
+
+.marketingTool {
+	margin-bottom: 20px
+}
+
+.marketingTool .cover {
+	width: 20%;
+	padding: 0 10px;
+	float: left;
+	height: 120px
+}
+
+.marketingTool .toolBox {
+	width: 100%;
+	height: 120px;
+	border-radius: 2px;
+	float: left;
+	text-align: center;
+	color: #fff;
+	padding: 30px 0
+}
+
+.marketingTool .toolBox .mtTitle {
+	font-size: 20px
+}
+
+.marketingTool .coupon {
+	background-color: #ff9066
+}
+
+.marketingTool .distribute {
+	background-color: #ffbb64
+}
+
+.marketingTool .invite_code {
+	background-color: #ff7979
+}
+
+.marketingTool .invite_cart {
+	background-color: #66d289
+}
+
+.marketingTool .ditch {
+	background-color: #82aff9
+}
+
+.moreBox {
+	margin-bottom: 40px
+}
+
+.moreBox .moreService,.moreBox .tutorial {
+	float: left;
+	width: 50%
+}
+
+.moreBox .moreService .content,.moreBox .tutorial .content {
+	background-color: #fff;
+	height: 290px
+}
+
+.moreBox .moreService .subContent,.moreBox .tutorial .subContent {
+	float: left;
+	width: 50%
+}
+
+.moreBox .moreService .content {
+	padding: 30px 0 20px 5%;
+	margin-right: 10px
+}
+
+.moreBox .moreService .newHref {
+	display: block;
+	float: left;
+	width: 90%;
+	height: 60px;
+	background-color: #fff;
+	border: solid 1px #eee;
+	padding: 18px 20px;
+	margin: 0 5% 20px 0
+}
+
+.moreBox .moreService .newHref img {
+	vertical-align: top;
+	width: 24px;
+	height: 24px;
+	margin-right: 5px
+}
+
+.moreBox .moreService .newHref span {
+	display: inline-block;
+	line-height: 24px;
+	color: #353535;
+	font-size: 14px
+}
+
+.moreBox .tutorial {
+	padding-left: 10px
+}
+
+.moreBox .tutorial .content {
+	padding-top: 30px
+}
+
+.moreBox .tutorial .content .subHelp {
+	width: 33%;
+	float: left;
+	text-align: center
+}
+
+.moreBox .tutorial .content .item {
+	float: left;
+	margin: 0 20% 30px 20%;
+	width: 110px;
+	height: 100px;
+	overflow: hidden;
+	text-align: center
+}
+
+.moreBox .tutorial .content .item p {
+	font-size: 13px;
+	text-align: center;
+	color: #525252;
+	margin: 0;
+	padding: 0;
+	line-height: 20px
+}
+
+.titleText {
+	/*margin: 20px 0;*/
+	line-height: 60px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #353535;
+	padding: 0 20px;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.titleText a {
+	font-weight: 100;
+	margin-left: 10px;
+	line-height: 20px
+}
+
+.titleText .subText {
+	font-size: 14px;
+	color: #888;
+	font-weight: 500;
+	padding-left: 10px
+}
+
+.goodCase {
+	padding-bottom: 120px;
+	height: 330px
+}
+
+.caseContent {
+	width: 100%;
+	height: 130px;
+	background: #fff;
+	padding: 20px
+}
+
+.caseContent>div {
+	position: relative;
+	cursor: default;
+	float: left;
+	width: 8%;
+	height: 90px;
+	margin-right: 4.5%;
+	text-align: center
+}
+
+.caseContent>div>img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%
+}
+
+.caseContent>div p {
+	margin-top: 10px;
+	font-size: 14px;
+	text-align: center;
+	color: #243042
+}
+
+.caseContent>div .codeContent {
+	display: none;
+	position: absolute;
+	top: 90px;
+	left: -35px;
+	width: 150px;
+	height: 180px;
+	padding: 15px;
+	border-radius: 2px;
+	background-color: #fff;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+	border: solid 1px #dbdbdb
+}
+
+.caseContent>div .codeContent img {
+	display: block;
+	width: 120px;
+	height: 120px
+}
+
+.caseContent>div .codeContent p {
+	font-size: 12px
+}
+
+.caseContent>div:hover .codeContent {
+	display: block
+}
+
+a.bottomBtn,a.itemBox,a.newHref,a.toolBox {
+	transition: .1s linear
+}
+
+a.bottomBtn:hover,a.itemBox:hover,a.newHref:hover,a.toolBox:hover {
+	box-shadow: inset 0 0 1000px rgba(0,0,0,.05)
+}
+
+a.bottomBtn:active,a.itemBox:active,a.newHref:active,a.toolBox:active {
+	box-shadow: inset 0 0 1000px rgba(0,0,0,.1)
+}
+
+a.item {
+	transition: .1s linear;
+	position: relative
+}
+
+a.item:before {
+	content: '';
+	position: absolute;
+	left: 25px;
+	top: 10px;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: rgba(0,0,0,.05);
+	display: none
+}
+
+a.item:hover:before {
+	display: block
+}
+
+a.item:active:before {
+	background: rgba(0,0,0,.1)
+}
+
+.welcomeBoxClose {
+	position: fixed;
+	top: 50px;
+	right: 50px;
+	cursor: pointer
+}
+
+.welcomeBoxClose img {
+	float: left;
+	width: 100%;
+	height: 100%
+}
+
+.salerWelcomeBox {
+	position: absolute;
+	width: 600px;
+	height: 400px;
+	top: 50%;
+	left: 50%;
+	margin-left: -300px;
+	margin-top: -200px;
+	border-radius: 8px;
+	background: #fff;
+	overflow: hidden
+}
+
+.welcomeBoxBanner {
+	width: 100%;
+	height: 200px;
+	background: #fffcf7;
+	overflow: hidden
+}
+
+.welcomeBoxBanner img {
+	display: block;
+	width: 318px;
+	height: 160px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 40px
+}
+
+.welcomeBoxTitle {
+	width: 100%;
+	line-height: 22px;
+	text-align: center;
+	font-size: 16px;
+	color: #353535;
+	font-weight: 500;
+	margin-top: 40px
+}
+
+.welcomeBoxIntro {
+	width: 100%;
+	line-height: 20px;
+	text-align: center;
+	font-size: 14px;
+	color: #666;
+	margin-top: 10px
+}
+
+.enterIntroBtn {
+	width: 160px;
+	position: absolute;
+	left: 50%;
+	bottom: 30px;
+	margin-left: -80px
+}
+
+.baseIcon {
+	position: relative
+}
+
+.baseIcon:after {
+	-webkit-transform: scale(.5);
+	-ms-transform: scale(.5);
+	transform: scale(.5);
+	position: absolute;
+	right: 35px;
+	width: 64px;
+	text-align: center;
+	line-height: 32px;
+	height: 32px;
+	top: 50%;
+	margin-top: -8px;
+	border-radius: 16px;
+	font-size: 20px;
+	font-weight: 500;
+	display: block;
+	color: #fff;
+	-webkit-transform-origin: right top;
+	-ms-transform-origin: right top;
+	transform-origin: right top
+}
+
+.baseIcon.newIcon:after {
+	content: "New";
+	background-color: #fb6161
+}
+
+.baseIcon.hotIcon:after {
+	content: "Hot";
+	background-color: #ffb85e
+}
+
+.darkScreen2.indWel {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	margin-top: 0;
+	opacity: 0;
+	visibility: hidden
+}
+
+.indexWelcomeCloseBtn {
+	position: absolute;
+	right: 60px;
+	top: 60px;
+	cursor: pointer
+}
+
+.darkScreen2.indWel.active {
+	opacity: 1;
+	visibility: visible
+}
+
+.darkScreen2.indWel.ready {
+	transition-property: opacity,visibility;
+	transition-duration: .5s
+}
+
+.indexWelcomeBox {
+	width: 600px;
+	height: 400px;
+	background: #fff;
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden
+}
+
+.indexWelcomeBox>.indConBan {
+	background: #fffcf7;
+	text-align: center
+}
+
+.indexWelcomeCont {
+	text-align: center
+}
+
+.indexWelcomeCont>span {
+	font-size: 16px;
+	color: #353535;
+	font-weight: 500;
+	margin-top: 40px;
+	display: block
+}
+
+.indexWelcomeCont>p {
+	font-size: 14px;
+	color: #666;
+	margin-top: 10px;
+	line-height: 20px;
+	position: relative
+}
+
+.guideBody {
+	width: 622px;
+	height: 520px;
+	border-radius: 4px;
+	background-color: #fff;
+	position: fixed;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	top: 20%
+}
+
+.guideBody .closeGuide {
+	font-weight: 100;
+	color: #fff;
+	font-size: 21px;
+	position: absolute;
+	top: -24px;
+	left: 625px;
+	cursor: pointer
+}
+
+.guideBody .bannerWindow {
+	width: 100%;
+	height: 320px;
+	margin-top: 6px;
+	overflow: hidden
+}
+
+.guideBody .bannerWindow .bannerBox {
+	width: 2488px;
+	font-size: 0;
+	position: relative
+}
+
+.guideBody .bannerFoot {
+	text-align: center;
+	width: 100%;
+	height: 200px;
+	background-color: #fff;
+	box-shadow: 0 -4px 12px 0 rgba(31,67,124,.08);
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px
+}
+
+.guideBody .bannerFoot .guideBtn {
+	width: 120px
+}
+
+.guideBody .bannerFoot .guideMsg {
+	padding: 35px 0 18px 0
+}
+
+.guideBody .bannerFoot .guideMsg .title {
+	color: #2a75ed;
+	font-size: 18px
+}
+
+.guideBody .bannerFoot .markBox {
+	clear: both;
+	margin: 17px auto;
+	width: 67px;
+	height: 10px
+}
+
+.guideBody .bannerFoot .markBox .static {
+	float: left;
+	width: 6px;
+	height: 6px;
+	border: 1px solid #ced5e1;
+	background-color: #ced5e1;
+	border-radius: 50%;
+	margin: 0 5px;
+	cursor: pointer
+}
+
+.guideBody .bannerFoot .markBox .active {
+	border: 1px solid #2a75ed;
+	background-color: #fff
+}
+
+.subClose {
+	position: absolute;
+	right: 7px;
+	top: 7px
+}
+
+.versionAlert {
+	display: none
+}
+
+.vAlertBox {
+	width: 600px;
+	height: 309px;
+	border-radius: 2px;
+	background-color: #fff;
+	position: fixed;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	top: 20%
+}
+
+.vAlertBox .vTitle {
+	font-size: 16px;
+	font-weight: 600;
+	color: #353535;
+	text-align: center;
+	margin: 40px 0 20px 0
+}
+
+.vAlertBox .vContent {
+	margin: 0 61px;
+	line-height: 29px;
+	text-indent: 25px
+}
+
+.vAlertBox .btns {
+	text-align: center;
+	margin-top: 30px
+}
+
+.vAlertBox .btns .btnBlue {
+	width: 120px;
+	margin-left: 18px
+}
+
+/*clear clearfix*/
+.clearfix:after { content: ""; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix {/* zoom: 1; */}
+
+.headerLeft{float: left;}
+.headerLeft .img{width:90px;height: 90px;border-radius: 5px;float: left;background-position:center center;background-repeat:no-repeat;background-size:cover;}
+.headerLeft .info{float: left;margin-left: 20px;padding: 17px 0;}
+.headerLeft .info h2{font-size: 18px;margin: 0;}
+.headerLeft .info span{margin-left: 10px;font-size: 12px;}
+.headerLeft .info span.green{background: #cfefdf;color:#00a854;padding: 3px 10px;border-radius: 3px;}
+.headerLeft .info span.cRed a{color:#ff3f5a;}
+.dataBox .myShop .content p.follow{display: block;font-size: 12px;color:#b2b2b2;font-weight: normal;}
+.dataBox .myShop .content p.follow i{font-style: inherit;}
+.headerLeft .info .bottom{font-size: 12px;}
+.headerLeft .info .bottom p{font-weight: normal;font-size: 12px;margin:15px 0 0;}
+.headerLeft .bottom a{border-radius: 3px;}
+.headerLeft .bottom a.blue{background: #eef6ff;color:#2984e2;}
+.headerLeft .bottom a.blue:hover{background: #d4e8ff;}
+.headerLeft .bottom a.red{background: #ffe8ed;color:#ff4f67;}
+.headerLeft .bottom .A{margin-left: 15px;padding: 5px 15px;}
+
+.headerRight{float: right;}
+.headerRight img{width: 72px;height: 72px;display: block;margin: 0 auto;}
+.dataBox .myShop .content .headerRight p{display: block;font-size: 12px;}
+
+
+.base_mainContent {
+	padding: 0;
+	background-color: #ebebf1;
+}
+
+.header {
+	width: 100%;
+	height: 62px;
+	background-color: #fafbfc
+}
+
+.header ul {
+	width: 100%;
+	height: 100%;
+	list-style: none;
+	padding-left: 0
+}
+
+.header li {
+	float: left;
+	width: 110px;
+	height: 100%;
+	text-align: center
+}
+
+.header a {
+	display: block;
+	color: #243042;
+	font: normal normal normal 16px/62px 'Microsoft YaHei'
+}
+
+.red_prompt {
+	background-color: #629eff
+}
+
+.red_prompt_word a {
+	color: #629eff;
+	background: #fff;
+	display: inline-block;
+	height: 28px;
+	line-height: 28px;
+	border-radius: 2px;
+	padding: 0 5px;
+	margin: 0 10px;
+	font-size: 12px
+}
+
+.close_img_wrapper {
+	background-color: #629eff
+}
+
+.content {
+	width: 100%;
+	height: 650px;
+	background-color: #fff;
+	overflow: hidden;
+	position: relative
+}
+
+.phonePreview {
+	position: absolute;
+	width: auto;
+	height: 500px;
+	left: 76px;
+	top: 48px
+}
+
+.bindH4 {
+	position: absolute;
+	font: normal bold normal 16px/1.5em 'Microsoft YaHei';
+	left: 400px;
+	top: 67px
+}
+
+.homeInfoArea {
+	height: 34px;
+	position: absolute;
+	left: 380px;
+	top: 120px
+}
+
+.infoLabel {
+	margin-right: 15px;
+	text-align: left;
+	width: 145px;
+	line-height: 34px;
+	float: left
+}
+
+.infoValue {
+	float: left
+}
+
+.wxName {
+	height: 34px;
+	position: absolute;
+	left: 500px;
+	top: 175px
+}
+
+#editWxName {
+	float: left;
+	line-height: 34px;
+	color: #2a75ed;
+	margin-left: 20px;
+	cursor: pointer
+}
+
+.wxTitleShow {
+	float: left;
+	line-height: 34px
+}
+
+.titleShow {
+	float: left;
+	line-height: 34px
+}
+
+#edit {
+	float: left;
+	line-height: 34px;
+	color: #2a75ed;
+	margin-left: 20px;
+	cursor: pointer
+}
+
+#save,
+#saveWx {
+	float: left;
+	line-height: 34px;
+	color: #2a75ed;
+	margin-left: 20px;
+	cursor: pointer
+}
+
+.bindInfoArea {
+	height: 34px;
+	position: absolute;
+	left: 500px;
+	top: 230px
+}
+
+.qrcodeArea {
+	height: 34px;
+	position: absolute;
+	left: 500px;
+	top: 285px
+}
+
+.copyButton {
+	width: 42px;
+	height: 24px;
+	float: left;
+	border-radius: 2px;
+	border: solid 1px #2a75ed;
+	color: #2a75ed;
+	text-align: center;
+	font-size: 12px;
+	line-height: 20px;
+	background-color: #fff;
+	margin: 6px 0 0 20px
+}
+.copyButton:hover{
+	background: #2a75ed;
+	color:#fff;
+}
+/*#ZeroClipboardMovie_1 {
+	margin-top: -16px
+}*/
+
+.no_wx_temp1 {
+	position: absolute;
+	font: normal bold normal 16px/1.5em 'Microsoft YaHei';
+	left: 400px;
+	top: 70px
+}
+
+.no_wx_temp2 {
+	position: absolute;
+	font-size: 14px;
+	left: 400px;
+	top: 120px;
+	color: #b8b8b8
+}
+
+.no_wx_temp3 {
+	width: 180px;
+	height: 42px;
+	position: absolute;
+	left: 400px;
+	top: 170px;
+	font-size: 16px;
+	line-height: 42px;
+	border-radius: 4px;
+	color: #fff;
+	text-align: center;
+	background-color: #2a75ed
+}
+
+.no_wx_temp3:hover {
+	color: #fff
+}
+
+.appendText {
+	display: none;
+	z-index: 10001;
+	position: absolute;
+	left: 320px;
+	top: 10px;
+	width: 260px;
+	color: #fff
+}
+
+.appendText .textBtn {
+	cursor: pointer;
+	width: 100px;
+	line-height: 34px;
+	margin-top: 20px;
+	text-align: center;
+	border: 1px solid #fff;
+	border-radius: 3px
+}
+
+#mask {
+	display: none;
+	z-index: 1000;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	border: solid rgba(0, 0, 0, .5)
+}
+
+.cRed-time{
+	display: inline-block;
+	vertical-align: middle;
+	margin-top:5px;
+	width:130px;
+}
+.count-down{
+	display: inline-block;
+	vertical-align: middle;
+}
+.cRed-time .time-over{
+	display: block;
+	margin-top:6px;
+}
+.cRed-time .time-over:hover{
+	color:#33bb49;
+}
+.cRed-time .cRed{
+	font-size: 14px !important;
+}
+.headerLeft .img{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 17px 0;
+}
+.headerLeft .infor{
+	display: inline-block;
+	vertical-align: middle;
+}
+.count-down .cbuld{
+	float:left;
+	background:rgba(0,0,0,0.3);
+	border-radius: 4px;
+	text-align: center;
+	color:#fff !important;
+	font-size: 12px !important;
+	margin-right:10px;
+	padding:2px;
+	margin-right:12px !important;
+}
+.count-down .cbuld .time-size{
+	font-size: 21px !important;
+	display: inline-block;
+}
+.count-down .cbutext{
+	float:left;
+	margin-top:12px;
+}
+.count-down .cbuld span{
+	margin:0;
+}
+
+
+
+
+
+

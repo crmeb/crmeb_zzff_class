@@ -1,0 +1,19 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+{block name="head_top"}
+<style>
+    .content{
+        padding: 0.3rem;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="search-page" id="app">
+    <div class="content">
+        {$content}
+    </div>
+</div>
+{/block}
+{block name='foot'}
+
+{/block}

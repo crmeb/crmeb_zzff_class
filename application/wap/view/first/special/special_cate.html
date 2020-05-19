@@ -1,0 +1,220 @@
+{extend name="public/container"}
+{block name="title"}分类{/block}
+{block name="head_top"}
+<style>
+    .free{margin-top:.1rem;font-weight:400;font-size:.22rem;line-height:.38rem;color:#feb720;}
+</style>
+<script src="/wap/first/zsff/js/scroll.js"></script>
+<script src="/wap/first/zsff/js/navbarscroll.js"></script>
+{/block}
+{block name="content"}
+<div class="goodsClass" id="app" v-cloak>
+    <div class="header">
+        <div class="search acea-row row-center-wrapper">
+            <div class="pictrue">{if $homeLogo}<img src="{$homeLogo}">{else}<img
+                    src="/wap/first/zsff/images/crmeb.png">{/if}
+            </div>
+            <div class="input acea-row row-middle">
+                <img src="/wap/first/zsff/images/search.png">
+                <form method="post" @submit.prevent="goSearch">
+                    <input type="text" placeholder="输入课程名称" v-model="search">
+                </form>
+            </div>
+        </div>
+        <div class="wrapper" id="wrapper">
+            <div class="scroller">
+                <ul>
+                    <li v-for="item in grabeCate" :data-id="item.id">
+                        <a href="javascript:void(0)" v-text="item.name"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="nav" id="nav">
+        <div class="scroller">
+            <ul>
+                <li class="item" :class="subjectId == item.id ? 'on': ''" v-for="item in subjectCate"
+                    @click="subjectId = item.id">
+                    <a href="javascript:void(0)">
+                        <div class="pictrue"><img :src="item.pic"></div>
+                        <div class="name" v-text="item.name"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="public_list goodList">
+        <a class="item acea-row row-between-wrapper" v-for="item in updateSpecialList" :href="getDetails(item.id)">
+            <div class="pictrue">
+                <img :src="item.image">
+                <div class="label">{{ item.type }}</div>
+            </div>
+            <div class="text">
+                <div class="title acea-row row-middle">
+                    <div class="name line1" v-text="item.title"></div>
+                </div>
+                <div class="labelList" style="height:.4rem;line-height:.4rem;">
+                    <span class="labelItem" v-for="label in item.label">{{label}}</span>
+                </div>
+                <div class="acea-row row-middle row-between">
+                    <div class="money" v-if="item.money > 0"><span class="yen">￥</span>{{item.money}}</div>
+                    <div class="free" v-else>免费</div>
+                    <div class="num">{{item.browse_count}}人已学习</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <p class="loading-line" style="background-color: #ffffff" v-cloak>
+        <span v-show="loading == true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+    <div style="height: 1.0rem"></div>
+    {include file="public/store_menu"}
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var cate_id = {$cate_id};
+    require(['vue', 'helper', 'store', 'special-type'], function (Vue, $h, app, specialType) {
+        new Vue({
+            el: '#app',
+            data: {
+                grabeCate: [],
+                subjectCate: [],
+                specialList: [],
+                gradeId: 0,
+                subjectId: 0,
+                search: '',
+                loadTitle: '',
+                loading: false,
+                limit: 10,
+                page: 1,
+                loadend: false,
+            },
+            computed: {
+                updateSpecialList: function () {
+                    return this.specialList.map(function (value) {
+                        value.type = specialType[value.type];
+                        return value;
+                    });
+                }
+            },
+            watch: {
+                gradeId: function (n) {
+                    this.getSubject();
+                },
+                subjectId: function (n) {
+                    if (n == 0) return;
+                    this.loadend = false;
+                    this.page = 1;
+                    this.$set(this, 'specialList', []);
+                    this.getSpecialList();
+                }
+            },
+            created: function () {
+            },
+            mounted: function () {
+                this.getCateList();
+            },
+            methods: {
+                goSearch: function () {
+                    this.loadend = false;
+                    this.page = 1;
+                    this.$set(this, 'specialList', []);
+                    this.getSpecialList();
+                },
+                getDetails: function (id) {
+                    return $h.U({
+                        c: 'special',
+                        a: 'details',
+                        q: { id: id }
+                    });
+                },
+                getCateList: function () {
+                    var that = this;
+                    app.baseGet($h.U({ c: 'special', a: 'get_grade_cate' }), function (res) {
+                        that.$set(that, 'grabeCate', res.data.data);
+                        var defaultSelect = 0;
+                        if (cate_id) {
+                            for (var i = 0; i < that.grabeCate.length; i++) {
+                                if (cate_id == that.grabeCate[i].id) {
+                                    defaultSelect = i;
+                                    break;
+                                }
+                            }
+                            that.gradeId = cate_id;
+                        }
+                        that.$nextTick(function () {
+                            $('#wrapper').navbarscroll({
+                                defaultSelect: defaultSelect,
+                                scrollerWidth: 5,
+                                fingerClick: 1,
+                                endClickScroll: function (obj) {
+                                    that.gradeId = obj.data('id');
+                                }
+                            });
+                        })
+                    });
+                },
+                getSubject: function () {
+                    var that = this;
+                    app.baseGet($h.U({
+                        c: 'special',
+                        a: 'get_subject_cate',
+                        q: { grade_id: this.gradeId }
+                    }), function (res) {
+                        that.$set(that, 'subjectCate', res.data.data);
+                        if (that.subjectCate.length) {
+                            that.subjectId = that.subjectCate[0].id;
+                            that.$nextTick(function () {
+                                $('#nav').navbarscroll({
+                                    defaultSelect: 0,
+                                    scrollerWidth: 5,
+                                    fingerClick: 1,
+                                    endClickScroll: function (obj) {
+                                    }
+                                });
+                            })
+                        } else {
+                            that.subjectId = 0;
+                            that.$set(that, 'specialList', []);
+                        }
+                    });
+                },
+                getSpecialList: function () {
+                    var that = this;
+                    if (that.loadend) return;
+                    if (that.loading) return;
+                    that.loading = true;
+                    that.loadTitle = '';
+                    app.baseGet($h.U({
+                        c: 'special',
+                        a: 'get_special_list',
+                        q: { subject_id: that.subjectId, search: that.search, page: that.page, limit: that.limit }
+                    }), function (res) {
+                        var list = res.data.data;
+                        var specialList = $h.SplitArray(list, that.specialList);
+                        that.loading = false;
+                        that.page++;
+                        that.loadend = list.length < that.limit;
+                        that.loadTitle = that.loadend ? '我是有底线的' : '上拉加载更多';
+                        that.$set(that, 'specialList', specialList);
+                        that.EventUtil();
+                    }, function (res) {
+                        that.loading = false;
+                        this.loadTitle = '加载更多';
+                    });
+                },
+                EventUtil: function () {
+                    this.$nextTick(function () {
+                        $h.EventUtil.listenTouchDirection(document, function () {
+                            this.loading == false && this.getSpecialList();
+                        }.bind(this), false);
+                    })
+                }
+            }
+        });
+    })
+</script>
+{/block}

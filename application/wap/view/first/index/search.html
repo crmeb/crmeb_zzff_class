@@ -1,0 +1,118 @@
+{extend name="public/container"}
+{block name="title"}搜索{/block}
+{block name="head_top"}
+<style>
+    body{background-color:#f2f2f2;}
+</style>
+{/block}
+{block name="content"}
+<div class="search-page" id="app">
+    <div class="header acea-row row-between-wrapper">
+        <form method="post" @submit.prevent="goSearch" style="display: inherit;">
+            <div class="input acea-row row-between-wrapper">
+                <span class="iconfont icon-sousuo"></span>
+                <input v-model="search" type="text" placeholder="请输入课程名称">
+            </div>
+            <button type="submit" class="searchBnt">搜索</button>
+        </form>
+    </div>
+    <!--热门搜索-->
+    <div class="hotSearch" v-if="searchList.special.length < 1 && searchList.tash.length < 1 && search=='' " v-cloak="">
+        <div class="title line1">热门搜索</div>
+        <div class="list acea-row row-middle">
+            <div class="item" v-for="item in hotSearch" v-text="item" @click="goSearch(item)">正在加载</div>
+        </div>
+    </div>
+    <div class="searchResult swiper-details" v-if="(searchList.special.length || searchList.tash.length) && search" v-cloak="">
+        <div class="title acea-row row-middle line1" v-if="searchList.special.length">专题</div>
+        <div class="swiper-list2">
+            <div class="item acea-row row-between-wrapper" v-for="item in searchList.special">
+                <a class="pictrue" :href="getSpecialUrl(item.id)"><img :src="item.image"></a>
+                <div class="underline">
+                    <a class="text-pic acea-row row-column" :href="getSpecialUrl(item.id)">
+                        <div class="name line1" v-text="item.title"></div>
+                        <div class="notes line1" v-text="item.abstract"></div>
+                        <div class="bottom acea-row row-between-wrapper">
+                            <div class="acea-row row-middle">
+                                <div class="num acea-row row-center-wrapper" v-for="(vo,index) in item.label" v-text="vo" v-if="index <= 1"></div>
+                            </div>
+                            <div class="money">{{item.is_pink ? (item.pink_money == 0 ? '免费':'￥'+item.pink_money): (item.money <= 0 ? '免费':'￥'+item.money) }}</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <a class="more acea-row row-middle row-right" v-if="searchList.special.length > limit" :href="getMoreList(0)">查看更多></a>
+        <div class="title acea-row row-middle line1" v-if="searchList.tash.length">任务视频</div>
+        <div class="video-listn">
+            <div class="item acea-row row-between-wrapper" v-for="item in searchList.tash">
+                <a class="pictrue" :href="getTashUrl(item.special_id)"><img :src="item.image"></a>
+                <div class="underline">
+                    <a class="text acea-row row-center row-column" :href="getTashUrl(item.special_id)">
+                        <div class="name line1" v-text="item.title"></div>
+                        <div class="num acea-row row-middle"><span class="iconfont icon-bofang1"></span>{{item.play_count}}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <a class="more acea-row row-middle row-right" v-if="searchList.tash.length > limit" :href="getMoreList(1)">查看更多></a>
+    </div>
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="" v-if="searchList.special.length < 1 && searchList.tash.length < 1 && search && is_search">
+        <span>没有搜索到更多内容</span>
+    </p>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                search:'',
+                hotSearch:[],
+                searchList:{special:[],tash:[]},
+                loading:false,
+                limit:2,
+                is_search:false,
+            },
+            watch:{
+                search:function (n) {
+                    if(n=='') this.$set(this,'searchList',{special:[],tash:[]});
+                }
+            },
+            methods:{
+                getMoreList:function(type){
+                    return $h.U({c:'index',a:'more_list',p:{type:type},q:{search:this.search}});
+                },
+                getSpecialUrl:function(id){
+                    return $h.U({c:'special',a:'details',q:{id:id}});
+                },
+                getTashUrl:function(id){
+                    return $h.U({c:'special',a:'details',q:{id:id}})+'#act2';
+                },
+                get_host_search:function () {
+                    app.baseGet($h.U({c:'index',a:'get_host_search'}),function (res) {
+                        this.$set(this,'hotSearch',res.data.data);
+                    }.bind(this));
+                },
+                goSearch:function (name) {
+                    if(typeof name=='string' && name) this.search=name;
+                    if(this.search=='') return;
+                    if(this.loading) return;
+                    this.loading=true;
+                    app.baseGet($h.U({c:'index',a:'go_search',q:{search:this.search,limit:this.limit+1}}),function (res) {
+                        this.loading=false;
+                        this.$set(this,'searchList',res.data.data);
+                        this.is_search=res.data.data.special.length < 1 && res.data.data.tash.length < 1 ? true :false;
+                    }.bind(this),function () {
+                        this.loading=false;
+                    }.bind(this));
+                }
+            },
+            mounted:function () {
+                this.get_host_search();
+            }
+        })
+    })
+</script>
+{/block}

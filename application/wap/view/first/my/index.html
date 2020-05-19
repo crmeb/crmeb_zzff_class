@@ -1,0 +1,291 @@
+{extend name="public/container"}
+{block name="title"}个人中心{/block}
+{block name='head_top'}
+<style>
+    body {
+        background-color: #F7F4F8
+    }
+
+    .mask h4 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        margin-top: 1rem;
+        color: #ffffff;
+        font-size: 0.5rem;
+        text-align: center;
+    }
+
+    .mask .code {
+        width: 100%;
+        display: flex;
+        align-items: center
+    }
+
+    .mask .code .image {
+        height: 5rem;
+        width: 5rem;
+        margin: 0 auto;
+    }
+
+    .support {
+        width: 2.19rem;
+        height: .74rem;
+        margin: .54rem auto;
+        display: block;
+    }
+
+    .mask .button {
+        display: inherit;
+        text-align: center;
+        font-size: 0.28rem;
+        color: #fff;
+        width: 1.5rem;
+        height: 0.6rem;
+        background-color: #509efb;
+        line-height: 0.6rem;
+        border-radius: 0.5rem;
+        margin: 1rem auto;
+    }
+
+    .userNew .vip-wrap {
+        width: 6.9rem;
+        height: 1.06rem;
+        padding: .24rem .28rem 0 .32rem;
+        border-bottom-right-radius: .16rem;
+        border-bottom-left-radius: .16rem;
+        margin: -.24rem auto 0;
+        font-weight: 500;
+        font-size: .28rem;
+        background-color: #fcedd3;
+        color: #966c23;
+    }
+
+    .userNew .vip-wrap svg {
+        font-size: .37rem;
+    }
+
+    .userNew .vip-wrap .name {
+        flex: 1;
+        margin-right: .25rem;
+        margin-left: .25rem;
+    }
+
+    .userNew .vip-wrap .btn {
+        width: 1.6rem;
+        height: .5rem;
+        border-radius: .5rem;
+        font-weight: 500;
+        font-size: .24rem;
+        line-height: .5rem;
+        text-align: center;
+        background-image: linear-gradient(to right, #f6ddbe, #f1be74);
+        color: #63440e;
+    }
+
+    .vip-state {
+        display: inline-block;
+        padding-right: .12rem;
+        padding-left: .12rem;
+        border-radius: .21rem;
+        font-weight: 400;
+        font-size: .2rem;
+        line-height: .36rem;
+        background-color: #fff8ed;
+        color: #966c23;
+    }
+
+    .vip-state svg {
+        vertical-align: middle;
+        font-size: .23rem;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="userNew" id="app" v-cloak>
+    <div class="header acea-row row-between-wrapper" @click="goUrl('{:Url('user_info')}')">
+        <div class="picTxt acea-row row-middle">
+            <!-- <div class="pictrue">{if $userInfo['uid']}<img src="{$userInfo.avatar}">{else}<img
+                    src="/system/images/user_log.jpg">{/if}</div>
+            <div class="name line1">{if $userInfo['uid']}{$userInfo.nickname}{else}请登陆{/if}</div> -->
+
+            <div class="pictrue">
+                {if $userInfo['uid']}
+                <img src="{$userInfo.avatar}">
+                {else}
+                <img src="/wap/first/zsff/images/avatar_default.png">
+                {/if}
+            </div>
+            <div>
+                {if $userInfo['uid']}
+                <div class="name line1">{$userInfo.nickname}</div>
+                {else}
+                <div class="name line1">请登陆</div>
+                {/if}
+                {if $userInfo['level'] eq 1}
+                <div class="vip-state">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#iconhuiyuan"></use>
+                    </svg>
+                    {$overdue_time}到期
+                    <!-- 会员已过期 -->
+                </div>
+                {elseif $userInfo['level'] eq 0 && $userInfo['overdue_time'] neq 0}
+                <div class="vip-state">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#iconhuiyuan"></use>
+                    </svg>
+                    会员已过期
+                </div>
+                {/if}
+            </div>
+        </div>
+        <div class="iconfont icon-icon-yxj-arrow-right"></div>
+    </div>
+    <div class="nav acea-row row-middle">
+        <div class="item" @click="goUrl('{:Url('special/grade_list')}')">
+            <div class="pictrue"><img src="/wap/first/zsff/images/u_n01.png"></div>
+            <div class="name">我的课程</div>
+            <div class="info">管理您的课程订单</div>
+        </div>
+        <div class="item" @click="goUrl('{:Url('special/record')}')">
+            <div class="pictrue"><img src="/wap/first/zsff/images/u_n02.png"></div>
+            <div class="name">学习记录</div>
+            <div class="info">共有{$recordNumber}条记录</div>
+        </div>
+        <div class="item" @click="goUrl('{:Url('special/grade_list',['type'=>1])}')">
+            <div class="pictrue"><img src="/wap/first/zsff/images/u_n03.png"></div>
+            <div class="name">我的收藏</div>
+            <div class="info">已收藏{$collectionNumber}个</div>
+        </div>
+    </div>
+    <div class="list">
+        <div class="item acea-row row-between-wrapper" @click="goUrl('{:Url('my_gift')}')">
+            <div class="picTxt acea-row row-middle">
+                <div class="pictrue"><img src="/wap/first/zsff/images/u01.png"></div>
+                <div class="name">我的赠送</div>
+            </div>
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+        <div class="item acea-row row-between-wrapper" @click="goUrl('{:Url('spread/spread')}')">
+            <div class="picTxt acea-row row-middle">
+                <div class="pictrue"><img src="/wap/first/zsff/images/u02.png"></div>
+                <div class="name">推广中心</div>
+            </div>
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+        <div class="item acea-row row-between-wrapper" @click="location.href='{:Url('about_us')}'">
+            <div class="picTxt acea-row row-middle">
+                <div class="pictrue"><img src="/wap/first/zsff/images/u03.png"></div>
+                <div class="name">关于我们</div>
+            </div>
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+        <div class="item acea-row row-between-wrapper" @click="goUrl('{:Url('service/service_list')}')">
+            <div class="picTxt acea-row row-middle">
+                <div class="pictrue"><img src="/wap/first/zsff/images/u04.png"></div>
+                <div class="name">咨询客服</div>
+            </div>
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+        {if $phone && !$isWechat}
+        <div class="item acea-row row-between-wrapper" @click="logout">
+            <div class="picTxt acea-row row-middle">
+                <div class="pictrue"><img src="/wap/first/zsff/images/logout.png"></div>
+                <div class="name">退出</div>
+            </div>
+            <div class="iconfont icon-icon-yxj-arrow-right"></div>
+        </div>
+        {/if}
+    </div>
+
+    <div style="height:1.2rem;"></div>
+    <enter :appear="appear" @change="changeVal" :url="url" :site_name="site_name"></enter>
+    <div class="mask" @touchmove.prevent style="z-index: 100;" v-show="isfollow">
+        <h4>立即绑定微信公众号用户</h4>
+        <div class="code">
+            <img :src="codeUrl" class="image">
+        </div>
+        <div class="button" @click.stop="skip">跳过</div>
+    </div>
+    <img class="support" src="{__WAP_PATH}zsff/images/crmeb_my.png">
+    {include file="public/store_menu"}
+</div>
+<script>
+    var site_name = '{$Auth_site_name}';
+    require(['vue', 'helper', 'store', '{__WAP_PATH}zsff/js/enter.js'], function (Vue, $h, app) {
+        new Vue({
+            el: '#app',
+            data: {
+                appear: true,
+                codeUrl: '',
+                isfollow: false,
+                url: $h.U({ c: 'login', a: 'phone_check' }),
+                site_name: site_name,
+            },
+            mounted: function () {
+            },
+            methods: {
+                skip: function () {
+                    this.isfollow = false;
+                    this.appear = true;
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 800);
+                },
+                loginClose: function () {
+                    this.appear = true;
+                },
+                logComplete: function (data) {
+                    var that = this;
+                    if (!data.isfollow) {
+                        this.codeUrl = data.url;
+                        this.isfollow = true;
+                        var qcode_id = data.qcode_id;
+                        var interval = setInterval(function () {
+                            app.baseGet($h.U({ c: 'index', a: 'qcode_login', q: { qcode_id: qcode_id } }), function (res) {
+                                clearInterval(interval);
+                                that.isfollow = false;
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 800);
+                            }, null, true);
+                        }, 1000);
+                    } else {
+                        that.appear = true;
+                        window.location.reload();
+                    }
+                },
+                goUrl: function (url) {
+                    var that = this;
+                    app.baseGet($h.U({ c: 'index', a: 'login_user' }), function (res) {
+                        window.location.href = url;
+                    }, function () {
+                        that.appear = false;
+                    });
+                },
+                //所有插件回调处理事件
+                changeVal: function (opt) {
+                    if (typeof opt != 'object') opt = {};
+                    var action = opt.action || '';
+                    var value = opt.value || '';
+                    this[action] && this[action](value);
+                },
+                enter: function () {
+                    this.appear = false;
+                },
+                change: function (title) {
+                    this.appear = title;
+                },
+                logout: function () {
+                    var that = this;
+                    app.baseGet($h.U({ c: 'my', a: 'logout' }), function (res) {
+                        $h.pushMsgOnce(res.data.msg, function () {
+                            location.reload();
+                        });
+                    });
+                }
+            }
+        })
+    })
+</script>
+{/block}

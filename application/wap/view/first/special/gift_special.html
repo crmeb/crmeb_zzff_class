@@ -1,0 +1,42 @@
+{extend name="public/container"}
+{block name='head_top'}
+<style>
+    body{background-color: #509efb}
+</style>
+{/block}
+{block name="content"}
+<div class="present-topics">
+    <div class="white">
+        <div class="pictrue"><img src="{$userInfo.avatar}"></div>
+        <div class="tip">{$userInfo.nickname}发礼物啦</div>
+        <div class="giftName">{$special.title}</div>
+        <div class="pictrue2"><img src="{$special.image}"></div>
+        <div class="sendBnt acea-row row-center-wrapper">发送给朋友</div>
+        <a class="see" href="{:Url('gift_receive',['orderId'=>$orderId])}" style="display: inherit;">查看领取详情 ></a>
+    </div>
+    <!--<div class="pictrue3"><img src="{$special_gift_banner}"></div>-->
+</div>
+<div class="shares-model" style="display: none">
+    <img style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;" src="{__WAP_PATH}zsff/images/share-info.png">
+</div>
+<script>
+    $('.shares-model').on('touchmove',function(e){
+        e.preventDefault();
+    });
+    $('.sendBnt').on('click',function () {
+        $('.shares-model').show();
+    });
+    $('.shares-model').on('click',function () {
+        $('.shares-model').hide();
+    })
+    window.overallShare=false;
+    mapleWx($jssdk(), function () {
+        this.onMenuShareAll({
+            title: '手慢无!{$userInfo.nickname}发送礼物啦! {$special.title}',
+            desc: "{$special.abstract}",
+            imgUrl: '{$special.image}',
+            link: '{$site_url}'
+        });
+    });
+</script>
+{/block}

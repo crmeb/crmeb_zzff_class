@@ -1,0 +1,226 @@
+{extend name="public/container"}
+{block name='head_top'}
+<style>
+    body {
+        background-color: #f2f2f2;
+    }
+</style>
+<link href="{__WAP_PATH}zsff/layer_mobile/need/layer.css" rel="stylesheet">
+<script src="{__WAP_PATH}zsff/layer_mobile/layer.js"></script>
+{/block}
+{block name='title'}我的推广人{/block}
+{block name="content"}
+<div class="my-promoter" id="app" ref="spreadlist">
+    <nav class="acea-row row-between-wrapper">
+        <div class="item">
+            <div>推广人(人)</div>
+            <div class="num">{$data.one_spread_count}</div>
+        </div>
+        <div class="item">
+            <div>总售出订单(个)</div>
+            <div class="num">{$data.order_count}</div>
+        </div>
+    </nav>
+    <div class="search acea-row row-center-wrapper" @click="dis=false">
+        <form @submit.prevent='search'>
+            <span class="iconfont icon-sousuo"></span>
+            <input type="text" placeholder="搜索" v-model="where.search" class="input" :class="dis==false?'on':''" style="border: none;margin: 0;padding: 0;">
+        </form>
+    </div>
+    <div class="list" v-cloak="" ref="list">
+        <div class="nav acea-row row-middle">
+            <div class="item item1">昵称</div>
+            <div class="item item2">手机号</div>
+            <div class="item item3" @click="order(1)" v-if="!action">售出专题
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-qiehuan-copy" v-if=" where.special_order=='desc' "></use>
+                    <use xlink:href="#icon-qiehuan-copy1" v-else-if="where.special_order=='asc'"></use>
+                </svg>
+            </div>
+            <div class="item item4" @click="order(2)" v-if="!action">售出金额
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-qiehuan-copy" v-if=" where.now_money_order=='desc' "></use>
+                    <use xlink:href="#icon-qiehuan-copy1" v-else-if="where.now_money_order=='asc'"></use>
+                </svg>
+                <!--icon-qiehuan-->
+            </div>
+            <div class="item item3" v-if="action">操作</div>
+        </div>
+        <div v-if="is_promoter == 1 && is_senior==0" style="padding-top: 2.5rem;text-align: center;">
+            <p>抱歉，您当前无权邀请下属推广人哦~</p>
+            <p>如有疑问，请联系客服</p>
+        </div>
+        <div v-else>
+            <div class="listcon acea-row row-middle" v-for="(item,index) in spreadList">
+                <div class="item item1 line1" v-text="item.nickname"></div>
+                <div class="item item2" v-text="item.phone"></div>
+                <div class="item item3" v-text="item.sellout_count" v-if="!action"></div>
+                <div class="item item4" v-text="item.sellout_money" v-if="!action"></div>
+                <div class="item item3" v-if="action" @click="removeSpread(index,item.uid)" style="color:#509efb;">移除推广人</div>
+            </div>
+            <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+                <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+                <span v-text="loadTitle">加载更多</span>
+            </p>
+        </div>
+
+    </div>
+    <div style="height:1.2rem;"></div>
+    <div class="footer acea-row row-center" v-if="is_promoter != 1 || is_senior">
+        <a class="increase increase1" v-text="spreadTitle" @click="spreadAct"></a>
+        <a class="increase" href="{:Url('poster_spread')}" ref="storeMenu">新增推广人</a>
+    </div>
+</div>
+{/block}
+{block name="foot"}
+<script>
+    var is_promoter={$userInfo.is_promoter ? : 0},is_senior = {$userInfo.is_senior};
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                dis:true,
+                where:{
+                    special_order:'desc',
+                    now_money_order:'desc',
+                    page:1,
+                    limit:10,
+                    search:'',
+                },
+                is_senior:is_senior,
+                is_promoter:is_promoter,
+                spreadTitle:'推广人管理',
+                action:false,
+                loading:false,
+                loadend:false,
+                loadTitle:'上拉加载更多',
+                spreadList:[],
+            },
+            mounted:function(){
+                this.getSpreadList();
+
+            },
+            methods:{
+                removeSpread:function(index,uid){
+                    var that = this;
+                    //询问框
+                    layer.open({
+                        content: '确认移除吗，确认后不可恢复哦~？'
+                        ,btn: ['确定','取消']
+                        ,yes: function(index){
+                            app.baseGet($h.U({c:'spread',a:'remove_spread',q:{uid:uid}}),function (res) {
+                                that.spreadList.splice(index,1);
+                                that.$set(that,'spreadList',that.spreadList);
+                                layer.close(index);
+                                layer.open({
+                                    content:res.data.msg
+                                    ,skin: 'msg'
+                                    ,time: 2 //2秒后自动关闭
+                                });
+                                setTimeout(location.reload(),5000);
+                            });
+                        }
+                    });
+                },
+                spreadAct:function(){
+                    this.action = !this.action;
+                    this.spreadTitle = this.action ? '取消推广人管理': '推广人管理';
+                },
+                order:function(action){
+                    var spreadList=[];
+                    switch (action){
+                        case 1:
+                            if(this.where.special_order=='')
+                                spreadList=this.sortCountOrder(true);
+                            else if(this.where.special_order=='desc')
+                                spreadList=this.sortCountOrder(false);
+                            else if(this.where.special_order=='asc')
+                                spreadList=this.sortCountOrder(true);
+                            break;
+                        case 2:
+                            if(this.where.now_money_order=='')
+                                spreadList=this.sortMoneyOrder(true);
+                            else if(this.where.now_money_order=='desc')
+                                spreadList=this.sortMoneyOrder(false);
+                            else if(this.where.now_money_order=='asc')
+                                spreadList=this.sortMoneyOrder(true);
+                            break;
+                    }
+                    this.$set(this,'spreadList',spreadList);
+                },
+                sortMoneyOrder:function(isDe){
+                    if(isDe){
+                        this.where.now_money_order='desc';
+                        return this.spreadList.sort(function (a,b) {
+                            return parseFloat(b.sellout_money) - parseFloat(a.sellout_money);
+                        });
+                    }else{
+                        this.where.now_money_order='asc';
+                        return this.spreadList.sort(function (a,b) {
+                            return parseFloat(a.sellout_money) - parseFloat(b.sellout_money);
+                        });
+                    }
+                },
+                sortCountOrder:function(isDe){
+                    if(isDe){
+                        this.where.special_order='desc';
+                        return this.spreadList.sort(function (a,b) {
+                            return parseFloat(b.sellout_count) - parseFloat(a.sellout_count);
+                        });
+                    }else{
+                        this.where.special_order='asc';
+                        return this.spreadList.sort(function (a,b) {
+                            return parseFloat(a.sellout_count) - parseFloat(b.sellout_count);
+                        });
+                    }
+                },
+                search:function (){
+                    this.where.page=1;
+                    this.loadend=false;
+                    this.$set(this,'spreadList',[]);
+                    this.getSpreadList();
+                },
+                getSpreadList:function(){
+                      var that=this;
+                      if(that.loading) return;
+                      if(that.loadend) return;
+                      that.loadTitle='';
+                      that.loading=true;
+                      app.baseGet($h.U({c:'spread',a:'spread_list',q:that.where}),function (res) {
+                          var list=res.data.data.list;
+                          var spreadList=$h.SplitArray(list,that.spreadList);
+                          that.loading=false;
+                          that.loadend=list.length < that.where.limit;
+                          that.loadTitle=that.loadend ? '已全部加载': '上拉加载更多';
+                          that.where.page=res.data.data.page;
+                          that.$set(that,'spreadList',spreadList);
+                          that.$nextTick(function () {
+                              that.bScrollInit();
+                          })
+                      },function (res) {
+                          that.loading=false;
+                          that.loadTitle='上拉加载更多';
+                      });
+                },
+                //滑动底部加载
+                bScrollInit:function(){
+                    var that = this;
+                    this.$refs.spreadlist.style.height = (
+                        document.documentElement.clientHeight-
+                        this.$refs.storeMenu.offsetHeight
+                    )+'px';
+                    this.$refs.spreadlist.style.overflowY = 'scroll';
+                    $(this.$refs.spreadlist).on('scroll',function(){
+                        var scrollTop = $(this).scrollTop();
+                        var scrollHeight = $(that.$refs.list).height();
+                        var windowHeight = $(this).height();
+                        if ((scrollTop + windowHeight) >= scrollHeight) {
+                            that.loading == false && that.getSpreadList();
+                        }
+                    })
+                },
+            }
+        });
+    })
+</script>
+{/block}

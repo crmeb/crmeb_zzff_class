@@ -1,0 +1,136 @@
+{extend name="public/container"}
+{block name="title"}开团成功{/block}
+{block name="content"}
+<div class="initiate-group" id="app" v-cloak="">
+    <div class="header acea-row row-between-wrapper">
+        <div class="text-pic acea-row row-between-wrapper">
+            <div class="pictrue"><img :src="special.image"></div>
+            <div class="text acea-row row-between">
+                <div class="line1" v-text="special.title"></div>
+                <div class="money">¥ {{special.money}}</div>
+            </div>
+        </div>
+        <div class="label acea-row row-center-wrapper" v-if="uid==pinkT.uid">开团成功</div>
+        <div class="label acea-row row-center-wrapper" v-else>拼团成功</div>
+    </div>
+    <div class="teamwork" v-cloak="">
+        <div class="list acea-row row-center-wrapper">
+            <div class="pictrue">
+                <img src="{__WAP_PATH}zsff/images/king.png" class="king">
+                <img :src="pinkT.avatar">
+            </div>
+            <div class="pictrue" v-for="item in pinkAll"><img :src="item.avatar"></div>
+            <div class="pictrue" v-for="item in info.count"><img src="{__WAP_PATH}zsff/images/symbol.png"></div>
+        </div>
+        <div class="tiptime">仅剩{{info.count}}人，剩余时间<span class="time">{{hour}}: {{minute}}: {{second}}</span></div>
+    </div>
+    <div class="shares-model" v-show="shares" @click="shares=false">
+        <img style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;" src="{__WAP_PATH}zsff/images/share-info.png">
+    </div>
+    <div class="acea-row row-center-wrapper" v-if="!pinkBool">
+        <a class="bnt acea-row row-center-wrapper" :href="getPinkUrl()">朋友圈海报</a>
+        <div class="bnt invite acea-row row-center-wrapper" @click="shares=true">邀请朋友拼课</div>
+    </div>
+    <div class="acea-row row-center-wrapper" v-else-if="pinkBool==1">
+        <a class="bnt invite acea-row row-center-wrapper" style="margin: 0 auto;width: 7rem;" :href="getTashUrl(special.id,true)">去学习</a>
+    </div>
+    <div class="acea-row row-center-wrapper" v-else-if="pinkBool==2">
+        <div class="bnt invite acea-row row-center-wrapper" style="margin: 0 auto;width: 7rem;">拼团时间已到,退款中</div>
+    </div>
+    <div class="acea-row row-center-wrapper" v-else-if="pinkBool==3">
+        <div class="bnt invite acea-row row-center-wrapper" style="margin: 0 auto;width: 7rem;">拼团已结束,请您参加别的拼团</div>
+    </div>
+    <div class="acea-row row-center-wrapper" v-else-if="pinkBool==6">
+        <div class="bnt invite acea-row row-center-wrapper" style="margin: 0 auto;width: 7rem;">拼团人数已满,等待订单状态</div>
+    </div>
+    <a class="service acea-row row-center-wrapper" href="{:Url('service/service_list')}">
+        <span class="iconfont icon-wodekefu"></span>
+        <div>客服</div>
+    </a>
+    {if !$subscribe && !empty($userInfo)}
+    <div class="publicFollow acea-row row-between-wrapper">
+        <div>关注公众号"{$Auth_site_name}"，看课更方便</div>
+        <div class="follow acea-row row-center-wrapper" @click=" is_code = true ">关注</div>
+    </div>
+    <div class="mask" style="align-items:center;display: flex;" v-show="is_code" @click="is_code=false">
+        <img :src="wechat_qrcode" alt="" style="width: 5rem;height: 5rem;margin: 0 auto;">
+    </div>
+    <div style="height: 1.0rem"></div>
+    {/if}
+</div>
+<script>
+    var info={$info};
+    var special_id={$special_id};
+    var uid={$userInfo.uid};
+    var site_url="{$site_url}";
+    var wechat_qrcode = '{$subscribeQrcode}';
+    window.overallShare=false;
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                uid:uid,
+                info:info,
+                special:info.special,
+                pinkT:info.pinkT,
+                pinkBool:info.pinkBool || 0,
+                pinkAll:info.pinkAll,
+                datatime:info.pinkT.stop_time,
+                hour:"00",
+                minute:"00",
+                second:"00",
+                shares:false,
+                wechat_qrcode:wechat_qrcode,
+                is_code: true,
+            },
+            created:function(){
+                this.show_time();
+            },
+            mounted:function(){
+                var that=this;
+                mapleWx($jssdk(), function () {
+                    this.onMenuShareAll({
+                        title:'仅差'+info.count+'人拼课成功! ['+that.special.title+']' ,
+                        desc: that.special.abstract,
+                        imgUrl: that.special.image,
+                        link: site_url
+                    });
+                });
+            },
+            methods:{
+                getTashUrl:function(id,isAtn){
+                    return $h.U({c:'special',a:'details',q:{id:id}})+(isAtn ? '#tash' : '');
+                },
+                getPinkUrl:function(){
+                    return $h.U({c:'special',a:'poster_show',q:{special_id:special_id,pinkId:this.pinkT.id}});
+                },
+                show_time:function(){
+                    var that = this;
+                    function nowTime() {
+                        var intDiff = that.datatime - Date.parse(new Date()) / 1000;
+                        var days = 0, hour = 0, minute = 0, second = 0;
+                        if (intDiff > 0) {
+                            hour = Math.floor(intDiff / (60 * 60)) - (days * 24);
+                            minute = Math.floor(intDiff / 60) -  (hour * 60);
+                            second = Math.floor(intDiff) - (hour * 60 * 60) - (minute * 60);
+                            if (hour <= 9) hour = '0' + hour;
+                            if (minute <= 9) minute = '0' + minute;
+                            if (second <= 9) second = '0' + second;
+                            that.hour=hour;
+                            that.minute=minute;
+                            that.second=second;
+                        } else {
+                            that.hour="00";
+                            that.minute="00";
+                            that.second="00";
+                            clearInterval(timer);
+                        }
+                    }
+                    nowTime();
+                    var timer = setInterval(nowTime, 1000);
+                }
+            }
+        });
+    })
+</script>
+{/block}

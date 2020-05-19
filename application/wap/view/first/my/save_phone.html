@@ -1,0 +1,110 @@
+{extend name="public/container"}
+{block name="title"}{if $user_phone}更换手机号码{else}绑定手机号码{/if}{/block}
+{block name='head_top'}
+<style>
+    body{background-color: #f2f2f2}
+</style>
+{/block}
+{block name="content"}
+<div class="replace-phone" id="app" v-cloak="">
+    <ul class="list">
+        <li class="item"><input type="text" :placeholder="place_msg" v-model="phone"></li>
+        <li class="item itemCode acea-row row-between-wrapper">
+            <input type="text" v-model="code_num" placeholder="请输入验证码">
+            <button class="code" :disabled="active" :class="active == true?'on':''" @click="code">{{timetext}}</button>
+        </li>
+    </ul>
+    <div class="bnt" v-text="but_name" @click="goNext">下一步</div>
+    <!--完成-->
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var phone='{$user_phone}';
+    require(['vue','helper','store','reg-verify'],function(Vue,$h,app,$reg) {
+        new Vue({
+            el: '#app',
+            data: {
+                phone:phone || '',
+                code_num:'',
+                place_msg:phone ? '请输入原的手机号' : '请输入手机号码',
+                active:false,
+                timetext:'获取验证码',
+                but_name:phone ? '下一步':'确认绑定',
+                run:null,
+                type:0,
+            },
+            methods:{
+                goNext:function(){
+                    var that=this;
+                    if(phone){
+                        app.baseGet($h.U({c:'my',a:'validate_code',q:{phone:this.phone,code:this.code_num}}),function (res) {
+                            $h.pushMsgOnce(res.data.msg,function () {
+                                that.phone='';
+                                that.code_num='';
+                                that.but_name='确认绑定';
+                                that.place_msg='请输入新手机号码';
+                                that.active=false;
+                                that.type=1;
+                                phone='';
+                                if(that.run) clearInterval(that.run);
+                                that.timetext='获取验证码';
+                                document.title='绑定手机号码';
+                            });
+                        });
+                    }else{
+                        app.baseGet($h.U({
+                            c:'my',
+                            a:'save_phone',
+                            q:{
+                                phone:this.phone,
+                                code:this.code_num,
+                                type:this.type
+                            }
+                        }),function (res) {
+                            $h.pushMsgOnce(res.data.msg,function () {
+                                window.location.href=$h.U({c:'my',a:'index'});
+                            })
+                        });
+                    }
+                },
+                code:function () {
+                    var that = this;
+                    if(!that.phone) return $h.pushMsgOnce('请输入手机号码');
+                    if(!$reg.isPhone(that.phone)) return $h.pushMsgOnce('请输入正确的手机号码');
+                    this.SendOutCode();
+                },
+                SendOutCode:function () {
+                    var that = this;
+                    that.active = true;
+                    var n = 60;
+                    app.baseGet($h.U({c:'auth_api',a:'code',q:{phone:that.phone}}),function (res){
+                        var data=res.data.data;
+                        if(data.Message=='OK' || data.Code=='OK'){
+                            that.run=setInterval(function(){
+                                n--;
+                                if(n<0){
+                                    clearInterval(that.run);
+                                    that.run=null
+                                }
+                                that.timetext = "剩余 "+n+"s";
+                                if(that.timetext<"剩余 "+0+"s"){
+                                    that.active = false;
+                                    that.timetext = "重发";
+                                }
+                            },1000);
+                        }else{
+                            $h.pushMsgOnce(data.Message);
+                            that.active =false;
+                        }
+                    },function (res) {
+                        that.active =false;
+                    });
+                }
+            }
+        });
+    })
+
+
+</script>
+{/block}

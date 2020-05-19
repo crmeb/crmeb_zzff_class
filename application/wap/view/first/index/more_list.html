@@ -1,0 +1,112 @@
+{extend name="public/container"}
+{block name="title"}{$search} 搜索{/block}
+{block name="head_top"}
+<style>
+    body{background-color:#f2f2f2;}
+</style>
+{/block}
+{block name="content"}
+<div class="search-page" id="app">
+    <div class="searchResult swiper-details" v-cloak="" ref="list">
+        <div v-if="where.type===0">
+            <div class="title acea-row row-middle line1">专题</div>
+            <div class="swiper-list2">
+                <div class="item acea-row row-between-wrapper" v-for="item in searchList">
+                    <a class="pictrue" :href="getSpecialUrl(item.id)"><img :src="item.image"></a>
+                    <div class="underline">
+                        <a class="text-pic acea-row row-column" :href="getSpecialUrl(item.id)">
+                            <div class="name line1" v-text="item.title"></div>
+                            <div class="notes line1" v-text="item.abstract"></div>
+                            <div class="bottom acea-row row-between-wrapper">
+                                <div class="acea-row row-middle">
+                                    <div class="num acea-row row-center-wrapper" v-for="(vo,index) in item.label" v-text="vo" v-if="index <= 1"></div>
+                                </div>
+                                <div class="money">{{item.is_pink ? (item.pink_money == 0 ? '免费':'￥'+item.pink_money): (item.money <= 0 ? '免费':'￥'+item.money) }}</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <div class="title acea-row row-middle line1">任务视频</div>
+            <div class="video-listn">
+                <div class="item acea-row row-between-wrapper" v-for="item in searchList">
+                    <a class="pictrue" :href="getTashUrl(item.special_id)"><img :src="item.image"></a>
+                    <div class="underline">
+                        <a class="text acea-row row-center row-column" :href="getTashUrl(item.special_id)">
+                            <div class="name line1" v-text="item.title">7课掌握病句解析技巧</div>
+                            <div class="num acea-row row-middle"><span class="iconfont icon-bofang1"></span>{{item.play_count}}</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">没有更多内容了</span>
+    </p>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var type={$type},search='{$search}';
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                searchList:[],
+                loadTitle:'',
+                loading:false,
+                loadend:false,
+                where:{
+                    type:type,
+                    search: search || '',
+                    page:1,
+                    limit:10
+                }
+            },
+            methods:{
+                getMoreList:function () {
+                    if(this.loading) return;
+                    if(this.loaded) return;
+                    this.loading=true;
+                    this.loadTitle='';
+                    app.baseGet($h.U({c:'index',a:'get_more_list',q:this.where}),function (res) {
+                        var list=res.data.data.more_list;
+                        var searchList=$h.SplitArray(list,this.searchList);
+                        this.where.page=res.data.data.page;
+                        this.loading=false;
+                        this.loaded=list.length < this.where.limit;
+                        this.loadTitle=this.loaded ? '没有更多内容了': '加载更多';
+                        this.$set(this,'searchList',searchList);
+                        this.$nextTick(function () {
+                            this.EventUtil();
+                        }.bind(this));
+                    }.bind(this),function (res) {
+                        this.loading=false;
+                        this.loadTitle='加载更多';
+                    }.bind(this));
+                },
+                EventUtil:function () {
+                    this.$nextTick(function () {
+                        $h.EventUtil.listenTouchDirection(document,function (){
+                            this.loading == false && this.getMoreList();
+                        }.bind(this),false);
+                    })
+                },
+                getSpecialUrl:function(id){
+                    return $h.U({c:'special',a:'details',q:{id:id}});
+                },
+                getTashUrl:function(id){
+                    return $h.U({c:'special',a:'details',q:{id:id}})+'#tash';
+                },
+            },
+            mounted:function () {
+                this.getMoreList();
+            }
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,895 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+{block name="head_top"}
+<link rel="stylesheet" type="text/css" href="{__WAP_PATH}zsff/css/video-js.min.css"/>
+<script src="{__WAP_PATH}zsff/js/video.min.js"></script>
+<script src="{__WAP_PATH}zsff/js/video.zh.js"></script>
+<style>
+    .video-js .vjs-big-play-button{top: 50%;left: 50%;transform: translate(-50%,-50%);}
+    .layui-layer-shade{background-image: url("/wap/first/zsff/images/close.png")!important;background-repeat: no-repeat!important;background-size: 0.8rem 0.8rem;background-position: 50% 88%;}
+    .navCon{position: relative;}
+    .swiper-details .swiper-nav .free{position:absolute;font-size: 0.2rem;color: #fff;left:67%;top: 0;margin-top: -0.5rem;animation: stone linear 1s infinite alternate;-webkit-animation: free linear 1s infinite alternate;}
+    .swiper-details .swiper-nav .free .freeCon{width:1.1rem;height:0.4rem;border-radius:0.05rem;background-color:#ea2f2f;position:relative;left:0.5rem}
+    .swiper-details .swiper-nav .free .freeCon:after{content: "";width: 0;height: 0;border-left: 0.1rem solid transparent;border-right: 0.1rem solid transparent;border-top: 0.13rem solid #ea2f2f;position:absolute;bottom: -0.1rem;left: 50%;margin-left: -0.1rem;}
+    @keyframes free
+    {
+        from {transform:scale(1);}
+        to {transform:scale(0.9);}
+    }
+    @-webkit-keyframes stone
+    {
+        from {transform:scale(1);}
+        to {transform:scale(0.9);}
+    }
+    /*这里开始*/
+    footer{position: fixed;width: 100%;height: 1.3rem;bottom: 0;border-top: 1px solid #eee;background: #fff;padding: 0 0.3rem;box-sizing: border-box;}
+    .video_footer_img{width:0.4rem;height:0.4rem;margin-bottom:.09rem;vertical-align:middle;}
+    .video_footer_img img{width: 100%;height: 100%;display: block;}
+    .video_footer_img2{width:0.4rem;height:0.4rem;margin-bottom:.09rem;vertical-align:middle;}
+    .video_footer_img2 img{width: 100%;height: 100%;display: block;}
+    .video_footer_tit{font-size: 0.2rem;line-height:.2rem;color: #333;}
+    .video_footer_left{height: 1rem;margin-right:.34rem;}
+    .video_footer_btn{-webkit-flex:1;flex:1;height: 0.76rem;border-radius:37px;}
+    .video_footer_btn_left{width: 50%;height: 100%;border-radius:37px 0px 0px 37px;background:linear-gradient(90deg,rgba(248,162,1,1) 0%,rgba(255,186,37,1) 100%);}
+    .video_footer_btn_right{width: 100%;height: 100%;border-radius:37px 37px 37px 37px;background:linear-gradient(90deg,rgba(64,157,255,1) 0%,rgba(30,133,251,1) 100%);}
+    .video_footer_btn_left_pic{font-size: 0.28rem;line-height:.22rem; color: #fff;text-align: center;}
+    .video_footer_btn_left_num{font-size: 0.2rem;line-height:.2rem; color: #fff;text-align: center;}
+    .video_footer_btn_left_pic + .video_footer_btn_left_num{margin-top:.09rem;}
+    footer .video_footer_btn .on{width: 100% !important;border-radius: 37px !important;}
+    footer .video_footer_btn.item2{width: 6.2rem;}
+    video{width: 100%}
+    .labelItem {
+        font-size: 0.24rem;
+        color: #999;
+        font-weight: 400;
+        background-color: #F2F8FF;
+        padding: 0.04rem 0.1rem;
+        border-radius: 0.06rem;
+        color: #2C8EFF;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="thematic-details" id="app" v-cloak="">
+    {if !$subscribe}
+    <div class="follow acea-row row-between-wrapper">
+        <div class="picTxt acea-row row-between-wrapper">
+            <div class="pictrue"><img src="{$confing.site_logo}"></div>
+            <div class="text">
+                <div class="name line1">{$confing.site_name}</div>
+                <div class="line1">{$confing.seo_title}</div>
+            </div>
+        </div>
+        <div class="followBnt" @click="is_code=true">关注</div>
+    </div>
+    {/if}
+    <!--END-->
+    <div class="swiper-details">
+        <div class="banner slider-banner">
+            <ul class="swiper-wrapper" v-cloak="">
+                <li class="swiper-slide" v-for="swiper in swiperlist">
+                    <img :src="swiper"/>
+                </li>
+            </ul>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="successTip" v-if="barrageStatus == true">
+            <div class="picTxt acea-row row-middle" v-for="(item,index) in Barragelist" v-show="num==index?true:false">
+                <div class="pictrue"><img :src="item.avatar"></div>
+                <div class="acea-row row-middle">
+                    <div class="name line1">{{item.nickname}}</div>
+                    <div v-text="item.status_name"></div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper">
+            <div class="swiper-int">
+                <div class="swiper-int-top">
+                    <div class="swiper-int-top-left">
+                        <div class="name" v-text="special.title">加载中</div>
+                        <div v-if="special.label.length" class="attr">
+                            <div v-for="item in special.label">{{item}}</div>
+                        </div>
+                    </div>
+                    <div class="collect" @click="collect">
+                        <div :class="[special.collect ? 'iconshoucang1' : '', 'iconfont', 'iconshoucang']"></div>
+                        <div>{{special.collect ? '已收藏': '收藏'}}</div>
+                    </div>
+                </div>
+                <div class="acea-row row-middle" style="height:.7rem;margin-top:.15rem;margin-bottom:.18rem;line-height:.7rem;">
+                    <div class="pin-money" v-if="is_pay==false && is_partake==false">
+                        <span class="price">¥<b>{{ special.money }}</b></span>
+                    </div>
+                    <div class="collect">已有{{special.browse_count}}人学习</div>
+                </div>
+            </div>
+            <div class="peopleNum acea-row row-middle line1" v-if="pinkUser.length">
+                <div class="pictrue" v-for="(item,key) in pinkUser" v-if="key < 6"><img :src="item.avatar"></div>
+                <div class="iconfont icon-gengduo" v-if="pinkUser.length >= 6"></div>
+                <div class="text">{{special.fake_sales}}人参加</div>
+            </div>
+        </div>
+        <div class="pinTip2 acea-row row-between-wrapper" v-if="is_pay">
+            <div class="reminder line1">和小伙伴一起学习，有老师答疑哦~</div>
+            <div class="chatBnt acea-row row-center-wrapper" @click=" open = false ">加入群聊</div>
+        </div>
+        <div class="swiper-nav acea-row row-center-wrapper" v-cloak="" ref="list" >
+            <div class="navCon acea-row row-middle">
+                <div v-if="special.type == 5" class="item" :class="active==index?'on':''" v-for="(nav,index) in cloumnNavlist" @click=" active = index">
+                    <span>{{nav.title}}</span>
+                </div>
+                <div v-if="special.type == 4" class="item" :class="active==index?'on':''" v-for="(nav,index) in liveNavlist" @click=" active = index">
+                    <span>{{nav.title}}</span>
+                </div>
+                <div v-if="special.type != 5 && special.type != 4" class="item" :class="active==index?'on':''" v-for="(nav,index) in otherNavlist" @click=" active = index">
+                    <span>{{nav.title}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- /*通用详情
+         */-->
+        <div class="swiper-conter" v-show="active==0" v-html="special.content"></div>
+        <!-- /**专题目录和专栏目录
+         **/-->
+        <div v-show="active==1 && special.type != 4">
+            <div v-if="updateOtherTaskList.length" ref="list">
+                <!-- 专栏目录 -->
+                <ul v-if="special.type === 5" class="parent-catalogue">
+                    <li v-for="(item, index) in updateOtherTaskList" :key="item.id" :class="[parentActive === index ? 'active' : '']" @click="parentActive = index">
+                        <div class="parent-title">
+                            <div class="name">{{item.title}}</div>
+                            <div :class="[parentActive === index ? 'iconxiangshang' : 'iconxiangxia', 'iconfont']"></div>
+                        </div>
+                        <ul v-if="item.special_task.length" class="catalogue">
+                            <li v-for="(itm, idx) in item.special_task" :key="itm.id" @click="play(itm)">
+                                <div class="label">{{ itm.type }}</div>
+                                <div class="title">{{idx < 9 ? '0' + (idx + 1) : idx + 1}} | {{itm.title}}</div>
+                                <template v-if="item.pay_status">
+                                    <div v-if="itm.pay_status" class="iconfont iconsuozi"></div>
+                                    <div v-else class="free">免费</div>
+                                </template>
+                                <div v-else class="free">免费</div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- 专题目录 -->
+                <ul v-else class="catalogue">
+                    <li v-for="(item, index) in updateOtherTaskList" :key="item.id" @click="play(item)">
+                        <div class="label">{{ item.type }}</div>
+                        <div class="title">{{index < 9 ? '0' + (index + 1) : index + 1}} | {{item.title}}</div>
+                        <div v-if="item.pay_status" class="iconfont iconsuozi"></div>
+                        <div v-else class="free">免费</div>
+                    </li>
+                </ul>
+            </div>
+            <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+                <span v-show="otherLoading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+                <span v-text="otherLoadTitle">加载更多</span>
+            </p>
+            <div style="height:1.5rem"></div>
+        </div>
+        <!-- /**直播回放目录
+         **/-->
+         <div v-if="special.type === 4 && active" class="replay-directory">
+            <ul v-if="liveTaskList.length">
+                <li v-for="(item, index) in liveTaskList" :key="index" :class="{ active: RecordId === item.RecordId }" class="item"
+                    @click="playBackRecord(item.RecordId)">
+                    <div class="label">回放</div>
+                    <div class="name">{{ index | serial }} | {{ special.title }}</div>
+                    <div></div>
+                </li>
+            </ul>
+            <div class="foot">
+                <span v-show="liveLoading" class="fa fa-spinner loadingpic"></span>
+                <div class="tip">{{ liveLoadTitle }}</div>
+            </div>
+         </div>
+
+        <div class="video-list" v-show="active==2 && special.type == 5" v-cloak=""  style="-webkit-overflow-scrolling: touch;">
+            <div v-if="columnTaskList.length && active==2" ref="list">
+                <div class="video-listn">
+                    <div class="item acea-row row-between-wrapper" v-for="vo in updateOtherTaskList" @click="play(vo)">
+                        <div class="pictrue" @click="play(vo)" style="position: relative">
+                            <img :src="vo.image">
+                            <div class="label">{{ vo.type }}</div>
+                        </div>
+                        <div class="underline">
+                            <div class="text acea-row row-between row-column">
+                                <div class="name line1" v-text="vo.title" @click="play(vo)"></div>
+                                <div v-if="vo.label.length" class="attr">
+                                    <div v-for="item in vo.label">{{item}}</div>
+                                </div>
+                                <template v-if="special.pay_type">
+                                    <template v-if="vo.pay_status">
+                                        <div v-else class="price">¥<span>{{vo.money}}</span></div>
+                                    </template>
+                                    <div v-else class="free">免费</div>
+                                </template>
+                                <div v-else class="free">免费</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+                <span v-show="columnLoading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+                <span v-text="columnLoadTitle">加载更多</span>
+            </p>
+            <div style="height:1.5rem"></div>
+        </div>
+    </div>
+
+    <footer class="acea-row row-wrap-all" ref="storeMenu" v-if="is_pay==false && is_partake==false && is_gift==false && isPink==false">
+        <a class="video_footer_left acea-row row-column row-center-wrapper" href="{:Url('wap/index/index')}">
+            <div class="video_footer_img"><img src="/wap/first/zsff/images/footer1.png"></div>
+            <span class="video_footer_tit">首页</span>
+        </a>
+        <div class="video_footer_left acea-row row-column row-center-wrapper" @click="OpenPay(1)" v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0">
+            <div class="video_footer_img2"><img src="/wap/first/zsff/images/footer2.png"></div>
+            <span class="video_footer_tit">送朋友</span>
+        </div>
+        <div class="video_footer_btn acea-row" :class="(special.pay_type == 1 && special.type == 4) || special.money > 0 ? '': 'item2'">
+
+            <div class="video_footer_btn_right acea-row row-column row-center-wrapper" :class="((special.pay_type == 0 || special.pay_type == 2 ) && special.type == 4 ) || special.money <= 0? 'item2 on': 'item1' " :class="" v-if="special.type == 4 && (is_pay || special.money <= 0)">
+                <span class="video_footer_btn_left_pic" @click="OpenPay(6)" v-if="special.type == 4">进入直播间</span>
+                <span class="video_footer_btn_left_num" @click="OpenPay(5)" v-if="special.type != 4">免费学习</span>
+            </div>
+            <div class="video_footer_btn_right acea-row row-column row-center-wrapper" :class="" @click="OpenPay(2)" v-if="special.money > 0 || special.pink_money > 0">
+                <span class="video_footer_btn_left_pic">￥{{special.money}}</span>
+                <span class="video_footer_btn_left_num">单独购</span>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <footer class="acea-row row-wrap-all" ref="storeMenu" v-if="is_pay==true && is_gift==false && paid">
+        <a class="video_footer_left acea-row row-column row-center-wrapper" href="{:Url('wap/index/index')}">
+            <div class="video_footer_img"><img src="{__WAP_PATH}zsff/images/footer1.png"></div>
+            <span class="video_footer_tit">首页</span>
+        </a>
+        <div class="video_footer_left acea-row row-column row-center-wrapper" @click="OpenPay(1)" v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0">
+            <div class="video_footer_img2"><img src="{__WAP_PATH}zsff/images/footer2.png"></div>
+            <span class="video_footer_tit">送朋友</span>
+        </div>
+        <div class="video_footer_btn acea-row">
+            <div class="video_footer_btn_right acea-row row-column row-center-wrapper on">
+                <span class="video_footer_btn_left_pic"  v-if="special.type != 4" @click="OpenPay(5)">去学习</span>
+                <span class="video_footer_btn_left_pic"  v-if="special.type == 4" @click="OpenPay(6)">进入直播间</span>
+            </div>
+        </div>
+    </footer>
+    <footer class="acea-row row-wrap-all" v-if="is_gift" ref="storeMenu">
+        <!--        <div class="video_footer_left acea-row row-column row-center-wrapper">-->
+        <!--            <div class="video_footer_img"><img src="{__WAP_PATH}zsff/images/footer1.png"></div>-->
+        <!--            <span class="video_footer_tit">首页</span>-->
+        <!--        </div>-->
+        <div class="video_footer_btn acea-row item2">
+            <div class="video_footer_btn_right acea-row row-column row-center-wrapper on" @click="OpenPay(4)">
+                <span class="video_footer_btn_left_pic">领取课程</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="groupCode" :hidden="open" v-cloak="">
+        <div class="code"><img :src="special.service_code"></div>
+        <div class="codeTip">长按扫一扫<br>加客服好友进群哦</div>
+    </div>
+    <div class="mask" style="align-items:center;display: flex;" v-show="is_code" @click="is_code=false">
+        <img :src="wechat_qrcode" alt="" style="width: 5rem;height: 5rem;margin: 0 auto;">
+    </div>
+    <div class="mask" @touchmove.prevent :hidden="open" @click="open=true"></div>
+    <payment @change="changeVal" :payment="payment" :money="money" :special_id="special.id" :iswechat="isWechat" :link_pay_uid="link_pay_uid" :pay_type_num="pay_type_num" :pink-id="pinkId"></payment>
+    <enter :appear="appear" @change="changeVal" :url="url" :site_name="site_name"></enter>
+    <div class="initiate-group">
+        <a class="service acea-row row-center-wrapper" href="{:Url('service/service_list')}">
+            <span class="iconfont icon-wodekefu"></span>
+            <div>客服</div>
+        </a>
+    </div>
+
+    <div class="password" :class="password?'on':''">
+        <div class="title">请输入密码</div>
+        <input type="password" v-model="qr_password"  autocomplete="off">
+        <input type="hidden" v-model="studio_pwd"  autocomplete="off">
+        <div class="psdBnt" @click="goLive">确定</div>
+    </div>
+    <div class="mask" v-show="password" @touchmove.prevent @click="password = false "></div>
+</div>
+{/block}
+{block name='foot'}
+<script type="text/javascript">
+    var swiperlist={$swiperlist},special={$special},pinkUser={$pinkUser},pinkIngList={$pinkIngList},pinkId={$pinkId},
+        orderId='{$orderId ? $orderId : ""}',link_pay_uid={$link_pay_uid},wechat_qrcode='{$code_url}',
+        isWechat={$isWechat ? 'true' : 'false'},isPay={$isPay ? 'true':'false'},partake={$partake},gift={$gift},
+        link_pay={$link_pay},isPink={$isPink ? 'true':'false'},BarrageShowTime={$BarrageShowTime ? $BarrageShowTime : 5},
+        barrage_index={$barrage_index ? $barrage_index : 0},uid={$userInfo['uid'] ? $userInfo['uid']:0},liveInfo={$liveInfo},site_name = '{$Auth_site_name}',isMember={$is_member};
+    window.overallShare=false;
+    require(['vue','helper','store','special-type','reg-verify','{__WAP_PATH}zsff/js/payment.js','{__WAP_PATH}zsff/js/enter.js'],function(Vue,$h,app,specialType) {
+        new Vue({
+            el: '#app',
+            filters: {
+                serial: function (value) {
+                    return value < 9 ? '0' + (value + 1) : value + 1;
+                }
+            },
+            data: {
+                parentActive: 0,
+                site_name:site_name,
+                RecordId:'',
+                special:special,
+                pinkUser:pinkUser,
+                swiperlist:swiperlist,
+                pinkIngList:pinkIngList,
+                otherTaskList:[],
+                columnTaskList:[],
+                liveTaskList:[],
+                cloumnNavlist:[{'title':'专栏详情'}, {'title':'专栏目录'}, {'title':'专栏套餐'}],
+                otherNavlist:[{'title':'专题详情'}, {'title':'专题目录'}],
+                liveNavlist:[{'title':'直播介绍'}, {'title':'回放目录'}],
+                active:0,
+                open:true,
+                payment:true,
+                appear:true,
+                is_pay:isPay,
+                otherLoading:false,
+                columnLoading:false,
+                liveLoading:false,
+                otherLoadend:false,
+                columnLoadend:false,
+                liveLoadend:false,
+                pay_type_num:-1,
+                pinkId:pinkId || 0,
+                pinkInfo:{
+                    pinkT:{
+                        difftime:{hour:"00", minute:"00", second:"00"}
+                    }
+                },
+                Barragelist:[],
+                otherLoadTitle:'上拉加载更多',
+                columnLoadTitle:'上拉加载更多',
+                liveLoadTitle:'上拉加载更多',
+                money:special.money,
+                where:{
+                    page:1,
+                    limit:10,
+                    special_id:special.id || 0,
+                    source_id:0,
+                },
+                orderId:null,
+                is_partake:false,
+                is_gift:false,
+                paid:isPay,
+                link_pay_uid:0,
+                wechat_qrcode:wechat_qrcode,
+                is_code:false,
+                isWechat:isWechat,
+                is_live:special.is_live,
+                url:isWechat ? $h.U({c:'index',a:'login'}):$h.U({c:'login',a:'phone_check'}),
+                isPink:isPink,
+                barrageStatus:true,
+                num:barrage_index,
+                stream_name:liveInfo.stream_name || '',
+                password:false,
+                liveInfo:liveInfo,
+                qr_password:'',
+                studio_pwd:liveInfo.studio_pwd
+            },
+            computed: {
+                updateOtherTaskList: function (value) {
+                    return this.otherTaskList.map(function (value) {
+                        value.type = specialType[value.type];
+                        if (value.hasOwnProperty('special_task')) {
+                            value.special_task.map(function (item) {
+                                return item.type = specialType[item.type];
+                            });
+                        }
+                        return value;
+                    });
+                }
+            },
+            watch:{
+                active:function (n) {
+                    var that = this;
+                    if(n==1 && that.special.type !=4 && that.special.type !=5){
+                        this.getCourseList();
+                    }
+                    if(n==1 && that.special.type ==4){
+                        this.getLiveTask();
+                    }
+                    if(n==2 && this.special.type == 5){
+                        // this.getCloumnTask();
+                    }
+                }
+            },
+            created:function(){
+                this.CountDown({name:'pinkIngList',time_name:"stop_time"});
+            },
+            mounted:function(){
+                var that=this;
+                this.$nextTick(function () {
+                    mapleWx($jssdk(), function () {
+                        this.onMenuShareAll({
+                            title:that.special.title ,
+                            desc: that.special.abstract,
+                            imgUrl: that.special.image,
+                            link: location.href.indexOf('?')==-1 ? location.href+'?spread_uid='+uid : location.href+'&spread_uid='+uid,
+                        });
+                    });
+                    $('.swiper-conter').append('<div style="height:1.5rem"></div>');
+                    setTimeout(function () {
+                        new Swiper('.banner', {
+                            pagination: '.swiper-pagination',
+                            paginationClickable: false,
+                            autoplay:2500,
+                            speed: 1000,
+                            autoplayDisableOnInteraction: false,
+                            observer:true,
+                            observeParents:true,
+                        });
+                    },500);
+                    switch (location.hash){
+                        case '#tash':
+                            if(that.special.type != 4) that.active=1;
+                            $('body,html').animate({scrollTop:$(that.$refs.list).offset().top},800);
+                            break;
+                        case '#act1':
+                            that.active=0;
+                            $('body,html').animate({scrollTop:$(that.$refs.list).offset().top},800);
+                            break;
+                        case '#act2':
+                            if(that.special.type != 4) that.active=1;
+                            $('body,html').animate({scrollTop:$(that.$refs.list).offset().top},800);
+                            break;
+                        case '#partake':
+                            that.is_partake=true;
+                            break;
+                        case '#gift':
+                            that.is_gift=true;
+                            break;
+                        case '#link_pay':
+                            that.link_pay_uid=link_pay_uid;
+                            break;
+                    }
+                    if(partake) that.is_partake=true;
+                    if(gift) that.is_gift=true;
+                    if(link_pay) that.link_pay_uid=link_pay_uid;
+                    that.barrage();
+                });
+                switch(this.special.type){
+                    case 5:
+                        this.getCourseList();
+                        this.getCloumnTask();
+                        break;
+                    case 4:
+                        this.getLiveTask();
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 6:
+                        this.getCourseList();
+                        break;
+                }
+                if(that.pinkId){
+                    app.baseGet($h.U({c:'special',a:'get_pink_info',q:{pinkId:that.pinkId}}),function (res) {
+                        that.pinkInfo=res.data.data;
+                        that.CountDown({name:'pinkInfo.pinkT',time_name:'stop_time'});
+                    },function (res){
+                        $h.showMsg(res.msg,function(){
+                            window.location.href=$h.U({c:'special',a:'details',q:{id:that.special.id}});
+                        });
+                    });
+                }
+                var width=$('.swiper-conter').width();
+                $('.video-ue').each(function (index) {
+                    var id="video-ue-"+index,videoUrl=$(this).attr('src');
+                    $(this).attr('id',id);
+                    $(this).children('video').attr('src',videoUrl);
+                    $(this).append("<source src='"+videoUrl+"' type='video/mp4' />")
+                    $(this).addClass("video-js");
+                    videojs(id, {}, function(){
+                        this.width(width);
+                        this.src(videoUrl);
+                    });
+                })
+            },
+            methods:{
+                goLive:function(){
+                    if(!this.qr_password) return $h.showMsg('请输入密码');
+                    if(this.qr_password != this.studio_pwd) return $h.showMsg('密码不正确');
+                    window.location.href = $h.U({c:'live',a:'index',q:{stream_name:this.stream_name}});
+                },
+                barrage:function(){
+                    var that = this;
+                    if(typeof BarrageShowTime=='string') BarrageShowTime=parseInt(BarrageShowTime);
+                    BarrageShowTime=BarrageShowTime*1000;
+                    app.baseGet($h.U({c:'special',a:'get_barrage_list',q:{special_id:special.id}}),function (res) {
+                        that.$set(that,'Barragelist',res.data.data);
+                        var len = that.Barragelist.length;
+                        if(!len) return;
+                        setInterval(function () {
+                            that.num = that.num == len-1?0:that.num+1;
+                            that.barrageStatus = !that.barrageStatus;
+                            app.baseGet($h.U({c:'special',a:'set_barrage_index',q:{index:that.num}}));
+                        },BarrageShowTime);
+                    });
+                },
+                goPink:function(){
+                    return $h.U({c:'special',a:'order_pink',q:{pink_id:pinkId}});
+                },
+                follow:function(){
+                    return $h.openImage(wechat_qrcode);
+                },
+                getPartakePinkUrl:function(){
+                    return $h.U({c:'special',a:'details',q:{id:this.special.id}});
+                },
+                pay_order:function(data){
+                    this.orderId=data.result.orderId || '';
+                    switch (data.status){
+                        case "PAY_ERROR":case 'ORDER_EXIST':case 'ORDER_ERROR':
+                            this.extendOrder(data.msg);
+                            break;
+                        case 'WECHAT_PAY':
+                            this.wechatPay(data.result.jsConfig);
+                            break;
+                        case 'SUCCESS':
+                            this.successOrder(data.msg);
+                            break;
+                        case 'ZHIFUBAO_PAY':
+                            window.location.href=$h.U({c:'Alipay',a:'index',q:data.result});
+                            break;
+                    }
+                },
+                wechatPay:function(config){
+                    var that = this;
+                    mapleWx($jssdk(),function(){
+                        this.chooseWXPay(config,function(){
+                            that.successOrder();
+                        },{
+                            fail:that.extendOrder,
+                            cancel:that.extendOrder
+                        });
+                    });
+                },
+                successOrder:function(msg){
+                    var that=this;
+                    $h.showMsg({
+                        title:msg ? msg :'支付成功',
+                        icon:'success',
+                        success:function (){
+                            switch (parseInt(that.pay_type_num)){
+                                case 1:
+                                    window.location.href=$h.U({c:'special',a:'gift_special',q:{orderId:that.orderId}});
+                                    break;
+                                case 2:
+                                    that.paid=true;
+                                    that.is_pay=true;
+                                    that.payment=true;
+                                    break;
+                                case 3:
+                                    window.location.href=$h.U({c:'special',a:'pink',q:{orderId:that.orderId}});
+                                    break;
+                            }
+                        }
+                    });
+                },
+                extendOrder:function(msg){
+                    var that=this;
+                    var msg=msg ? msg :'支付失败';
+                    $h.showMsg({
+                        title:typeof msg=='object' ? '支付失败' :msg,
+                        success:function () {
+                            if(that.orderId) app.baseGet($h.U({c:'special',a:'del_order',q:{orderId:that.orderId}}));
+                        }
+                    })
+                },
+                play:function(item){
+                    if(item.pay_status == 1 && this.is_pay==false && this.special.type != 5) return $h.showMsg('请先购买~');
+                    if(item.is_pay == 2){
+                        this.password = true;
+                        this.studio_pwd = item.studio_pwd;
+                        this.stream_name = item.stream_name;
+                        return ;
+                    }
+                    var that = this;
+                    if (that.special.type == 5) {
+                        switch(that.active){
+                            case 1:
+                                this.goPlayTsak(item);
+                                break;
+                            case 2:
+                                location.href = $h.U({c:"special",a:"details",q:{id:item.id}});
+                                break;
+                        }
+                    }else{
+                        this.goPlayTsak(item);
+                    }
+                },
+                //获取课程列表
+                getCourseList:function(){
+                    var that=this;
+                    if(this.otherLoading) return;
+                    if(this.otherLoaded) return;
+                    this.otherLoadTitle='';
+                    this.otherLoading=true;
+                    app.baseGet($h.U({c:'special',a:'get_course_list',q:this.where}),function (res) {
+                        var data=res.data.data;
+                        var list=data.list || [];
+                        var taskList=$h.SplitArray(list,that.otherTaskList);
+                        that.where.page=data.page;
+                        that.otherLoaded=list.length < that.where.limit;
+                        that.F=that.otherLoaded ? '我也是有底线的': '上拉加载更多';
+                        that.otherLoading=false;
+                        that.$set(that,'otherTaskList',taskList);
+                        that.$nextTick(function () {
+                            that.bScrollInit();
+                        });
+                    },function (res) {
+                        that.otherLoading=false;
+                        that.otherLoadTitle='加载更多';
+                    });
+                },
+                //获取专栏专题素材列表
+                getCloumnTask:function(){
+                    var that=this;
+                    if(this.columnLoading) return;
+                    if(this.columnLoaded) return;
+                    this.columnLoadTitle='';
+                    this.columnLoading=true;
+                    app.baseGet($h.U({c:'special',a:'get_cloumn_task',q:this.where}),function (res) {
+                        var data=res.data.data;
+                        var list=data.list || [];
+                        var taskList=$h.SplitArray(list,that.columnTaskList);
+                        that.where.page=data.page;
+                        that.columnLoaded=list.length < that.where.limit;
+                        that.columnLoadTitle=that.columnLoaded ? '我也是有底线的': '上拉加载更多';
+                        that.columnLoading=false;
+                        that.$set(that,'columnTaskList',taskList);
+                        that.$nextTick(function () {
+                            that.bScrollInit();
+                        });
+                    },function (res) {
+                        that.columnLoading=false;
+                        that.columnLoadTitle='加载更多';
+                    });
+                },
+                //获取直播回放
+                getLiveTask:function(){
+                    var that=this;
+                    if(this.liveLoading) return;
+                    if(this.liveLoaded) return;
+                    this.liveLoadTitle='';
+                    this.liveLoading=true;
+                    app.baseGet($h.U({c:'live',a:'get_live_record_list',q:{special_id:that.special.id,}}),function (res) {
+                        var data=res.data.data;
+                        var list=data.list || [];
+                        var taskList=$h.SplitArray(list,that.liveTaskList);
+                        that.where.page=data.page;
+                        that.liveLoaded=list.length < that.where.limit;
+                        that.liveLoadTitle=that.liveLoaded ? '我也是有底线的': '上拉加载更多';
+                        that.liveLoading=false;
+                        that.$set(that,'liveTaskList',taskList);
+                        that.$nextTick(function () {
+                            that.bScrollInit();
+                        });
+                    },function (res) {
+                        that.liveLoading=false;
+                        that.liveLoadTitle='加载更多';
+                    });
+                },
+                //播放素材
+                goPlayTsak:function(item){
+                    var that = this;
+                    app.baseGet($h.U({c:'special',a:'get_task_link',q:{task_id:item.id,special_id:item.special_id}}),function (res) {
+                        if(that.special.type == 4){
+                            window.location.href = $h.U({c:'live',a:'index',q:{stream_name:item.stream_name, special_id:item.special_id, live_id:item.live_id}});
+                        }else{
+                            app.baseGet($h.U({c:'special',a:'play_num',q:{task_id:item.id, special_id:item.special_id}}));
+                            location.href = $h.U({c:"special",a:"task_info",q:{id:item.id,specialId:item.special_id}});
+                        }
+                    },function (err) {
+                        return $h.pushMsgOnce(err);
+                    })
+                },
+                //滑动底部加载
+                bScrollInit:function(){
+                    var that = this;
+                    $h.EventUtil.listenTouchDirection(document,function (){
+                        if (that.special.type == 5) {
+                            that.columnLoading == false && that.getCloumnTask();
+                        }else{
+                            that.otherLoading == false && that.getCourseList();
+                        }
+
+                    },false);
+                },
+                //获取参加拼团跳转链接
+                getAttendUrl:function(pink_id,special_id){
+                    return $h.U({c:'special',a:'details',q:{id:special_id,pinkId:pink_id}})+'#partake';
+                },
+                //收藏和取消收藏
+                collect:function(){
+                    app.baseGet($h.U({c:'special',a:'collect',q:{id:this.special.id}}),function (res) {
+                        if(this.special.collect)
+                            $h.pushMsgOnce('取消收藏成功');
+                        else
+                            $h.pushMsgOnce('收藏成功');
+                        this.special.collect=this.special.collect ? false : 1;
+                    }.bind(this));
+                },
+                //打开支付插件,并检测登录状态,没有登录,打开登录插件
+                OpenPay:function(is_pink){
+                    this.pay_type_num = is_pink;
+                    app.baseGet($h.U({c:'index',a:'user_login'}),function (res) {
+                        switch (is_pink){
+                            case 1:
+                                this.money= this.special.money;
+                                this.payment=false;
+                                break;
+                            case 2:
+                                this.money=this.special.money;
+                                this.payment=false;
+                                break;
+                            case 3:
+                                this.money=this.special.pink_money;
+                                this.payment=false;
+                                break;
+                            case 4:
+                                this.payment=true;
+                                app.baseGet($h.U({c:'special',a:'receive_gift',q:{orderId:orderId}}),function (res) {
+                                    $h.showMsg({
+                                        title:res.data.msg,
+                                        icon:'success',
+                                        success:function () {
+                                            window.location.href=$h.U({c:'index',c:'index'});
+                                        }
+                                    })
+                                });
+                                break;
+                            case 5:
+                                location.hash='#tash';
+                                $('body,html').animate({scrollTop:$(this.$refs.list).offset().top},800);
+                                this.is_pay=true;
+                                this.paid=false;
+                                this.active=1;
+                                break;
+                            case 6:
+                                if(this.liveInfo.studio_pwd && this.liveInfo.pay_type==2){
+                                    this.password = true;
+                                }else {
+                                    window.location.href = $h.U({
+                                        c: 'live',
+                                        a: 'index',
+                                        q: {stream_name: this.stream_name,record_id:this.RecordId}
+                                    });
+                                }
+                                break;
+                        }
+                    }.bind(this),function (res) {
+                        this.appear=false;
+                    }.bind(this));
+                },
+                ReceiveGift:function(){
+                    var that=this;
+                    if(!orderId) return;
+                    app.baseGet($h.U({c:'special',a:'receive_gift',q:{orderId:orderId}}),function (res) {
+                        $h.showMsg({
+                            title:res.data.msg,
+                            icon:'success',
+                            success:function () {
+                                window.location.href=$h.U({c:'index',a:'index'});
+                            }
+                        })
+                    });
+                },
+                //关闭登录
+                loginClose:function(value){
+                    this.appear=value;
+                },
+                //关闭支付
+                payClose:function(value){
+                    this.payment=value;
+                },
+                //登录完成回调事件
+                logComplete:function(){
+                    this.appear=true;
+                    if(this.pay_type_num==3 || this.pay_type_num==1)
+                        this.money=this.special.money;
+                    else
+                        this.money=this.special.money;
+                    if(this.pay_type_num != 4) this.payment=false;
+                    if(this.pay_type_num == 6) this.payment=true;
+                },
+                //所有插件回调处理事件
+                changeVal:function (opt){
+                    if(typeof opt !='object') opt={};
+                    var action=opt.action || '';
+                    var value=opt.value || '';
+                    this[action] && this[action](value);
+                },
+                CountDown:function (opt,that) {
+                    if(typeof opt!='object') opt={};
+                    var name=opt.name || '',value=null,that=that ? that: this;
+                    if(name.indexOf('.')===-1)
+                        value=that[name];
+                    else{
+                        var nameArray=name.split('.');
+                        value=that[nameArray[0]][nameArray[1]];
+                    }
+                    var tiem=opt.time || 1000,timeName=opt.time_name || 'datatime', strName={hour:"00", minute:"00", second:"00"},
+                        outputName=opt.output || 'difftime';
+                    if(!name) return false;
+                    if(value===undefined) return false;
+                    opt.nowTime=function(){
+                        if(Array.isArray(value)){
+                            for(var i=0;i<value.length;i++){
+                                var intDiff = value[i][timeName] - Date.parse(new Date()) / 1000;//获取数据中的时间戳的时间差；
+                                var days = 0, hour = 0, minute = 0, second = 0;
+                                if (intDiff > 0) {
+                                    hour = Math.floor(intDiff / (60 * 60)) - (days * 24);
+                                    minute = Math.floor(intDiff / 60) -  (hour * 60);
+                                    second = Math.floor(intDiff) - (hour * 60 * 60) - (minute * 60);
+                                    if (hour <= 9) hour = '0' + hour;
+                                    if (minute <= 9) minute = '0' + minute;
+                                    if (second <= 9) second = '0' + second;
+                                    strName={
+                                        hour:hour,
+                                        minute:minute,
+                                        second:second
+                                    };
+                                } else {
+                                    strName={
+                                        hour:"00",
+                                        minute:"00",
+                                        second:"00"
+                                    };
+                                }
+                                value[i][outputName]=strName;
+                            }
+                            that.$set(that,name,value);
+                        }else{
+                            var intDiff = value[timeName] - Date.parse(new Date()) / 1000;
+                            var days = 0, hour = 0, minute = 0, second = 0;
+                            if (intDiff > 0) {
+                                hour = Math.floor(intDiff / (60 * 60)) - (days * 24);
+                                minute = Math.floor(intDiff / 60) -  (hour * 60);
+                                second = Math.floor(intDiff) - (hour * 60 * 60) - (minute * 60);
+                                if (hour <= 9) hour = '0' + hour;
+                                if (minute <= 9) minute = '0' + minute;
+                                if (second <= 9) second = '0' + second;
+                                strName={
+                                    hour:hour,
+                                    minute:minute,
+                                    second:second
+                                };
+                            } else {
+                                strName={
+                                    hour:"00",
+                                    minute:"00",
+                                    second:"00"
+                                };
+                            }
+                            if(name.indexOf('.')===-1)
+                                that.$set(that[name],outputName,strName);
+                            else{
+                                var nameArray=name.split('.');
+                                that.$set(that[nameArray[0]][nameArray[1]],outputName,strName);
+                            }
+                        }
+                    };
+                    opt.nowTime();
+                    setInterval(opt.nowTime,tiem);
+                },
+                //播放回放
+                playBackRecord:function (item) {
+                    this.RecordId = item.RecordId;
+                    this.OpenPay(6);
+                },
+            },
+        });
+    })
+
+</script>
+{/block}

@@ -1,0 +1,39 @@
+{extend name="public/container"}
+{block name='title'}领取记录{/block}
+{block name='head_top'}
+<style>
+    body{background-color: #509efb}
+</style>
+{/block}
+{block name="content"}
+<div class="receive-details">
+    <div class="white">
+        <div class="header acea-row row-center-wrapper row-column">
+            <div class="name"><img src="{$userInfo.avatar}">{$userInfo.nickname}发礼物啦</div>
+            <div>{$title}</div>
+        </div>
+        <div class="padding">
+            {if $is_gift}
+            <div class="receive">已领取1/1个</div>
+            {else}
+            <div class="receive">已领取0/1个</div>
+            {/if}
+            <div class="pic-text acea-row row-between-wrapper">
+                {if count($user)}
+                <div class="pictrue"><img src="{$user.avatar}"></div>
+                <div class="text">
+                    <div class="name line1">{$user.nickname}</div>
+                    <div class="acea-row row-between-wrapper">
+                        <div>{$add_time}</div>
+                        <div>已领取</div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+            <!--<div class="pictrue3"><img src="{$image}"></div>-->
+        </div>
+    </div>
+    <div class="pictrue4"><img src="{$special_gift_banner}"></div>
+</div>
+
+{/block}

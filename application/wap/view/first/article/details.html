@@ -1,0 +1,41 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+{block name="head_top"}
+<style>
+    .content{padding: 0.3rem}
+    .content video{width: 100%}
+    .content img{width: 100%;height: auto;}
+    .video-js .vjs-big-play-button{top:50%!important;left:50%!important;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}
+</style>
+<link rel="stylesheet" type="text/css" href="{__WAP_PATH}zsff/css/video-js.min.css"/>
+<script src="{__WAP_PATH}zsff/js/video.min.js"></script>
+<script src="{__WAP_PATH}zsff/js/video.zh.js"></script>
+<script src="{__WAP_PATH}zsff/js/md5.js"></script>
+{/block}
+{block name="content"}
+<div class="content">
+    {$content}
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var myPlayer=[],width=$('.content').width();
+    $('.video-ue').each(function (index) {
+        var id="video-ue-"+index,videoUrl=$(this).attr('src');
+        $(this).attr('id',id);
+        $(this).html("<source src='"+videoUrl+"' type='video/mp4' />")
+        $(this).addClass("video-js");
+        videojs(id, {}, function(){
+            this.width(width);
+        });
+    })
+    mapleWx($jssdk(), function () {
+        this.onMenuShareAll({
+            title:"{$title}" ,
+            desc: '{$synopsis}',
+            imgUrl: "{$image}",
+            link: location.href,
+        });
+    });
+</script>
+{/block}

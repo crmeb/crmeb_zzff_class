@@ -1,0 +1,119 @@
+{extend name="public/container"}
+{block name='head_top'}
+
+{/block}
+{block name='title'}{if $type==0}一级推广佣金记录{elseif $type==1}二级推广佣金记录{else}佣金提现记录{/if}{/block}
+{block name="content"}
+<div class="promotion-details withdrawals-record" id="app" ref="app">
+    <div class="data acea-row row-middle" id="dateShowBtn">
+        <input type="text" readonly="readonly" onfocus='this.blur();' id="dateSelectorTwo" :value=value>
+        <span class="iconfont icon-xiala"></span>
+    </div>
+
+    <ul class="list" v-cloak="" ref="list">
+        <li class="item acea-row row-column row-center" v-for="item in spreadList">
+            <div class="acea-row row-between-wrapper">
+                <div class="title line1" v-text="item.title" v-if="type==0 || type==1"></div>
+                <div class="title line1" v-text="item.mark" v-else></div>
+                <div class="name line1" v-text="item.nickname"></div>
+            </div>
+            <div class="time acea-row row-between-wrapper">
+                <div v-text="item.add_time"></div>
+                <div class="money" v-if="item.pm==1">+{{item.number}}</div>
+                <div class="money" style="color: #ea2f2f;" v-else>-{{item.number}}</div>
+            </div>
+        </li>
+    </ul>
+
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+
+</div>
+<script src="{__WAP_PATH}zsff/js/iScroll.js"></script>
+<script src="{__WAP_PATH}zsff/js/Mdate.js"></script>
+{/block}
+{block name="foot"}
+<script>
+    var type={$type};
+    require(['vue','helper','store'],function(Vue,$h,app) {
+        new Vue({
+            el: '#app',
+            data: {
+                value:'',
+                spreadList:[],
+                loadTitle:'上拉加载更多',
+                loading:false,
+                loaded:false,
+                page:1,
+                limit:10,
+                type:type,
+            },
+            watch:{
+                value:function (n) {
+                    this.page=1;
+                    this.loadend=false;
+                    this.$set(this,'spreadList',[]);
+                    this.getSpreadList();
+                }
+            },
+            mounted:function(){
+                this.datas();
+                var year = new Date().getFullYear();
+                var montho = new Date().getMonth()+1;
+                var month = montho <10?'0'+montho : montho;
+                this.value=year+'年'+month+'月';
+            },
+            methods:{
+                datas:function(){
+                    var that=this;
+                    new Mdate("dateShowBtn", {
+                        acceptId:"dateSelectorTwo",
+                        beginYear: "2000",
+                        success:function (data) {
+                            that.value=data;
+                        }
+                    });
+                },
+                getSpreadList:function () {
+                    var that=this;
+                    if(this.loading) return;
+                    if(this.loadend) return;
+                    this.loadTitle='';
+                    this.loading=true;
+                    app.baseGet($h.U({c:'spread',a:'get_spread_list',q:{type:type,page:this.page,limit:this.limit,data:that.value}}),function (res) {
+                        var list=res.data.data.list;
+                        var spreadList=$h.SplitArray(list,that.spreadList);
+                        that.loadend=list.length < that.limit;
+                        that.loadTitle=that.loadend ? '已全部加载': '上拉加载更多';
+                        that.page=res.data.data.page;
+                        that.loading=false;
+                        that.$set(that,'spreadList',spreadList);
+                        that.$nextTick(function () {
+                            that.bScrollInit();
+                        });
+                    },function (res) {
+                        that.loadTitle='上拉加载更多';
+                        that.loading=false;
+                    });
+                },
+                //滑动底部加载
+                bScrollInit:function(){
+                    var that = this;
+                    this.$refs.app.style.height =document.documentElement.clientHeight+'px';
+                    this.$refs.app.style.overflowY = 'scroll';
+                    $(this.$refs.app).on('scroll',function(){
+                        var scrollTop = $(this).scrollTop();
+                        var scrollHeight = $(that.$refs.list).height();
+                        var windowHeight = $(this).height();
+                        if ((scrollTop + windowHeight) >= scrollHeight) {
+                            that.loading == false && that.getSpreadList();
+                        }
+                    })
+                }
+            }
+        });
+    })
+</script>
+{/block}

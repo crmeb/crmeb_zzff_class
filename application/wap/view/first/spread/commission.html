@@ -1,0 +1,35 @@
+{extend name="public/container"}
+{block name='head_top'}
+
+{/block}
+{block name='title'}佣金明细{/block}
+{block name="content"}
+<div class="commission-details">
+    <header class="acea-row row-center-wrapper row-column">
+        <div>累计佣金 (元）</div>
+        <div class="money">{$data.sum_spread}</div>
+    </header>
+    <div class="commission">
+        <div class="title acea-row row-middle">推广佣金</div>
+        <div class="list acea-row row-middle">
+            <a class="item acea-row row-between-wrapper" href="{:Url('spread_detail',['type'=>0])}">
+                <div>
+                    <div>一级推广佣金(元)</div>
+                    <div class="money">{$data.spread_one}</div>
+                </div>
+                <div class="iconfont icon-icon-yxj-arrow-right"></div>
+            </a>
+            <a class="item acea-row row-between-wrapper" href="{:Url('spread_detail',['type'=>1])}">
+                <div>
+                    <div>二级推广佣金(元)</div>
+                    <div class="money">{$data.spread_two}</div>
+                </div>
+                <div class="iconfont icon-icon-yxj-arrow-right"></div>
+            </a>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="foot"}
+
+{/block}

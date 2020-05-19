@@ -1,0 +1,80 @@
+{extend name="public/container"}
+{block name="title"}我的赠送{/block}
+{block name='head_top'}{/block}
+{block name="content"}
+<div class="my-gift my-spelling-order swiper-details" id="app">
+    <div class="video-listn" v-cloak="">
+        <div class="list" v-for="item in giftList">
+            <div class="item acea-row row-between-wrapper">
+                <div class="pictrue"><img :src="item.image"></div>
+                <div class="text acea-row row-between row-column">
+                    <div class="name line1" v-text="item.title"></div>
+                    <div class="num acea-row row-middle"><span class="money">¥ {{item.money}}</span></div>
+                </div>
+            </div>
+            <a class="bottom acea-row row-between-wrapper" v-if="item.is_draw" :href="goGiveOk(item)">
+                <div class="status line1">赠送成功</div>
+                <div class="time">领取人:{{item.gift_user.nickname}}</div>
+            </a>
+            <div class="bottom acea-row row-between-wrapper" v-else>
+                <div class="status line1">未赠送</div>
+                <a class="time goBnt acea-row row-center-wrapper" :href="goGive(item)">去赠送</a>
+            </div>
+        </div>
+    </div>
+
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+</div>
+<script>
+    require(['vue','helper','store'],function(Vue,$h,app){
+        new Vue({
+            el: '#app',
+            data: {
+                appear:true,
+                giftList:[],
+                loadTitle:'加载更多',
+                loadend:false,
+                loading:false,
+                page:1,
+                limit:10
+            },
+            mounted:function(){
+                this.getMyGiftList();
+                $h.EventUtil.listenTouchDirection(document,function (){
+                    this.loading == false && this.getMyGiftList();
+                }.bind(this),false);
+            },
+            methods:{
+                goGiveOk:function(item){
+                    return $h.U({c:'special',a:'gift_receive',p:{orderId:item.order_id}});
+                },
+                goGive:function(item){
+                    return $h.U({c:'special',a:'gift_special',q:{orderId:item.order_id}});
+                },
+                getMyGiftList:function () {
+                    var that=this;
+                    if(this.loading) return;
+                    if(this.loadend) return;
+                    this.loadTitle='';
+                    this.loading=true;
+                    app.baseGet($h.U({c:'my',a:'get_order_list',q:{type:1,page:this.page,limit:this.limit}}),function (res) {
+                        var list=res.data.data.list;
+                        var giftList=$h.SplitArray(list,that.giftList);
+                        that.loadend=list.length < that.limit;
+                        that.loadTitle=that.loadend ? '已全部加载': '加载更多';
+                        that.page=res.data.data.page;
+                        that.loading=false;
+                        that.$set(that,'giftList',giftList);
+                    },function (res) {
+                        that.loadTitle='加载更多';
+                        that.loading=false;
+                    });
+                },
+            }
+        })
+    })
+</script>
+{/block}

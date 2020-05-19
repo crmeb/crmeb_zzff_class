@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" media="screen" />
+	<title>JavaScript SDK</title>
+	<style>
+		tr{
+			padding: 10px;
+		}
+		th,td{
+			margin-right:40px;
+			width: 200px;
+			text-align: center;
+		}
+		th,td:first-child{
+			width: 300px;
+		}
+		#exampleForDeleteFile .del-opt {
+		   text-decoration: underline;
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<ul id="filelist"></ul>
+	<br />
+	 
+	<div id="container">
+	    <a id="browse" href="javascript:;">[Browse...]</a>
+	    <a id="start-upload" href="javascript:;">[Start Upload]</a>
+	</div>
+
+	<div id="example2">
+		<button id="get-bucket" style="margin: 30px 0;">List Objects</button>
+		<textarea id="responsexml" style="width: 80%;height: 400px; margin:0px 10%;"></textarea>
+	</div>
+
+	<div id="example3" style="margin-top:20px;">
+		<input type="file" id="imgFile">
+		<progress id="progressBar" value="0" max="100"> </progress>
+		<button id="utp" style="margin-left: 3em">Upload Trigger Processing</button>
+		<div id="display-adp-result" style="margin-top: 1em"><img src=""></div>
+	</div>
+
+	<div id="example4" style="margin-top:20px;">
+		<input type="file" id="imgFile2">
+		<progress id="progressBar2" value="0" max="100"> </progress>
+		<button id="utp2" style="margin-left: 3em">Put上传</button>
+		<div id="display-adp-result2" style="margin-top: 1em"><img src=""></div>
+	</div>
+
+	<table id="exampleForDeleteFile" style="margin-top:20px;">
+		<tr><th>文件名</th><th>大小</th><th>最后更新时间</th><th>操作</th></tr>
+
+	</table>
+
+	<div id="exampleForDownloadFile" style="margin-top:20px; color: darkred">
+		<span>http://sanrui.kss.ksyun.com/jssdk/book.pdf</span>
+		<button id="downloadBigFileBtn" style="margin-left:1em;">下载大文件</button>
+		<progress id="downloadProgressBar" value="0" max="100" style="margin-left: 2em;width: 300px"></progress>
+		<span style="margin-left:10px" id="downloadPercent"></span>
+		<button id="stopDownload" style="margin:0 2em">暂停</button>
+	</div>
+
+	<div id="multipartUpload" style="margin: 30px 0;">
+		<!--<input type="file" id="bigFile" webkitdirectory>-->
+		<input type="file" id="bigFile">
+		<button id="uploadBigFile">分块上传</button>
+		<progress id="multipartUploadProgressBar" value="0" max="100" style="margin:0 2em;width: 300px"> </progress>
+		<button id="suspendMultipartUpload">暂停</button>
+		<button id="cancelMultipartUpload" style="margin:0 10px">取消</button>
+	</div>
+
+	<script type="text/javascript" src="js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="js/ks3jssdk.js"></script>
+	<script type="text/javascript" src="lib/async.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

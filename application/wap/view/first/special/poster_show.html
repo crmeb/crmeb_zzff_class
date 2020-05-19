@@ -1,0 +1,41 @@
+{extend name="public/container"}
+{block name='title'}拼团海报{/block}
+{block name="head_top"}
+<style>
+    body{background-color:#4c4c4c;}
+</style>
+{/block}
+{block name="content"}
+<div class="promotion-poster promotion-poster2">
+    <div class="pictrue">
+        <img src="/{$filename}">
+    </div>
+    <div class="tip">长按保存海报，分享到朋友圈</div>
+    <div class="shareBnt">分享链接给朋友</div>
+    <div class="shares-model" style="display: none">
+        <img style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;" src="{__WAP_PATH}zsff/images/share-info.png">
+    </div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    $('.shares-model').on('touchmove',function(e){
+        e.preventDefault();
+    });
+    $('.shareBnt').on('click',function () {
+        $('.shares-model').show();
+    });
+    $('.shares-model').on('click',function () {
+        $('.shares-model').hide();
+    })
+    window.overallShare=false;
+    mapleWx($jssdk(), function () {
+        this.onMenuShareAll({
+            title: '{$special.title}',
+            desc: "{$special.abstract}",
+            imgUrl: '{$special.image}',
+            link: '{$site_url}'
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,38 @@
+{extend name="public/container"}
+{block name='title'}推广{/block}
+{block name="content"}
+<div class="extension">
+    <div class="header acea-row row-center-wrapper row-column">
+        <div>可提现金额 (元）</div>
+        <div class="money">{$userInfo.brokerage_price}</div>
+        <a href="{:Url('spread_detail',['type'=>2])}" style="color: #ffffff">提现记录<span class="iconfont icon-icon-yxj-arrow-right"></span></a>
+        <a class="cashBnt" href="{:Url('spread/withdraw')}">去提现</a>
+    </div>
+    <nav class="acea-row row-between-wrapper">
+        <div class="item">
+            <div>今日收益(元)</div>
+            <div class="num">{$data.number}</div>
+        </div>
+        <div class="item">
+            <div>今日新增订单</div>
+            <div class="num">{$data.order_count}</div>
+        </div>
+        <div class="item">
+            <div>今日新增代理</div>
+            <div class="num">{$data.spread_count}</div>
+        </div>
+    </nav>
+    <div class="list">
+        <a class="item acea-row row-middle" href="{:Url('special')}">专题推广</a>
+        <a class="item acea-row row-middle" href="{:Url('my_promoter')}">我的推广人</a>
+        <a class="item acea-row row-middle" href="{:Url('commission')}">佣金明细</a>
+    </div>
+    <div style="height:1.2rem;"></div>
+    {include file="public/store_menu"}
+</div>
+{/block}
+{block name="foot"}
+<script>
+
+</script>
+{/block}

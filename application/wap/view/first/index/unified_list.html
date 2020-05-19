@@ -1,0 +1,205 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+
+{block name="content"}
+<div class="course-list index" id="app" v-cloak="" ref="index" style="-webkit-overflow-scrolling: touch;">
+
+    <div class="header slider-banner" v-if="swiperlist.length">
+        <ul class="swiper-wrapper">
+            <li class="swiper-slide" v-for="(swiper,index) in swiperlist">
+                <a  v-if="swiper.url" :href="swiper.url">
+                    <img :src="swiper.pic"/>
+                </a>
+                <img v-else :src="swiper.pic"/>
+            </li>
+        </ul>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="nav" v-if="Recommendlist.length">
+        <div class="item" :class="where.subject_id==0 ? 'on':''" @click="where.subject_id=0">推荐</div>
+        <div class="item" v-for="item in Recommendlist" :class="where.subject_id==item.id ? 'on':''" @click="where.subject_id=item.id">{{item.title}}</div>
+    </div>
+    <div class="studyCourse" ref="list">
+        <!--宫图-->
+        <div class="swiper-list acea-row row-between-wrapper" v-if="where.typesetting==2" >
+            <a class="item" v-for="vo in updateList" :href="getDetails(vo.id)">
+                <div class="pictrue"><img :src="vo.image"></div>
+                <div class="name line1" v-text="vo.title"></div>
+                <div class="acea-row row-between-wrapper label-wrapper">
+                    <div class="age acea-row row-center-wrapper" v-for="(lab,index) in vo.label" v-if="index < 1" v-text="lab"></div>
+                </div>
+                <template v-if="where.type==0">
+                    <template>
+                        <div v-if="vo.money == 0" class="free">免费</div>
+                        <div v-else class="money">¥<span>{{vo.money}}</span></div>
+                    </template>
+                </template>
+            </a>
+        </div>
+        <!--大图-->
+
+        <div class="swiper-list2 swiper-list3" v-else-if="where.typesetting==1" >
+            <a class="item acea-row row-between-wrapper" v-for="vo in updateList" :href="getDetails(vo.id)">
+                <div class="pictrue">
+                    <img :src="vo.image">
+                    <div class="label">{{ vo.type }}</div>
+                </div>
+                <div class="text-pic acea-row row-column">
+                    <div class="name line1" v-text="vo.title"></div>
+                    <div class="bottom acea-row row-between-wrapper">
+                        <div class="acea-row row-middle">
+                            <div class="num acea-row row-center-wrapper" v-for="(lab,index) in vo.label" v-if="index < max" v-text="lab"></div>
+                        </div>
+                        <template v-if="where.type==0">
+                            <template>
+                                <div v-if="vo.money == 0" class="free">免费</div>
+                                <div v-else class="money">¥<span>{{vo.money}}</span></div>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!--小图-->
+        <div class="swiper-list2" v-else-if="where.typesetting==3">
+            <a class="item acea-row row-between-wrapper" v-for="vo in updateList" :href="getDetails(vo.id)">
+                <div class="pictrue">
+                    <img :src="vo.image">
+                    <div class="label">{{ vo.type }}</div>
+                </div>
+                <div class="underline">
+                    <div class="text-pic acea-row row-column">
+                        <div class="name line1" v-text="vo.title">非常语文课</div>
+                        <div class="bottom acea-row row-between-wrapper">
+                            <div class="acea-row row-middle">
+                                <div class="num acea-row row-center-wrapper" v-for="(lab,index) in vo.label" v-if="index < max" v-text="lab"></div>
+                            </div>
+                        </div>
+                        <template v-if="(vo.money > 0 || vo.pink_money > 0 ) && where.type==0">
+                            <template>
+                                <div v-if="vo.money <= 0" class="free">免费</div>
+                                <div v-else class="money">¥<span>{{vo.money}}</span></div>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!--纯图-->
+        <div class="list" v-else-if="where.typesetting==4">
+            <a class="item" v-for="vo in List" :href="getDetails(vo.id)" style="display: inherit"><img :src="vo.image"></a>
+        </div>
+    </div>
+    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
+        <span v-text="loadTitle">加载更多</span>
+    </p>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var type={$type},recommend_id={$recommend_id},typesetting={$typesetting},banner={$banner},Recommendlist={$Recommendlist},grade_id={$grade_id};
+    require(['vue','helper','store'],function(Vue,$h,storeApi) {
+        new Vue({
+            el: '#app',
+            data: {
+                where:{
+                    type:type,
+                    recommend_id:recommend_id,
+                    page:1,
+                    limit:10,
+                    typesetting:typesetting,
+                    subject_id:0,
+                },
+                Recommendlist:Recommendlist,
+                swiperlist:banner,
+                loading: false,
+                loadend: false,
+                loadTitle: '上拉加载更多',
+                List:[],
+                max:2
+            },
+            computed: {
+                updateList: function () {
+                    return this.List.map(function (value) {
+                        switch (value.type) {
+                            case 1:
+                                value.type = '图文';
+                                break;
+                            case 2:
+                                value.type = '音频';
+                                break;
+                            case 3:
+                                value.type = '视频';
+                                break;
+                            case 4:
+                                value.type = '直播';
+                                break;
+                            case 5:
+                                value.type = '专栏';
+                                break;
+                            case 6:
+                                value.type = '其他';
+                                break;
+                        }
+                        return value;
+                    });
+                }
+            },
+            watch:{
+                'where.subject_id':function (n) {
+                    this.where.page=1;
+                    this.loadend=false;
+                    this.$set(this,'List',[]);
+                    this.get_unifiend_list();
+                }
+            },
+            methods:{
+                getDetails:function(id){
+                    return this.where.type == 1 ? $h.U({c:'article',a:'details',q:{id:id}}) : $h.U({c:'special',a:'details',q:{id:id}});
+                },
+                get_unifiend_list:function () {
+                    if(this.loading) return;
+                    if(this.loadend) return;
+                    this.loadTitle='';
+                    this.loading=true;
+                    storeApi.baseGet($h.U({c:'index',a:'get_unifiend_list',q:this.where}),function (res) {
+                        var list=res.data.data.list;
+                        var List=$h.SplitArray(list,this.List);
+                        this.loading=false;
+                        this.where.page=res.data.data.page;
+                        this.loadend=list.length < this.where.limit;
+                        this.loadTitle=this.loadend ? '我是有底线的': '上拉加载更多';
+                        this.$set(this,'List',List);
+                        this.$nextTick(function () {
+                            this.EventUtil();
+                        }.bind(this))
+                    }.bind(this),function (res) {
+                        this.loadTitle='加载更多';
+                        this.loading=false;
+                    }.bind(this));
+                },
+                EventUtil:function () {
+                    var that=this;
+                    $h.EventUtil.listenTouchDirection(document,function (){
+                        that.loading == false && that.get_unifiend_list();
+                    },false);
+                }
+            },
+            mounted:function () {
+                this.get_unifiend_list();
+                this.$nextTick(function () {
+                    var myBanner = new Swiper('.header', {
+                        pagination: '.swiper-pagination',
+                        paginationClickable: false,
+                        autoplay:2500,
+                        speed: 1000,
+                        autoplayDisableOnInteraction: false
+                    });
+                })
+            }
+        })
+    })
+</script>
+{/block}

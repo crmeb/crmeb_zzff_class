@@ -1,37 +1,44 @@
-# CRMEB知识付费
+# 知识付费
 
 #### 介绍
-CRMEB知识付费
-
-#### 软件架构
-软件架构说明
+知识付费系统
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 上传代码到服务器进行解压
+2. 配置运行目录到public下
+3. 配置站点伪静态
+4. 检查php版本 5.6 ~ 7.1 版本
+5. 修改runtime和public/uploads文件夹权限为777和用户组,没有创建
+6. 配置好站点访问 http://域名 进行安装
+7. 进入安装界面进行一键安装
 
-#### 使用说明
+## 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### 图片 文件 视频上传说明
 
-#### 参与贡献
+本系统使用阿里云oss进行视频和图片上传,个别特殊文件需要上传至本地
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+#### 配置
+
+1. 登陆阿里云后台,进入[对象存储OSS]
+2. 点击[Bucket 列表] 进行创建 Bucket,设置读取权限为[公共读],其他可自行设置
+3. 登陆知识付费系统后台,配置阿里云 OSS 上传
+
+### 短信
+
+本系统使用阿里云短信,其他短信驱动暂不支持
+
+#### 配置
+
+1. 登陆阿里云控制台后台,进入[短信服务]
+2. 点击左侧[国内消息],进行申请短信签名,短信模板
+3. 等待审核通过后,进入知识付付费系统后台,配置阿里云短信服务
 
 
-#### 码云特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+
+
+
+

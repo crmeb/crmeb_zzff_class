@@ -1,0 +1,28 @@
+{extend name="public/container"}
+{block name="title"}{if $is_pay}支付成功{else}支付失败{/if}{/block}
+{block name="head_top"}
+<style>
+    body{background-color: #cccccc}
+</style>
+{/block}
+{block name="content"}
+<div class="payState">
+    <!--fail.png-->
+    {if $is_pay}
+    <div class="pictrue"><img src="{__WAP_PATH}zsff/images/msg_image/success.png"></div>
+    <!--支付失败-->
+    <div class="status">支付成功</div>
+    <!--重新支付-->
+    <a class="learn" style="display: inherit;" href="{:Url('wap/special/grade_list')}">去学习</a>
+    {else}
+    <div class="pictrue"><img src="{__WAP_PATH}zsff/images/msg_image/error.png"></div>
+    <!--支付失败-->
+    <div class="status">支付失败</div>
+    <!--重新支付-->
+    <a class="learn" style="display: inherit;" href="{:Url('wap/index/index')}">返回首页</a>
+    {/if}
+</div>
+{/block}
+{block name='foot'}
+
+{/block}

@@ -1,0 +1,131 @@
+{extend name="public/container"}
+{block name="title"}学习记录{/block}
+{block name="head_top"}
+<script src="/wap/first/zsff/js/scroll.js"></script>
+<script src="/wap/first/zsff/js/navbarscroll.js"></script>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="study-record">
+        <header>
+            {if $homeLogo}
+            <img class="logo" src="{$homeLogo}">
+            {else}
+            <img class="logo" src="/wap/first/zsff/images/crmeb.png">
+            {/if}
+            <form @submit.prevent="goSearch">
+                <img src="/wap/first/zsff/images/search.png">
+                <input v-model="search" type="search" placeholder="输入课程名称">
+            </form>
+        </header>
+        <main>
+            <div v-if="makeSpecials.length" class="goods">
+                <a v-for="item in makeSpecials" :key="item.id" :href="item.path" class="item">
+                    <div class="image">
+                        <img :src="item.image">
+                        <div class="label">{{ item.type }}</div>
+                    </div>
+                    <div class="text">
+                        <div class="name">{{ item.title }}</div>
+                        <div v-for="(itm, idx) in item.label" :key="idx" class="label">
+                            <span v-if="idx < 2" class="cell">{{ itm }}</span>
+                        </div>
+                        <div class="price">
+                            <template v-if="item.is_pink">
+                                <div class="money">¥<span>{{ item.pink_money }}</span></div>
+                                <div class="group-price-icon">拼团特惠</div>
+                            </template>
+                            <template v-else>
+                                <div v-if="item.money === '0.00'" class="free">免费</div>
+                                <div v-else class="money">¥<span>{{ item.money }}</span></div>
+                            </template>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="foot">
+                <span v-show="loading" class="fa fa-spinner loadingpic"></span>
+                <div class="tip">{{ loadTitle }}</div>
+            </div>
+        </main>
+    </div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    require(['vue', 'helper', 'store' , 'special-type'], function (Vue, $h, app, specialType) {
+        new Vue({
+            el: '#app',
+            data: {
+                specials: [],
+                search: '',
+                loadTitle: '',
+                loading: false,
+                limit: 10,
+                page: 1,
+            },
+            computed: {
+                makeSpecials: function () {
+                    var that = this;
+                    return that.specials.map(function (value) {
+                        value.path = $h.U({
+                            c: 'special',
+                            a: 'details',
+                            q: { id: value.id }
+                        });
+                        value.type = specialType[value.type];
+                        return value;
+                    });
+                }
+            },
+            created: function () {
+                this.getSpecialList();
+            },
+            methods: {
+                goSearch: function () {
+                    this.loadend = false;
+                    this.page = 1;
+                    this.$set(this, 'specials', []);
+                    this.getSpecialList();
+                },
+                getSpecialList: function () {
+                    var that = this;
+                    if (that.loadend) return;
+                    if (that.loading) return;
+                    that.loading = true;
+                    that.loadTitle = '';
+                    app.baseGet($h.U({
+                        c: 'special',
+                        a: 'get_special_list',
+                        q: {
+                            subject_id: 0,
+                            search: that.search,
+                            page: that.page,
+                            limit: that.limit,
+                            type: 1
+                        }
+                    }), function (res) {
+                        var specials = res.data.data;
+                        that.loading = false;
+                        $h.SplitArray(specials, that.specials);
+                        that.loadend = specials.length < that.limit;
+                        that.loadTitle = that.loadend ? '我是有底线的' : '上拉加载更多';
+                        that.page++;
+                        that.EventUtil();
+                    }, function (res) {
+                        that.loading = false;
+                        this.loadTitle = '加载更多';
+                    });
+                },
+                EventUtil: function () {
+                    this.$nextTick(function () {
+                        $h.EventUtil.listenTouchDirection(document, function () {
+                            this.loading == false && this.getSpecialList();
+                        }.bind(this), false);
+                    })
+                }
+            }
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,165 @@
+
+/*选择日期*/
+.getDateBg{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    transition: opacity 0.4s;
+    opacity: 0;
+}
+.getDateBox{
+    width: 100%;
+    position: fixed;
+    left: 0;
+    background-color: #fff;
+    box-shadow: -5px 0 5px rgba(0,0,0,0.3);
+    z-index: 101;
+    transition: bottom 0.4s;
+    bottom: -270px;
+}
+.slideIn{
+    display: block !important;
+}
+.slideIn .getDateBox{
+    animation: slideIn 0.4s;
+    -webkit-animation: slideIn 0.4s;
+    bottom: 0;
+}
+.slideOut .getDateBox{
+    animation: slideOut 0.4s;
+    -webkit-animation: slideOut 0.4s;
+    bottom: -400px;
+}
+
+.slideIn .getDateBg{
+    opacity: 1;
+}
+.slideOut .getDateBg{
+    opacity: 0;
+}
+
+.getDateBox .choiceDateTitle{
+    height: 0.8rem;
+    background-color: #f2f2f2;
+}
+.getDateBox .choiceDateTitle button{
+    height: 100%;
+    padding: 0 0.3rem;
+    color: #509efb;
+    font-size: 0.3rem;
+    background: none;
+    border: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.2);
+    font-weight:bold;
+}
+.getDateBox .dateContent{
+    width: 100%;
+    margin: 1.0rem 0;
+    height: 120px;
+    overflow: hidden;
+    position: relative;
+}
+
+.getDateBox .dateContent:before{
+    content: "";
+    width: 100%;
+    height: 40px;
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+.getDateBox .dateContent:after{
+    content: "";
+    width: 100%;
+    height: 40px;
+    background: -webkit-linear-gradient(bottom, rgba(255,255,255,1), rgba(255,255,255,0));
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+.getDateBox .dateContent .checkeDate{
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    top: 40px;
+}
+.getDateBox .dateContent .checkeDate:before,
+.getDateBox .dateContent .checkeDate:after{
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: scaleY(0.5);
+    -webkit-transform: scaleY(0.5);
+}
+.getDateBox .dateContent .checkeDate:after{
+    top: auto;
+    bottom: 0;
+}
+
+#yearwrapper,
+#monthwrapper,
+#daywrapper{
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+#yearwrapper{
+    left: 0;
+}
+#daywrapper{
+    right: 0;
+}
+#monthwrapper{
+    right: 0;
+}
+#monthwrapper ul{
+    margin-right: 40%;
+}
+#yearwrapper ul{
+    margin-left: 40%;
+}
+#daywrapper ul{
+    margin-right: 40%;
+}
+#yearwrapper ul li,
+#monthwrapper ul li,
+#daywrapper ul li{
+    height: 40px;
+    line-height: 40px;
+    font-size: 0.27rem;
+    text-align: center;
+    list-style: none;
+}
+
+@keyframes slideIn{
+    0%{bottom: -270px;}
+    100%{bottom: 0;}
+}
+@-webkit-keyframes slideIn{
+    0%{bottom: -270px;}
+    100%{bottom: 0;}
+}
+
+@keyframes slideOut{
+    0%{bottom: 0;}
+    100%{bottom: -270px;}
+}
+@-webkit-keyframes slideOut{
+    0%{bottom: 0;}
+    100%{bottom: -270px;}
+}

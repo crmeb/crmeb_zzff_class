@@ -95,11 +95,18 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：admin 密码：admin123.cr
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
 ### 商业版与 :tw-1f19a: 开源版差异
-
+    商业版：适合商用；开源版：不适合商用
+    商业版：带拼团；开源版：不带拼团
+    商业版：会员线下卡打通；开源版：无
+    商业版：会员充值及课程关联；开源版：无
+    商业版：提供更新包；开源版：不提供更新包
+    商业版：VIP群；开源版：普通群
+    商业版：有授权证书；开源版：无授权证书
+    商业版：购买其他产品会员价；开源版：无折扣
+    商业版：有技术咨询及问题售后服务；开源版：无
+    
 ![系统功能](/readme/images/商业版对比.jpg)
 ### 商业版[<a href='https://s.click.taobao.com/W7hVkLw' target="_blank"> 去看看 </a>]
-
-[![输入图片说明](https://images.gitee.com/uploads/images/2019/0122/114739_a48f5bfd_892944.gif "tasheng jo(1).gif")](https://s.click.taobao.com/W7hVkLw)
 商业授权及定制服务版：http://www.crmeb.com
 
 ###技术亮点
@@ -122,9 +129,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：admin 密码：admin123.cr
     16.无缝事件机制行为扩展更方便，方便二次开发；
     17.一键安装自动检查系统环境一键安装；
 ###  系统组件开源项目
-
 #### form-builder
-
 tp5 PHP表单生成器，快速生成现代化的form表单。包含复选框、单选框、输入框、下拉选择框等元素以及,省市区三级联动,时间选择,日期选择,颜色选择,文件/图片上传等功能。
 form-builder : https://github.com/xaboy/form-builder
 

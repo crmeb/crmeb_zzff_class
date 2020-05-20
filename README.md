@@ -39,7 +39,7 @@ CRMEB知识付费系统是基于ThinkPhp5.0+Vue开发的一套新零售直播知
 
 ####   :fire:演示站后台:[ 查看 ]
 
-http://zhishifufei.crmeb.net/index.php/admin 账号：admin 密码：admin123.crmeb888
+http://zhishifufei.crmeb.net/index.php/admin 账号：demo 密码：crmeb.com
 
 #### CRMEB推荐阿里云服务器配置
 
@@ -105,7 +105,6 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：admin 密码：admin123.cr
     商业版：购买其他产品会员价；开源版：无折扣
     商业版：有技术咨询及问题售后服务；开源版：无
     
-![系统功能](/readme/images/商业版对比.jpg)
 ### 商业版[<a href='https://s.click.taobao.com/W7hVkLw' target="_blank"> 去看看 </a>]
 商业授权及定制服务版：http://www.crmeb.com
 

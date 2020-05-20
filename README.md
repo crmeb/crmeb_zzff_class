@@ -1,41 +1,147 @@
-# 知识付费
 
-#### 介绍
-知识付费系统
+# CRMEB知识付费分销+直播营销系统
 
+<p align="center">
+    <a href="http://www.crmeb.com">
+        <img src="https://img.shields.io/badge/OfficialWebsite-CRMEB-yellow.svg" />
+    </a>
 
-#### 安装教程
+<a href="http://www.crmeb.com">
+        <img src="https://img.shields.io/badge/Licence-GPL3.0-green.svg?style=flat" />
+    </a>
+    <a href="http://www.crmeb.com">
+        <img src="https://img.shields.io/badge/Edition-3.0-blue.svg" />
+    </a>
+     <a href="https://gitee.com/ZhongBangKeJi/CRMEB/repository/archive/master.zip">
+        <img src="https://img.shields.io/badge/download-80m-red.svg" />
+    </a>
+    </p>
+<p align="center">    
+    <b>如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！</b>
+</p>
 
-1. 上传代码到服务器进行解压
-2. 配置运行目录到public下
-3. 配置站点伪静态
-4. 检查php版本 5.6 ~ 7.1 版本
-5. 修改runtime和public/uploads文件夹权限为777和用户组,没有创建
-6. 配置好站点访问 http://域名 进行安装
-7. 进入安装界面进行一键安装
+### 项目介绍
 
-## 使用说明
+CRMEB知识付费系统是基于ThinkPhp5.0+Vue开发的一套新零售直播知识付费系统，CRMEB系统就是集分销推广关系管理+营销+直播的知识类电商系统，能够快速积累客户、会员数据分析、智能转化客户、 有效提高销售、吸引流量、网络营销、品牌推广的一款应用，且更适合企业二次开发；
+### 导航栏目
 
-### 图片 文件 视频上传说明
+[前端下载](/readme/前端下载地址.md)
+ | [使用手册](https://help.crmeb.net)
+ | [安装说明](/readme/安装说明.md)
+ | [论坛地址](http://bbs.crmeb.net)
+ | [官网地址](https://www.crmeb.com)
+ | [TP5开发手册](https://www.kancloud.cn/manual/thinkphp5/118003)
+ | [服务器](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z)
+ | [授权价格](https://s.click.taobao.com/W7hVkLw)
 
-本系统使用阿里云oss进行视频和图片上传,个别特殊文件需要上传至本地
+###  前后台演示
+![前端演示](/readme/images/前端演示二维码.jpg)
 
-#### 配置
+####   :fire:演示站后台:[ 查看 ]
 
-1. 登陆阿里云后台,进入[对象存储OSS]
-2. 点击[Bucket 列表] 进行创建 Bucket,设置读取权限为[公共读],其他可自行设置
-3. 登陆知识付费系统后台,配置阿里云 OSS 上传
+http://zhishifufei.crmeb.net/index.php/admin 账号：admin 密码：admin123.crmeb888
 
-### 短信
+#### CRMEB推荐阿里云服务器配置
 
-本系统使用阿里云短信,其他短信驱动暂不支持
+阿里云领取2000元代金劵：[<a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z">https://www.aliyun.com</a>]
+ <table><tr><td> 
+ 
+ 入门级配置
+ ```
+ CPU：1核
+ 内存：1G
+ 实例规格：突发性能t5实例
+ 带宽：1M
+ 系统：CentOS 7.4 64位(推荐)
+ 价格：366元/年 933.3元/三年
+ ```
+ <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z">学生9.5/月</a>
+   </td>
+ <td>
+ 
+ 标准级配置
+ ```
+ CPU：2核
+ 内存：4G
+ 实例规格：突发性能t5实例
+ 带宽：2M
+ 系统：CentOS 7.4 64位(推荐)
+ 价格：936元/年 2386.8元/三年
+ ```
+ <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z">新用户半价</a>
+ 
+   </td>
+   <td>
+ 
+ 企业级配置
+ ```
+ CPU：4核
+ 内存：8G
+ 实例规格：突发性能t6实例
+ 带宽：5M
+ 系统：CentOS 7.4 64位(推荐)
+ 价格：2786.64元/年 5389.20元/三年
+ ```
+ <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z">领取￥2000红包</a>
+ 
+   </td>
+   </tr></table>
+   
+###   :tw-1f50a: 开源版使用须知
+1.允许用于个人学习、毕业设计、教学案例、公益事业;
 
-#### 配置
+2.如果商用必须保留版权信息，请自觉遵守。开源版不适合商用，商用请购买商业版;
 
-1. 登陆阿里云控制台后台,进入[短信服务]
-2. 点击左侧[国内消息],进行申请短信签名,短信模板
-3. 等待审核通过后,进入知识付付费系统后台,配置阿里云短信服务
+3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
+### 商业版与 :tw-1f19a: 开源版差异
+
+![系统功能](/readme/images/商业版对比.jpg)
+### 商业版[<a href='https://s.click.taobao.com/W7hVkLw' target="_blank"> 去看看 </a>]
+
+[![输入图片说明](https://images.gitee.com/uploads/images/2019/0122/114739_a48f5bfd_892944.gif "tasheng jo(1).gif")](https://s.click.taobao.com/W7hVkLw)
+商业授权及定制服务版：http://www.crmeb.com
+
+###技术亮点
+
+    1.后台应用form-builder PHP快速生成现代化表单；
+    2.前端以Vue + RequireJS模块化开发；
+    3.PHPExcel数据导出,导出表格更加美观,可视；
+    4.EasyWeChat部署微信开发,微信接入更加快捷,简单；
+    5.后台应用ECharts实现完善的数据统计和分析；
+    6.内部预留事件钩子,方面用户二次开发；
+    7.后台多任务窗口化操作界面；
+    8.内置强大灵活的权限管理；
+    9.内置组合数据,系统配置,管理碎片化数据；
+    10.客户端完善的交互效果和动画；
+    11.内置客服系统；
+    12.高频数据缓存；
+    13.数据备份和恢复；
+    14.采用单纯页面渲染+vue标准接口、前端半分离，对于二开实力弱的公司及开发者更友好;
+    15.长连接减少CPU及内存使用及网络堵塞，减少请求响应时长；
+    16.无缝事件机制行为扩展更方便，方便二次开发；
+    17.一键安装自动检查系统环境一键安装；
+###  系统组件开源项目
+
+#### form-builder
+
+tp5 PHP表单生成器，快速生成现代化的form表单。包含复选框、单选框、输入框、下拉选择框等元素以及,省市区三级联动,时间选择,日期选择,颜色选择,文件/图片上传等功能。
+form-builder : https://github.com/xaboy/form-builder
+
+### 参与开发
+
+请提交 [CRMEB](https://gitee.com/ZhongBangKeJi/crmeb_knowledge_payment/pulls)。
+
+### 版权信息
+
+本项目包含的第三方源码和二进制文件之版权信息另行标注。
+
+版权所有Copyright © 2017-2019 by CRMEB (http://www.crmeb.com)
+
+All rights reserved。
+
+CRMEB® 商标和著作权所有者为西安众邦网络科技有限公司。    
+    
 
 
 

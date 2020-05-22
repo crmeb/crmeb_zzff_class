@@ -559,13 +559,10 @@
                 clone_form:function () {
                     var that = this;
                     if(parseInt(id) == 0){
-                        if(that.formData.image.pic) return layList.msg('请先删除上传的图片在尝试取消');
-                        if(that.formData.poster_image.pic) return layList.msg('请先删除上传的图片在尝试取消');
-                        if(that.formData.banner.length) return layList.msg('请先删除上传的图片在尝试取消');
-                        if(that.formData.service_code.pic) return layList.msg('请先删除上传的图片在尝试取消');
+                        if(that.formData.image) return layList.msg('请先删除上传的图片在尝试取消');
                         parent.layer.closeAll();
                     }
-                    parent.location.href = layList.U({a:'index',p:{type:1,special_type:'{$special_type}'}});
+                    parent.layer.closeAll();
                 }
             },
             mounted:function () {

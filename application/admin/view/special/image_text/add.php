@@ -387,8 +387,11 @@
 {block name='script'}
 <script>
     var id = {$id},
-        special =<?=isset($special) ? $special : "{}"?>;
-    sourceCheckList =<?= isset($sourceCheckList) ? $sourceCheckList : "{}"?>,
+        special =<?=isset($special) ? $special : "{}"?>,
+    sourceCheckList =<?= isset($sourceCheckList) ? $sourceCheckList : "{}"?>;
+    var table_date=new Array();//用于保存当前页数据
+
+    var ids=new Array();    //用于保存选中的数据
         require(['vue'], function (Vue) {
             new Vue({
                 el: "#app",
@@ -602,7 +605,8 @@
                             if (that.formData.service_code.pic) return layList.msg('请先删除上传的图片在尝试取消');
                             parent.layer.closeAll();
                         }
-                        window.location.href = layList.U({a: 'index', p: {type: 1, special_type: '{$special_type}'}});
+                        parent.layer.closeAll();
+                        // window.location.href = layList.U({a: 'index', p: {type: 1, special_type: '{$special_type}'}});
                     }
                     ,
                     //素材
@@ -625,9 +629,28 @@
                                 {field: 'image', title: '封面',templet:'<div><img src="{{ d.image }}"></div>'},
                             ]]
                             ,page: true
+                            ,done:function (res,curr,count) {
+                                table_date=res.data;
+                                    console.log(res);
+                                for(var i=0;i< res.data.length;i++){
+                                    for (var j = 0; j < ids.length; j++) {
+                                        if(res.data[i].id == ids[j].id) {
+                                            res.data[i]["LAY_CHECKED"]='true';/*设置勾选*/
+                                            /*找到对应数据改变勾选样式*/
+                                            var index= res.data[i]['LAY_TABLE_INDEX'];
+                                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                                        }
+                                    }
+                                }
+                                var checkStatus = table.checkStatus('List');/*获得选中的值 和判断是否是全选 isAll true全选 isAlL false 没有全选*/
+                                if(checkStatus.isAll){
+                                    $('.layui-table-header th[data-field="0"] input[type="checkbox"]').prop('checked', true);
+                                    $('.layui-table-header th[data-field="0"] div[class="layui-unselect layui-form-checkbox"]').addClass('layui-form-checked');
+                                }
+                            }
                         });
-                    }
-                    ,
+                    },
                     show_source_list: function () {
                         var that = this;
                         var table = layui.table, form = layui.form;
@@ -657,6 +680,16 @@
                                 })
                             }
                         });
+                    },
+                    removeArrayRepElement:function(arr) {
+                        for (var i = 0; i < arr.length; i++) {
+                            for (var j = 0; j < arr.length; j++) {
+                                if (arr[i].id == arr[j].id && i != j) {
+                                    arr.splice(j, 1);
+                                }
+                            }
+                        }
+                        return arr;
                     }
                 },
                 mounted: function () {
@@ -680,19 +713,57 @@
                     });
                     var table = layui.table;
                     table.on('toolbar(List)', function(obj){
-                        console.log(obj);
                         var checkStatus = table.checkStatus(obj.config.id);
                         switch(obj.event){
                             case 'getCheckData':
                                 var data = checkStatus.data;
                                 // $("#check_source_tmp",window.parent.document).val(JSON.stringify(data));
-                                var source_tmp =JSON.stringify(data);
+                                var source_tmp =JSON.stringify(ids);
                                 that.source_tmp_list = JSON.parse(source_tmp);
                                 that.formData.check_source_sure = JSON.parse(source_tmp);
                                 that.show_source_list();
                                 break;
                         };
                     });
+                    table.on('checkbox(List)', function (obj) {
+                        if(obj.checked==true){
+                            if(obj.type=='one'){
+                                ids.push(obj.data);
+                            }else{
+                                for(var i=0;i<table_date.length;i++){
+                                    ids.push(table_date[i]);
+                                }
+                            }
+                            ids=that.removeArrayRepElement(ids);
+                        }else{
+                            if(obj.type=='one'){
+                                for(var i=0;i<ids.length;i++){
+                                    if(ids[i].id==obj.data.id){
+                                        ids.remove(i);
+                                    }
+                                }
+                            }else{
+                                for(var i=0;i<ids.length;i++){
+                                    for(var j=0;j<table_date.length;j++){
+                                        if(ids[i].id==table_date[j].id){
+                                            ids.remove(i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    Array.prototype.remove=function(dx){
+                        if(isNaN(dx)||dx>this.length){return false;}
+                        for(var i=0,n=0;i<this.length;i++)
+                        {
+                            if(this[i]!=this[dx]){
+                                this[n++]=this[i];
+                            }
+                        }
+                        this.length-=1;
+                    };
+
                     //选择图片
                     function changeIMG(index, pic) {
                         $(".image_img").css('background-image', "url(" + pic + ")");

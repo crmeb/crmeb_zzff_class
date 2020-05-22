@@ -149,3 +149,17 @@ function set_field_value(array $update, array $where , $value = '', $model_type)
     return \service\JsonService::fail('保存失败');
 
 }
+
+function money_rate_num($money, $type) {
+    if (!$money || is_numeric($money)) return \service\JsonService::fail('非法参数');
+    if (!$type) return \service\JsonService::fail('非法参数');
+    switch ($type) {
+        case "gold":
+            $goldRate = \service\SystemConfigService::get("gold_rate");
+                $num = ($money * 10) * (int) $goldRate;
+            return $num;
+        default:
+            return \service\JsonService::fail('汇率类型缺失');
+
+    }
+}

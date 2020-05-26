@@ -40,9 +40,10 @@ CRMEB知识付费系统是基于ThinkPhp5.0+Vue开发的一套新零售直播知
 ####   :fire:演示站后台:[ 查看 ]
 
 http://zhishifufei.crmeb.net/index.php/admin 账号：demo 密码：crmeb.com
-###  官方交流群
+####  官方交流群
 ![](/readme/images/知识付费1.png)
 ![](/readme/images/知识付费2.png)
+
 如果群已经加满或失效请加微信：weiwei5626112
 #### CRMEB推荐阿里云服务器配置
 

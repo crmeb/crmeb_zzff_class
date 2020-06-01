@@ -77,7 +77,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo 密码：crmeb.com
 
         
 ###  功能脑图
-![](/readme/images/zsff_openv1.1.png)
+![](/readme/images/zsff_open_v1.1.png)
 
 ####  官方交流群
 ![](/readme/images/知识付费1.png)

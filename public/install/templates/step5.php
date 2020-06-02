@@ -30,10 +30,11 @@ $admin = $root."../index.php/admin/index/";
 <?php require './templates/footer.php';?>
 <script>
 $(function(){
+    var version = '<?php echo trim($curent_version['version']);?>';
 	$.ajax({
 	type: "POST",
 	url: "http://shop.crmeb.net/index.php/admin/server.upgrade_api/updatewebinfo",
-	data: {host:'<?php echo $host;?>',https:'<?php echo 'http://'.$host;?>',version:'<?php echo $curent_version['version'];?>',ip:'<?php echo $_SERVER[HTTP_CLIENT_IP];?>'},
+	data: {host:'<?php echo $host;?>',https:'<?php echo 'http://'.$host;?>',version:version,ip:'<?php echo $_SERVER[HTTP_CLIENT_IP];?>'},
 	dataType: 'json',
 	success: function(){}
 	});

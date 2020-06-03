@@ -1,6 +1,8 @@
 
-# CRMEB知识付费分销+直播营销系统
-
+<p align="center">
+    <img src="https://images.gitee.com/uploads/images/2018/1214/151026_2299df23_892944.gif" />
+</p>
+<h1 align="center">CRMEB知识付费分销+直播营销系统</h1> 
 <p align="center">
     <a href="http://www.crmeb.com">
         <img src="https://img.shields.io/badge/OfficialWebsite-CRMEB-yellow.svg" />

@@ -25,14 +25,14 @@
 CRMEB知识付费系统是基于ThinkPhp5.0+Vue开发的一套新零售直播知识付费系统，CRMEB系统就是集分销推广关系管理+营销+直播的知识类电商系统，能够快速积累客户、会员数据分析、智能转化客户、 有效提高销售、吸引流量、网络营销、品牌推广的一款应用，且更适合企业二次开发；
 ### 导航栏目
 
-[下载](/readme/前端下载地址.md)
+[下载](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/tree/master)
  | [使用手册](https://help.crmeb.net)
  | [安装说明](http://help.crmeb.net/crmeb_zsff/1514710)
  | [论坛地址](http://bbs.crmeb.net)
  | [官网地址](https://www.crmeb.com)
  | [TP5开发手册](https://www.kancloud.cn/manual/thinkphp5/118003)
  | [服务器](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z)
- | [授权价格](https://s.click.taobao.com/W7hVkLw)
+ | [授权价格](https://www.crmeb.com)
 
 ###  前后台演示
 ![前端演示](/readme/images/前端演示二维码.jpg)

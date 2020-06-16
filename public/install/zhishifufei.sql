@@ -4062,7 +4062,7 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (58, 'replenishment_num', 'text', 'input', 5, '', 0, 'required:true,number:true,min:0', 100, 0, '\"20\"', '待补货数量', '产品待补货数量低于多少时，提示补货', 0, 1),
 (59, 'routine_appId', 'text', 'input', 7, '', 0, '', 100, 0, '\"\"', 'appId', '小程序appID', 0, 1),
 (60, 'routine_appsecret', 'text', 'input', 7, '', 0, '', 100, 0, '\"\"', 'AppSecret', '小程序AppSecret', 0, 1),
-(61, 'api', 'text', 'input', 2, '', 0, '', 100, 0, '\"\\/wechat\\/index\\/serve\"', '接口地址', '微信接口例如：http://www.abc.com/wechat/index/serve', 0, 1),
+(61, 'api', 'text', 'input', 2, '', 0, '', 100, 0, '\"\\/wap\\/wechat\\/serve\"', '接口地址', '微信接口例如：http://www.abc.com/wap/wechat/serve', 0, 1),
 (62, 'paydir', 'textarea', 'input', 4, '', 0, '', 100, 5, '\"\\/wap\\/special\\/details\\n\"', '配置目录', '支付目录配置系统不调用提示作用', 0, 1),
 (73, 'routine_logo', 'upload', 'input', 7, '', 1, '', 0, 0, '\"\"', '小程序logo', '小程序logo', 0, 1),
 (74, 'routine_name', 'text', 'input', 7, '', 0, '', 100, 0, '\"\\u8f66\\u8054\\u76df\\u65b0\\u80fd\\u6e90\"', '小程序名称', '小程序名称', 0, 1),

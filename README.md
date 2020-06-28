@@ -90,7 +90,6 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 
 ####  官方交流群
 ![](/readme/images/知识付费1.png)
-![](/readme/images/知识付费2.png)
 
 如果群已经加满或失效请加微信：weiwei5626112
 

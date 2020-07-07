@@ -42,7 +42,7 @@ http://bbs.crmeb.net
 ###  前台演示
 ![前端演示](/readme/images/前端演示二维码.jpg)
 
-### 站后演示:[ 查看 ]
+### 后端演示:[ 查看 ]
 
 http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  功能清单

@@ -113,7 +113,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ![](/readme/images/知识付费v1.2.png)
 
 ####  官方交流群
-<img src="/readme/images/知识付费1.png"  height="100" width="100">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="100" width="100">
+<img src="/readme/images/知识付费1.png"  height="200" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
 http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388

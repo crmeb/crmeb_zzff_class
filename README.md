@@ -114,7 +114,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 
 ####  官方交流群
 ![](/readme/images/知识付费1.png)   如果群已经加满或失效请加微信：weiwei5626112
-#### 吐槽及意见或需求反馈   
+#### 吐槽、意见或需求反馈请戳下方链接   
 http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;

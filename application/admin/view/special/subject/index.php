@@ -11,10 +11,10 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">父级分类</label>
                                 <div class="layui-input-block">
-                                    <select name="cid">
+                                    <select name="pid">
                                         <option value="">所有分类</option>
                                         {volist name="grade" id="vo"}
-                                        <option value="{$vo.id}">{$vo.name}</option>
+                                        <option value="{$vo.id}"  {eq name="pid" value="$vo.id"}selected="selected"{/eq}>{$vo.name}</option>
                                         {/volist}
                                     </select>
                                 </div>
@@ -22,7 +22,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">分类名称</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="cate_name" class="layui-input" placeholder="请输入分类名称">
+                                    <input type="text" name="name" class="layui-input" placeholder="请输入分类名称">
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -46,7 +46,9 @@
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="layui-btn-container">
+                        <button type="button" class="layui-btn layui-btn-sm"><a href="#" onClick="javascript :history.back(-1);" style="color: #ffffff">返回一级</a></button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick="$eb.createModalFrame(this.innerText,'{:Url('create')}',{h:500,w:700})">添加分类</button>
+
                     </div>
                     <table class="layui-hide" id="List" lay-filter="List"></table>
                     <script type="text/html" id="is_show">
@@ -75,10 +77,10 @@
     //实例化form
     layList.form.render();
     //加载列表
-    layList.tableList('List',"{:Url('get_subject_list')}",function (){
+    layList.tableList('List',"{:Url('get_subject_list',['pid'=>$pid])}",function (){
         return [
             {field: 'id', title: '编号', sort: true,event:'id',width:'5%',align: 'center'},
-            {field: 'grade_name', title: '一级名称',align: 'center'},
+            {field: 'grade_name', title: '父级分类',align: 'center'},
             {field: 'name', title: '分类名称',edit:'name',align: 'center'},
             {field: 'pic', title: '图标',templet:'#pic',align: 'center'},
             {field: 'special_count', title: '专题数量',align: 'center'},
@@ -126,6 +128,7 @@
                         if(res.status == 200 && res.data.code == 200) {
                             $eb.$swal('success',res.data.msg);
                             obj.del();
+                            location.reload();
                         }else
                             return Promise.reject(res.data.msg || '删除失败')
                     }).catch(function(err){

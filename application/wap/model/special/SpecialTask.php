@@ -42,7 +42,7 @@ class SpecialTask extends ModelBasic
         if (!$task_id) {
             return false;
         }
-        return self::get($task_id);
+        return self::find($task_id);
     }
 
 }

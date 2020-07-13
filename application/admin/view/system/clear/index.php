@@ -3,7 +3,7 @@
 <button type="button" class="btn btn-w-m layui-btn" data-url="{:Url('system.clear/refresh_cache')}">刷新数据缓存</button>
 <button type="button" class="btn btn-w-m layui-btn" data-url="{:Url('system.clear/delete_cache')}">清除缓存</button>
 <button type="button" class="btn btn-w-m layui-btn" data-url="{:Url('system.clear/delete_log')}">清除日志</button>
-<button type="button" class="btn btn-w-m layui-btn-normal" onclick="action.data_compatible()">数据兼容</button>
+<!--<button type="button" class="btn btn-w-m layui-btn-normal" onclick="action.data_compatible()">数据兼容</button>-->
 </div>
 <!--<script src="/publick/sytem/js/index.js"></script>-->
 <script src="{__ADMIN_PATH}js/layuiList.js"></script>

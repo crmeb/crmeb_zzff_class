@@ -49,6 +49,9 @@
                         <button type="button" class="layui-btn layui-btn-sm" onclick="$eb.createModalFrame(this.innerText,'{:Url('create')}',{h:300,w:400})">添加分类</button>
                     </div>
                     <table class="layui-hide" id="List" lay-filter="List"></table>
+                    <script type="text/html" id="pid">
+                        <a href="{:Url('admin/special.subject/index')}?pid={{d.id}}">查看</a>
+                    </script>
                     <script type="text/html" id="act">
                         <button class="layui-btn layui-btn-xs" onclick="$eb.createModalFrame('编辑','{:Url('create')}?id={{d.id}}',{h:300,w:400})">
                             <i class="fa fa-paste"></i> 编辑
@@ -73,7 +76,8 @@
         return [
             {field: 'id', title: '编号', sort: true,event:'id',width:'8%',align: 'center'},
             {field: 'name', title: '分类名称',edit:'cate_name',width:'40%',align: 'center'},
-            {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',width:'30%',align: 'center'},
+            {field: 'pid', title: '查看子分类',templet:'#pid',align:'center',width:'16%'},
+            {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',width:'14%',align: 'center'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'22%'},
         ];
     });
@@ -116,6 +120,7 @@
                         if(res.status == 200 && res.data.code == 200) {
                             $eb.$swal('success',res.data.msg);
                             obj.del();
+                            location.reload();
                         }else
                             return Promise.reject(res.data.msg || '删除失败')
                     }).catch(function(err){

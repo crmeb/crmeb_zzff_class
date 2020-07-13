@@ -1,64 +1,8 @@
 {extend name="public/container"}
-{block name='title'}{$live_title}{/block}
-{block name='head_top'}
-<style>
-    body {
-        background-color: #e6e6e6;
-    }
-
-    #J_prismPlayer .prism-big-play-btn {
-        left: 0 !important;
-        bottom: 0 !important;
-        right: 0;
-        top: 0;
-        margin: auto;
-    }
-
-    .broadcast-details .footerCon {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -o-user-select: none;
-    }
-
-    .side {
-        position: fixed;
-        top: 4.6rem;
-        left: 0;
-        z-index: 999;
-        height: .5rem;
-        padding-right: .32rem;
-        padding-left: .16rem;
-        border-top-right-radius: .25rem;
-        border-bottom-right-radius: .25rem;
-        background-color: rgba(48, 40, 40, .7);
-        -webkit-transform: translateX(-100%) scale(0);
-        transform: translateX(-100%) scale(0);
-        -webkit-transition: .3s;
-        transition: .3s;
-        font-size: .24rem;
-        line-height: .5rem;
-        color: #fff;
-        opacity: 0;
-    }
-
-    .side.on {
-        -webkit-transform: translateX(0) scale(1);
-        transform: translateX(0) scale(1);
-        opacity: 1;
-    }
-</style>
+{block name="title"}{$live_title}{/block}
+{block name="head_top"}
 <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css">
 <script src="https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js"></script>
-<script src="/static/plug/vue/dist/vue.min.js"></script>
-<script src="/static/plug/axios.min.js"></script>
-<script src="/static/plug/helper.js"></script>
-<script src="{__WAP_PATH}zsff/js/countdown.js"></script>
-<script src="{__WAP_PATH}crmeb/module/store.js"></script>
-<script src="{__WAP_PATH}zsff/js/request.js"></script>
 <script src="{__WAP_PATH}zsff/layer_mobile/layer.js"></script>
 <script>
     window.room = {$room};
@@ -66,1113 +10,1220 @@
     window.uids = "{$userInfo['uid']}";
     window.socketDebug = true;
 </script>
+<style>
+    html,
+    body,
+    #app {
+        height: 100%;
+    }
+
+    .live .chat .item .text .info img.cont {
+        width: 50%;
+    }
+
+    .preview .layui-m-layercont {
+        padding: 0;
+    }
+
+    .preview .layui-m-layercont img {
+        display: block;
+        width: 100%;
+        object-fit: scale-down;
+    }
+
+    .loading {
+        padding-top: .1rem;
+        padding-bottom: .1rem;
+        font-size: .28rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loading .fa {
+        font-size: .4rem;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
 {/block}
 {block name="content"}
-<div v-cloak id="app" class="broadcast-details">
-    <div class="header">
-        <div class="prism-player" id="J_prismPlayer" v-if="liveInfo.is_play || PullUrl"></div>
-        <div class="text acea-row row-center-wrapper row-column" @touchmove.prevent v-else ref="column">
-            <img src="/wap/first/zsff/images/LIVE.png">
-            <div v-if="live_status==0">直播即将开始</div>
-            <div v-else-if="live_status==2">直播已结束</div>
-            <div v-else-if="live_status==1">讲师离开一会~马上回来</div>
-            <div v-else-if="live_status==-1" v-text="live_error">讲师离开一会~马上回来</div>
-            <count-down v-show="live_status == 0" :is-day="false" :is-second="true" :tip-text="'倒计时: '" :day-text="'天'"
-                :hour-text="'时'" :minute-text="'分钟'" :second-text="''" :datatime="datatime">
-            </count-down>
+<div v-cloak id="app">
+    <div class="live">
+        <div :style="{ height: playerHeight + 'px' }" class="header">
+            <div v-if="liveInfo.is_play || PullUrl" class="prism-player" id="J_prismPlayer"></div>
+            <div v-else class="text">
+                <div>{{ liveText }}</div>
+                <count-down v-show="!live_status" :day-show="false" :sec-show="false" :time="datatime"></count-down>
+            </div>
         </div>
-    </div>
-    <div :class="{ on: notice }" class="side">{{ notice }}</div>
-    <!-- 公屏 -->
-    <div ref="chatList" class="chat">
-        <p class="loading-line" style="background-color: #e6e6e6">
-            <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-            <span v-text="loadTitle" @click="getCommentList">点击加载更多</span>
-        </p>
-        <div class="item acea-row row-top" :class="userInfo.uid == item.uid ? 'row-right':''"
-            v-for="(item,index) in CommentList">
-            <div class="pictrue" v-if="userInfo.uid != item.uid"><img :src="item.avatar"></div>
-            <div class="text" :class="userInfo.uid == item.uid ? 'textR':''">
-                <div class="name" v-text="item.nickname" v-if="item.user_type==2 && user_type == 2">加载中</div>
-                <div class="name" v-else><span v-if="item.user_type==1">[讲师]</span>
-                    <span v-else-if="item.user_type==0">[助教]</span>
-                    <span>{{item.nickname}}</span>
-                    <span class="return" v-if="user_type != 2 && item.uid != 0" @click="recall(item.id,index)">撤回</span>
-                </div>
-                <div class="acea-row" v-if="item.type==1" :class="userInfo.uid == item.uid ? 'row-right':''">
-                    <div class="conter acea-row row-middle" v-html="item.content"></div>
-                </div>
-                <div class="acea-row" v-else-if="item.type==2">
-                    <div class="conter acea-row row-middle">
-                        <img :src="item.content">
+        <div class="nav">
+            <div :class="{ active: navActive === 0 }" class="item" @click="navActive = 0">聊天</div>
+            <div :class="{ active: navActive === 1 }" class="item" @click="navActive = 1">课堂</div>
+            <!--<div :class="{ active: navActive === 2 }" class="item" @click="navActive = 2">推荐</div>
+            <div :class="{ active: navActive === 3 }" class="item" @click="navActive = 3">排行</div>-->
+        </div>
+        <div class="main">
+            <!-- 聊天 -->
+            <div v-show="navActive === 0" class="section" @click="emojiKeyboardHide" @scroll="chatScroll">
+                <div ref="chat" class="chat">
+                    <div class="loading">
+                        <span v-show="Oloading" class="fa fa-spinner"></span>
+                        <div v-if="Oloadend && Opage > 2">已全部加载</div>
                     </div>
-                </div>
-                <div class="acea-row" v-else-if="item.type==3">
-                    <div class="conter acea-row row-middle" v-if="userInfo.uid == item.uid "
-                        @click="play_audio(item,index,'CommentList')">
-                        {{item.duration || 0}}’’<img
-                            :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                            class="signal signalR" style="margin-left:0.27rem;cursor: pointer;">
+                    <div v-if="OpenCommentList.length" class="list">
+                        <div v-for="(item, index) in OpenCommentList" :key="index" class="item">
+                            <div class="avatar">
+                                <img :src="item.avatar" class="img">
+                            </div>
+                            <div class="text">
+                                <div class="name" v-text="item.nickname" v-if="item.user_type==2 && user_type == 2">加载中</div>
+                                <div class="name" v-else>
+                                    <span v-if="item.user_type==1">[讲师]</span>
+                                    <span v-else-if="item.user_type==0">[助教]</span>
+                                    <span>{{item.nickname}}</span>
+                                    <span class="return" v-if="user_type != 2 && item.uid != 0 "
+                                        @click="recall(item.id,index)">撤回</span>
+                                </div>
+                                <div class="info" v-if="item.type==1">
+                                    <div class="cont" v-html="item.content"></div>
+                                </div>
+                                <div class="info" v-else-if="item.type==2 && item.content">
+                                    <img :src="item.content" class="cont" @click="preview(item.content)">
+                                </div>
+                                <div class="info" v-else-if="item.type==3">
+                                    <div class="cont" v-if="userInfo.uid == item.uid "
+                                        @click="play_audio(item,index,'OpenCommentList')">
+                                        {{item.duration || 0}}’’<img
+                                            :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
+                                            class="signal signalR" style="margin-left:0.27rem;cursor: pointer">
+                                    </div>
+                                    <div class="conter acea-row row-middle" v-else
+                                        @click="play_audio(item,index,'OpenCommentList')">
+                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
+                                            class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
+                                    </div>
+                                    <div class="spot" v-if="item.is_play"></div>
+                                </div>
+                                <div v-else-if="item.type === 4" class="info">
+                                    <div class="cont">{{ item.content }}{{ item.gift_name }}<img
+                                            :src="item.gift_image">×{{ item.gift_num }}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="conter acea-row row-middle" v-else @click="play_audio(item,index,'CommentList')">
-                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                            class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
-                    </div>
-                    <div class="spot" v-if="item.is_play"></div>
                 </div>
             </div>
-            <div class="pictrue" v-if="userInfo.uid == item.uid"><img :src="item.avatar"></div>
-        </div>
+            <!-- 课堂 -->
+            <div v-show="navActive === 1" class="section class" @click="emojiKeyboardHide">
+                <div ref="lesson" class="chat">
+                    <div class="load">
+                        <span v-show="loading==true" class="fa fa-spinner"></span>
+                        <span v-text="loadTitle" @click="getCommentList">点击加载更多</span>
+                    </div>
+                    <div class="list">
+                        <div v-for="(item, index) in CommentList" :key="index" class="item">
+                            <div class="avatar">
+                                <img :src="item.avatar" class="img">
+                            </div>
+                            <div class="text">
+                                <div class="name" v-text="item.nickname" v-if="item.user_type==2 && user_type == 2">加载中</div>
+                                <div class="name" v-else>
+                                    <span v-if="item.user_type==1">[讲师]</span>
+                                    <span v-else-if="item.user_type==0">[助教]</span>
+                                    <span>{{item.nickname}}</span>
+                                    <span class="return" v-if="user_type != 2 && item.uid != 0" @click="recall(item.id,index)">撤回</span>
+                                </div>
+                                <div class="info" v-if="item.type==1">
+                                    <div class="cont" v-html="item.content"></div>
+                                </div>
+                                <div class="info" v-else-if="item.type==2 && item.content">
+                                    <img :src="item.content" class="cont" @click="preview(item.content)">
+                                </div>
+                                <div class="info" v-else-if="item.type==3">
+                                    <div class="cont" v-if="userInfo.uid == item.uid " @click="play_audio(item,index,'CommentList')">
+                                        {{item.duration || 0}}’’
+                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
+                                            class="signal signalR" style="margin-left:0.27rem;cursor: pointer;">
+                                    </div>
+                                    <div class="cont" v-else @click="play_audio(item,index,'CommentList')">
+                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
+                                            class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
+                                    </div>
+                                    <div class="spot" v-if="item.is_play"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 推荐 -->
+            <div v-show="navActive === 2" class="section recom">
+                <div class="list">
+                    <div v-for="(item, index) in updateRecomList" :key="item.id" class="item">
+                        <div class="image">
+                            <img :src="item.image" class="img">
+                        </div>
+                        <div class="text">
+                            <div class="name">{{ item.title }}</div>
+                            <div class="label">
+                                <div v-for="(itm, idx) in item.label" :key="idx" class="cell">{{ itm }}</div>
+                            </div>
+                            <div class="money">
+                                <div class="sell">¥<span class="num">{{ item.money }}</span></div>
+                            </div>
+                            <a :href="$h.U({c: 'special', a: 'details', q: {id: item.id}})" class="link">去订购</a>
+                        </div>
+                    </div>
+                </div>
+                <div v-show="loadings" class="loading">
+                    <span class="fa fa-spinner"></span>
+                </div>
+                <div v-if="!loadings && !recomList.length" class="nothing"></div>
+            </div>
+            <!-- 欢迎语 -->
+            <div :class="{ on: notice }" class="welcome"><span class="name">{{ notice }}</span> 直播间</div>
+            <!-- 在线人数 -->
+            <div v-show="2 > navActive" class="online">{{ UserSum }} 人</div>
+            <!-- 右侧按钮 -->
+            <div v-show="2 > navActive" class="side-menu">
+                <button v-show="navActive === 1" class="btn barrage-btn" type="button" @click="barrage = !barrage">
+                    <img :src="barrage ? '{__WAP_PATH}zsff/images/barrage1.png' : '{__WAP_PATH}zsff/images/barrage2.png'">
+                </button>
+            </div>
+            <!-- 礼物特效 -->
 
-    </div>
-    <!-- 输入框、表情包 -->
-    <div ref="footer" class="footerCon" :class="{ on: active }">
-        <form ref="form">
-            <div class="footer acea-row row-between-wrapper">
-                <img :src="voice==true?'/wap/first/zsff/images/keyboard.png':'/wap/first/zsff/images/voice.png'"
-                    @click="voiceBnt" v-show="">
-                <div class="voice acea-row row-center-wrapper" v-if="voice" @touchstart="start" @touchmove="move"
-                    @touchend="end">{{speak}}</div>
-                <input class="input" @focus="focusScroll($event)" @blur="blurScroll" @chang="changeContent"
-                    @input="changeText" v-model="content" ref="input" type="text" v-else style="width: 5rem">
-                <img :src="active==true?'/wap/first/zsff/images/keyboard.png':'/wap/first/zsff/images/face.png'"
-                    @click="emoticon">
-                <img :src="content ? '/wap/first/zsff/images/push.png': '/wap/first/zsff/images/plus.png' " @click="push">
-            </div>
-        </form>
-        <div class="banner slider-banner">
-            <ul class="swiper-wrapper">
-                <li class="swiper-slide acea-row" v-for="(swiper,index) in swiperlist">
-                    <img v-for="item in swiper" :src="item.url" @click="mine(item)" class="emoji-outer">
-                    <img src="/wap/first/zsff/images/del.png" class="emoji-outer" @click="delEmoji">
-                </li>
-            </ul>
-            <div class="swiper-pagination"></div>
-        </div>
-    </div>
-    <!-- 在线人数 -->
-    <div class="statistics acea-row row-center-wrapper">
-        <div class="spot"></div>{{UserSum}}人
-    </div>
-    <div class="barrage" :class="barrage?'on':''">
-        <div class="item acea-row row-middle row-right" v-for="item in BarrageList">
-            <div class="text" v-html="item.content" v-if="item.type!=2"></div>
-            <div class="text" v-else><img :src="item.content" alt="" style="width: 1.5rem;height: auto;"></div>
-            <div class="pictrue"><img :src="item.avatar"></div>
-        </div>
-    </div>
-    <!-- 弹、讨论按钮 -->
-    <div class="fixed acea-row row-center-wrapper">
-        <div class="item" :class="barrage==false?'on':''" @click="openBarrage">弹</div>
-        <div class="item" @click="openDiscuss">讨论</div>
-    </div>
-    <!-- 讨论区 -->
-    <div v-show="discuss" class="discuss" :class="{ on: discuss }" :style="{ bottom: bottom + 'px' }">
-        <div class="header">
-            <div class="up" @click="closeDiscuss"><span class="iconfont icon-xiala"></span>收起</div>
-            讨论区（{{OpenCommentCount || 0}}）
-        </div>
-        <div ref="chat" class="chat">
-            <p v-if="OpenCommentList.length || Oloadend" class="loading-line">
-                <span v-show="Oloading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-                <span v-text="OloadTitle" @click="getOpenCommtList">加载更多</span>
-            </p>
-            <div class="item acea-row row-top" :class="userInfo.uid == item.uid ? 'row-right':''"
-                v-for="(item,index) in OpenCommentList">
-                <div class="pictrue" v-if="userInfo.uid != item.uid"><img :src="item.avatar"></div>
-                <div class="text" :class="userInfo.uid == item.uid ? 'textR':''">
-                    <div class="name" v-text="item.nickname" v-if="item.user_type==2 && user_type == 2">加载中</div>
-                    <div class="name" v-else>
-                        <span v-if="item.user_type==1">[讲师]</span>
-                        <span v-else-if="item.user_type==0">[助教]</span>
-                        <span>{{item.nickname}}</span>
-                        <span class="return" v-if="user_type != 2 && item.uid != 0 "
-                            @click="recall(item.id,index)">撤回</span>
+            <!-- 弹幕 -->
+            <div v-show="navActive === 1" ref="barrage" :class="{ on: barrage }" class="barrage">
+                <div class="item acea-row row-middle row-right" v-for="item in BarrageList">
+                    <div class="text" v-html="item.content" v-if="item.type!=2"></div>
+                    <div class="text" v-else>
+                        <img :src="item.content" alt="" style="width: 1.5rem;height: auto;">
                     </div>
-                    <div class="acea-row" v-if="item.type==1" :class="userInfo.uid == item.uid ? 'row-right':''">
-                        <div class="conter acea-row row-middle" v-html="item.content"></div>
-                    </div>
-                    <div class="acea-row" v-else-if="item.type==2">
-                        <div class="conter acea-row row-middle">
-                            <img :src="item.content">
-                        </div>
-                    </div>
-                    <div class="acea-row" v-else-if="item.type==3">
-                        <div class="conter acea-row row-middle" v-if="userInfo.uid == item.uid "
-                            @click="play_audio(item,index,'OpenCommentList')">
-                            {{item.duration || 0}}’’<img
-                                :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                                class="signal signalR" style="margin-left:0.27rem;cursor: pointer">
-                        </div>
-                        <div class="conter acea-row row-middle" v-else
-                            @click="play_audio(item,index,'OpenCommentList')">
-                            <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                                class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
-                        </div>
-                        <div class="spot" v-if="item.is_play"></div>
+                    <div class="pictrue">
+                        <img :src="item.avatar">
                     </div>
                 </div>
-                <div class="pictrue" v-if="userInfo.uid == item.uid"><img :src="item.avatar"></div>
             </div>
         </div>
+        <div v-show="2 > navActive" class="footer">
+            <!-- 输入 -->
+            <div class="control">
+                <button class="button" type="button" @click="emoticon">
+                    <img class="img"
+                        :src="emojiShow ? '{__WAP_PATH}zsff/images/keyboard.png' : '{__WAP_PATH}zsff/images/face.png'">
+                </button>
+                <button v-if="user_type == 0 || user_type == 1" class="button" type="button" @click="push">
+                    <img class="img" src="{__WAP_PATH}zsff/images/plus.png">
+                </button>
+                <form class="form" action="javascript:void(0)" @submit="push">
+                    <input ref="input" v-model="content" class="input" type="text">
+                    <button v-show="content" class="button" type="submit">
+                        <img class="img" src="{__WAP_PATH}zsff/images/push.png">
+                    </button>
+                </form>
+            </div>
+
+            <!-- 表情包 -->
+            <div v-show="emojiShow" id="emoji" class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div v-for="(item, index) in emojiList" :key="index" class="swiper-slide">
+                        <button v-for="(itm, idx) in item" :key="idx" class="button" type="button">
+                            <img :src="itm.url" class="img" @click="mine(itm)">
+                        </button>
+                        <button class="button" type="button" @click="delEmoji">
+                            <img class="img" src="{__WAP_PATH}zsff/images/del.png">
+                        </button>
+                    </div>
+                </div>
+                <div id="emoji-pagination" class="swiper-pagination"></div>
+            </div>
+        </div>
+        <!-- 打赏 -->
+       <!-- <div :class="{ mask: giftShow }" @click="giftShow = false"></div>-->
+      <!--  <div v-show="giftShow" class="gift-wrapper">
+            <div id="gift" class="swiper-container gift">
+                <div class="swiper-wrapper">
+                    <div v-for="(item, index) in updateGiftList" :key="index" class="swiper-slide">
+                        <div v-for="(itm, idx) in item" :key="itm.id" :class="{ on: idx === giftIndexOn }" class="item"
+                            @click="giftIndexOn = idx; giftOn = itm">
+                            <div class="image">
+                                <img :src="itm.live_gift_show_img" class="img">
+                            </div>
+                            <div class="name">{{ itm.live_gift_name }}</div>
+                            <div :style="{ backgroundImage: 'url(' + goldInfo.gold_image + ')' }" class="num">{{ itm.live_gift_price }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-show="updateGiftList.length > 1" id="gift-pagination" class="swiper-pagination"></div>
+            </div>
+            <div class="foot">
+                <a :href="$h.U({c: 'special', a: 'recharge_index'}) + '?from=live&stream_name=' + liveInfo.stream_name + '&record_id=' + recordId" class="text-group">
+                    <span v-if="userInfo.gold_num" :style="{ backgroundImage: 'url(' + goldInfo.gold_image + ')' }" class="number">{{ userInfo.gold_num }}</span>
+                    <span v-else>充值</span>
+                    <span class="knowledge iconxiangyou"></span>
+                </a>
+                <div class="button-group">
+                    <button class="button select" type="button" @click="giftSelectShow = !giftSelectShow">
+                        {{ giftNumSelected }}<span :class="['knowledge', giftSelectShow ? 'iconxiangxia' : 'iconxiangshang']"></span>
+                        <ul v-show="giftSelectShow" class="list">
+                            <li v-for="(item, index) in giftOn.live_gift_num" :key="item" @click.prevent="giftNumSelected = item">{{ item }}</li>
+                        </ul>
+                    </button>
+                    <button class="button post" type="button" @click="giveGift">赠送</button>
+                </div>
+            </div>
+        </div>-->
     </div>
-    <div v-if="recording" class="recording"><img src="/wap/first/zsff/images/recording.png"></div>
 </div>
-<script type="text/javascript">
-    var liveInfo = {$liveInfo}, PullUrl = "{$PullUrl ? $PullUrl : ''}", datatime = {$datatime}, phone_type = {$phone_type},
-        isWechat = {$isWechat? 'true': 'false'}, userInfo = {:json_encode($userInfo)}, live_status = {$live_status},
-        user_type = {$user_type}, OpenCommentCount = {$OpenCommentCount}, CommentCount = {$CommentCount}, OpenCommentTime = "{$OpenCommentTime}",
-        CommentTime = "{$CommentTime}", is_ban = {$is_ban}, UserSum = {$UserSum};
-    var scrollTops = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-    var vm = new Vue({
-        el: '#app',
-        data: {
-            bottom: '',
-            phone_type: phone_type,
-            UserSum: UserSum,
-            isWechat: isWechat,
-            OpenCommentCount: OpenCommentCount,
-            user_type: user_type,
-            userInfo: userInfo,
-            barrage: true,
-            height: '',
-            discuss: false,
-            datatime: datatime,
-            active: false,
-            voice: false,
-            speak: '按住 说话',
-            recording: false,
-            is_ban: is_ban,
-            live_error: '',
-            swiperlist: [
-                [
-                    {
-                        url: '/wap/first/zsff/face/emoji1/1.gif', type: '[qq_1]', name: '[微笑]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/2.gif', type: '[qq_2]', name: '[委屈]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/3.gif', type: '[qq_3]', name: '[色]',
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/4.gif', type: '[qq_4]', name: '[呆]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/5.gif', type: '[qq_5]', name: '[大哭]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/6.gif', type: '[qq_6]', name: '[害羞]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/7.gif', type: '[qq_7]', name: '[闭嘴]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/8.gif', type: '[qq_8]', name: '[睡觉]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/9.gif', type: '[qq_9]', name: '[哭]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/10.gif', type: '[qq_10]', name: '[尴尬]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/11.gif', type: '[qq_11]', name: '[怒火]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/12.gif', type: '[qq_12]', name: '[调皮]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/13.gif', type: '[qq_13]', name: '[呲牙]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/14.gif', type: '[qq_14]', name: '[惊讶]',
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/15.gif', type: '[qq_15]', name: '[难过]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/16.gif', type: '[qq_16]', name: '[囧]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/17.gif', type: '[qq_17]', name: '[抓狂]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/18.gif', type: '[qq_18]', name: '[吐]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/19.gif', type: '[qq_19]', name: '[偷笑]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji1/20.gif', type: '[qq_20]', name: '[可爱]'
-                    },
-                ],
-                [
-                    {
-                        url: '/wap/first/zsff/face/emoji2/1.png', type: '[em_1]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/2.png', type: '[em_2]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/3.png', type: '[em_3]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/4.png', type: '[em_4]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/5.png', type: '[em_5]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/6.png', type: '[em_6]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/7.png', type: '[em_7]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/8.png', type: '[em_8]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/9.png', type: '[em_9]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/10.png', type: '[em_10]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/11.png', type: '[em_11]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/12.png', type: '[em_12]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/13.png', type: '[em_13]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/14.png', type: '[em_14]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/15.png', type: '[em_15]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/16.png', type: '[em_16]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/17.png', type: '[em_17]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/18.png', type: '[em_18]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/19.png', type: '[em_19]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/20.png', type: '[em_20]'
-                    },
-                ],
-                [
-                    {
-                        url: '/wap/first/zsff/face/emoji2/21.png', type: '[em_21]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/22.png', type: '[em_22]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/23.png', type: '[em_23]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/24.png', type: '[em_24]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/25.png', type: '[em_25]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/26.png', type: '[em_26]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/27.png', type: '[em_27]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/28.png', type: '[em_28]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/29.png', type: '[em_29]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/30.png', type: '[em_30]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/31.png', type: '[em_31]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/32.png', type: '[em_32]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/33.png', type: '[em_33]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/34.png', type: '[em_34]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/35.png', type: '[em_35]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/36.png', type: '[em_36]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/37.png', type: '[em_37]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/38.png', type: '[em_38]'
-                    },
-                    {
-                        url: '/wap/first/zsff/face/emoji2/39.png', type: '[em_39]'
-                    },
-                ]
-            ],
-            liveInfo: liveInfo,
-            PullUrl: PullUrl,
-            player: null,
-            //讲师助教区域
-            CommentList: [
-                //{nickname:'',uid:'',content:'',avatar:''}
-            ],
-            //弹幕列表
-            BarrageList: [
-                // {content:'',avatar:'',user_type:''}
-            ],
-            //展开的评论区域列表
-            OpenCommentList: [
-                // {nickname:'',uid:'',content:'',avatar:''}
-            ],
-            loading: false,
-            loadend: false,
-            loadTitle: '点击加载更多',
-            Oloading: false,
-            Oloadend: false,
-            OloadTitle: '点击加载更多',
-            content: '',
-            live_status: live_status,
-            layerIndex: null,
-            page: 1,
-            limit: 5,
-            Olimit: 5,
-            Opage: 1,
-            cd: 3,
-            is_SendOut: true,
-            isAnimate: false,//是否回到底部
-            starttime: 0,
-            endtime: 0,
-            timeEnd: 60,
-            autoCloseRecord: null,
-            notice: ''
-        },
-        watch: {
-            notice: function (value) {
-                if (value) {
-                    setTimeout(() => {
-                        this.notice = '';
-                    }, 4000);
-                }
+<script>
+    var liveInfo = {$liveInfo},
+    PullUrl = '{$PullUrl? $PullUrl: ""}',
+    datatime = {$datatime},
+    phone_type = {$phone_type},
+    isWechat = {$isWechat? 'true' : 'false'},
+    userInfo = {:json_encode($userInfo)},
+    live_status = {$live_status},
+    user_type = {$user_type},
+    OpenCommentCount = {$OpenCommentCount},
+    CommentCount = {$CommentCount},
+    OpenCommentTime = {$OpenCommentTime? $OpenCommentTime : 0},
+    CommentTime = {$CommentTime? $CommentTime : 0},
+    is_ban = {$is_ban},
+    UserSum = {$UserSum},
+    goldInfo = {$goldInfo};
+</script>
+<script>
+    require(['vue', 'store', 'helper', '{__WAP_PATH}zsff/face/emoji.js', '{__WAP_PATH}zsff/js/countdown.js'], function (Vue, store, $h, emoji) {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                windowWidth: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                bottom: '',
+                phone_type: phone_type,
+                UserSum: UserSum,
+                isWechat: isWechat,
+                OpenCommentCount: OpenCommentCount,
+                user_type: user_type,
+                userInfo: userInfo,
+                barrage: true,
+                discuss: false,
+                datatime: datatime,
+                voice: false,
+                speak: '按住 说话',
+                recording: false,
+                is_ban: is_ban,
+                live_error: '',
+                liveInfo: liveInfo,
+                PullUrl: PullUrl,
+                player: null,
+                //讲师助教区域
+                CommentList: [],
+                //弹幕列表
+                BarrageList: [],
+                //展开的评论区域列表
+                OpenCommentList: [],
+                loading: false,
+                loadend: false,
+                loadTitle: '点击加载更多',
+                Oloading: false,
+                Oloadend: false,
+                // OloadTitle: '点击加载更多',
+                content: '',
+                live_status: live_status,
+                layerIndex: null,
+                page: 1,
+                limit: 16,
+                Olimit: 7,
+                Opage: 1,
+                cd: 3,
+                is_SendOut: true,
+                isAnimate: false,//是否回到底部
+                starttime: 0,
+                endtime: 0,
+                timeEnd: 60,
+                autoCloseRecord: null,
+                notice: '',
+                emojiList: emoji,
+                emojiShow: false,
+                giftList: [],
+                giftIndexOn: 0,
+                giftOn: {},
+                giftSelectShow: false,
+                //giftShow: false,
+                giftNumSelected: 1,
+                giftFloat: null,
+                goldInfo: goldInfo,
+                recomList: [],
+                rankList: [],
+                navActive: 0,
+                loadings: false
             },
-            // 页面滚动到底
-            CommentList: function (value) {
-                this.$nextTick(function () {
-                    this.$refs.chatList.scrollTop = this.$refs.chatList.scrollHeight;
-                });
-            },
-            discuss: function (value) {
-                this.$nextTick(function () {
-                    if (value) {
-                        this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;   
+            computed: {
+                playerHeight: function () {
+                    return Math.floor(this.windowWidth * 9 / 16);
+                },
+                liveText: function () {
+                    switch (this.live_status) {
+                        case 0:
+                            return '直播即将开始';
+                            break;
+                        case -1:
+                        case 1:
+                            return '讲师离开一会~马上回来';
+                            break;
+                        case 2:
+                            return '直播已结束';
+                            break;
                     }
-                });
-            },
-            OpenCommentList: function () {
-                this.$nextTick(function () {
-                    this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
-                });
-            },
-            active: function (value) {
-                console.log(this.$refs.footer.offsetHeight);
-                this.bottom = value ? this.$refs.footer.offsetHeight : this.$refs.form.offsetHeight;
-            },
-            bottom: function () {
-                console.log(123);
-                this.$nextTick(function () {
-                    this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
-                });
-            },
-            isAnimate: function (n) {
-                if (!n) return;
-                this.$nextTick(function () {
-                    if (this.discuss) {
-                        $('body,html').animate({ scrollTop: $(this.$refs.chatList).height() }, 300);
-                    } else {
-                        $('body,html').animate({ scrollTop: $(this.$refs.chat).height() }, 300);
+                },
+                updateGiftList: function () {
+                    var that = this,
+                        list = that.giftList,
+                        listLen = list.length,
+                        slideLen = listLen % 8 ? Math.floor(listLen / 8 + 1) : listLen / 8,
+                        index = 0,
+                        temp = [],
+                        arr = [];
+                    for (index = 0; index < slideLen; index++) {
+                        temp = list.slice(index * 8, index * 8 + 8);
+                        arr.push(temp);
                     }
-                    this.isAnimate = false;
-                }.bind(this));
-            }
-        },
-        mounted: function () {
-            var that = this;
-            // 设备横屏
-            if (window.orientation === 90 || window.orientation === -90) {
-                that.msg('为了您的良好体验，请将设备竖屏操作');
-            }
-            window.addEventListener('orientationchange', function () {
-                if (window.orientation === 90 || window.orientation === -90) {
-                    that.msg('为了您的良好体验，请将设备竖屏操作');
-                }
-            });
-            var R = 750 / $(window).width(), that = this;
-            this.height = ($(window).height() - $('.video').height()) * R / 100;
-            if (this.PullUrl || this.liveInfo.is_play) {
-                this.player = new Aliplayer({
-                    id: 'J_prismPlayer',
-                    width: '100%',
-                    height: '4.22rem',
-                    autoplay: false,
-                    isLive: this.liveInfo.is_play ? true : false,
-                    source: this.PullUrl,
-                    skinLayout: [
-                        { name: "bigPlayButton", align: "blabs", x: 30, y: 80 },
-                        { name: "errorDisplay", align: "tlabs", x: 0, y: 0 },
-                        { name: "infoDisplay", align: "cc" },
-                        {
-                            name: "controlBar", align: "blabs", x: 0, y: 0,
-                            children: [
-                                { name: "liveDisplay", align: "tlabs", x: 15, y: 6 },
-                                { name: "fullScreenButton", align: "tr", x: 10, y: 10 },
-                                { name: "subtitle", align: "tr", x: 15, y: 12 },
-                                { name: "volume", align: "tr", x: 5, y: 10 }
-                            ]
+                    return arr;
+                },
+                updateRecomList: function () {
+                    var that = this;
+                    return that.recomList.map(function (value) {
+                        if (typeof value.label === 'string') {
+                            value.label = JSON.parse(value.label);
                         }
-                    ]
-                }, function (player) {
-                    console.log('播放器创建好了。')
-                });
-                this.bindEvevt();
-            }
-            this.$nextTick(function () {
-                var myBanner = new Swiper('.banner', {
-                    pagination: '.swiper-pagination',
-                    paginationClickable: false,
-                    speed: 1000,
-                    autoplayDisableOnInteraction: false
-                });
-                window.scrollTo(0, document.body.scrollHeight);
-                $(".chat").scrollTop($('.chat').height());
-                window.overallShare = false;
-                mapleWx($jssdk(), function () {
-                    this.onMenuShareAll({
-                        title: that.liveInfo.live_title,
-                        desc: that.liveInfo.abstract,
-                        imgUrl: that.liveInfo.live_image,
-                        link: location.href.indexOf('?') == -1 ?
-                            location.href + '?spread_uid=' + that.userInfo.uid :
-                            location.href + '&spread_uid=' + that.userInfo.uid,
+                        if (that.userInfo.level && value.member_pay_type) {
+                            value.money = value.member_money;
+                        }
+                        return value;
                     });
-                });
-            });
-            window.vm = vm;
-            this.KeyboardStatus();
-            this.getCommentList();
-            this.getOpenCommtList();
-            var that = this;
-            $(function () {
-                $(document).on("change", ".images", function () {
-                    if (this.files.length > 1) return that.msg('您上传的图片不能大与1张');
-                    var file = this.files[0];
-                    if (file) {
-                        var formData = new FormData();
-                        formData.append('file', file);  /*获取上传的图片对象*/
-                        $.ajax({
-                            url: '{:Url("auth_api/upload")}',
-                            type: 'POST',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            dataType: 'json',
-                            success: function (res) {
-                                console.log(res);
-                                if (res.code == 200) {
-                                    that.isAnimate = true;
-                                    socket.ws.send('{"room":' + that.liveInfo.id + ',"content":"' + res.data.url + '","ms_type":"2","type":"send"}');
-                                } else {
-                                    that.msg(res.msg);
+                }
+            },
+            watch: {
+                giftIndexOn: function () {
+                    this.giftSelectShow = false;
+                },
+                notice: function (value) {
+                    var that = this;
+                    if (!value) {
+                        return;
+                    }
+                    setTimeout(function () {
+                        that.notice = '';
+                    }, 1500);
+                },
+                giftFloat: function (value) {
+                    var that = this;
+                    if (!value) {
+                        return;
+                    }
+                    setTimeout(function () {
+                        that.giftFloat = null;
+                    }, 2000);
+                },
+                CommentList: function () {
+                    if (this.navActive !== 1) {
+                        return;
+                    }
+                    this.contentScroll(this.$refs.lesson);
+                },
+                OpenCommentList: function () {
+                    if (this.navActive !== 0) {
+                        return;
+                    }
+                    this.contentScroll(this.$refs.chat);
+                },
+                emojiShow: function () {
+                    var dom = this.$refs.lesson;
+                    if (this.navActive === 1) {
+                        dom = this.$refs.chat;
+                    }
+                    this.contentScroll(dom);
+                },
+                BarrageList: function () {
+                    this.$nextTick(function () {
+                        this.$refs.barrage.scrollTop = this.$refs.barrage.scrollHeight;
+                    });
+                },
+                navActive: function (value) {
+                    switch (value) {
+                        case 2:
+                            this.getRecomList();
+                            break;
+                    }
+                }
+            },
+            created: function () {
+                this.recordId = this.getUrlStr('record_id');
+            },
+            mounted: function () {
+                this.$nextTick(function () {
+                    var that = this;
+                    window.addEventListener('resize', function () {
+                        that.windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                    });
+                    var skinLayoutchildren = [
+                        { name: "progress", align: "blabs", x: 0, y: 44 },
+                        { name: "playButton", align: "tl", x: 15, y: 12 },
+                        { name: "timeDisplay", align: "tl", x: 10, y: 7 },
+                        { name: "setting", align: "tr", x: 15, y: 12 },
+                        { name: "fullScreenButton", align: "tr", x: 10, y: 10 },
+                        { name: "subtitle", align: "tr", x: 15, y: 12 },
+                        { name: "volume", align: "tr", x: 5, y: 10 }
+                    ];
+                    if (this.liveInfo.is_play) {
+                        skinLayoutchildren = [
+                            { name: "liveDisplay", align: "tlabs", x: 15, y: 6 },
+                            { name: "fullScreenButton", align: "tr", x: 10, y: 10 },
+                            // { name: "subtitle", align: "tr", x: 15, y: 12 },
+                            { name: "volume", align: "tr", x: 5, y: 10 }
+                        ];
+                    }
+                    if (this.PullUrl || this.liveInfo.is_play) {
+                        this.player = new Aliplayer({
+                            id: 'J_prismPlayer',
+                            width: '100%',
+                            height: '100%',
+                            autoplay: false,
+                            isLive: this.liveInfo.is_play ? true : false,
+                            source: this.PullUrl,
+                            skinLayout: [
+                                { name: "bigPlayButton", align: "cc"},
+                                { name: "errorDisplay", align: "tlabs", x: 0, y: 0 },
+                                { name: "infoDisplay", align: "cc" },
+                                {
+                                    name: "controlBar", align: "blabs", x: 0, y: 0,
+                                    children: skinLayoutchildren
                                 }
-                            }
-                        })
-                    }
-                });
-            })
-        },
-        methods: {
-            // iOS 软键盘遮挡 fixed
-            focusScroll: function (event) {
-                var agent = navigator.userAgent.toLowerCase(),
-                    iPhone = agent.indexOf('iphone'),
-                    iPad = agent.indexOf('ipad');
-                if (iPhone !== -1 || iPad !== -1) {  // 判断系统是否是 iOS
-                    setTimeout(function () {
-                        window.scrollTo(0, document.body.scrollHeight);
-                        event.target.scrollIntoView(true);
-                    }, 500);
-                }
-            },
-            blurScroll: function () {
-                document.body.scrollTop = document.body.scrollTop;
-            },
-            play_audio: function (item, index, name) {
-                var that = this;
-                var is_play = item.is_play === undefined ? true : !item.is_play;
-                $.each(that[name], function (key, item) {
-                    if (index != key) {
-                        item.is_play = false;
-                        if (item.audio && !item.audio.paused) item.audio.pause();
-                        item.audio = null;
-                    };
-                });
-                this.$set(that, name, this[name]);
-                mapleWx($jssdk(), function () {
-                    console.log(this);
-                })
-                if (is_play) {
-                    audio = new Audio(item.content);
-                    audio.load();
-                    audio.preload = 'none';
-                    var plalyPromis = audio.play();
-                    if (plalyPromis !== null)
-                        plalyPromis.catch(function () {
-                            audio.play();
-                        })
-                    document.addEventListener('DOMContentLoaded', function () {
-                        function audioAutoPlay() {
-                            audio.play();
-                            document.addEventListener("WeixinJSBridgeReady", function () {
-                                audio.play();
-                            }, false);
-                        }
-                        audioAutoPlay();
-                    });
-
-                    audio.addEventListener('ended', function () {
-                        that.$set(that[name][index], 'is_play', false);
-                    });
-                }
-                this.$set(this[name][index], 'is_play', is_play);
-                this.$set(this[name][index], 'audio', audio);
-            },
-            msg: function (err, success) {
-                layer.open({ content: err, skin: 'msg', time: 2, success: success });
-            },
-            layerLoading: function (type, content) {
-                type = type == undefined ? 2 : type;
-                this.layerIndex = layer.open({ type: type, content: content });
-            },
-            layerLoadClose: function () {
-                layer.close(this.layerIndex);
-            },
-            getOpenCommtList: function () {
-                var that = this;
-                if (that.Oloading) return;
-                if (that.Oloadend) return;
-                that.Oloading = true;
-                that.OloadTitle = '';
-                RequestAxios.baseGet(Url({ c: 'live', a: 'get_open_comment_list', q: { page: that.Opage, limit: that.Olimit, live_id: that.liveInfo.id, add_time: OpenCommentTime } }), function (res) {
-                    that.Oloading = false;
-                    var list = res.data.list;
-                    $.each(list, function (index, item) {
-                        if (item.type == 1) item.content = that.replace_em(item.content);
-                        that.OpenCommentList.unshift(item);
-                    });
-                    that.Opage++;
-                    that.$set(that, 'OpenCommentList', that.OpenCommentList);
-                    that.Oloadend = list.length < that.Olimit;
-                    that.OloadTitle = that.Oloadend ? '已全部加载' : '点击加载更多';
-                    //每次进入广播统计直播间人数及欢迎进入人员
-                    setTimeout(function () {
-                        that.countRoomUser();
-                    }, 3000);
-                }, function (res) {
-                    that.Oloading = false;
-                    that.OloadTitle = '点击加载更多';
-                });
-            },
-            //获取讲师助教
-            getCommentList: function () {
-                var that = this;
-                if (that.loading) return;
-                if (that.loadend) return;
-                that.loading = true;
-                that.loadTitle = '';
-                RequestAxios.baseGet(Url({ c: 'live', a: 'get_comment_list', q: { page: that.page, limit: that.limit, live_id: that.liveInfo.id, add_time: CommentTime } }), function (res) {
-                    that.loading = false;
-                    var list = res.data.list;
-                    $.each(list, function (index, item) {
-                        if (item.type == 1) item.content = that.replace_em(item.content);
-                        that.CommentList.unshift(item);
-                    });
-                    if (that.page == Math.ceil(CommentCount / this.limit)) that.isAnimate = true;
-                    that.page++;
-                    that.$set(that, 'CommentList', that.CommentList);
-                    that.loadend = list.length < that.limit;
-                    that.loadTitle = that.loadend ? '已全部加载' : '点击加载更多';
-                }, function (res) {
-                    that.loading = false;
-                    that.loadTitle = '点击加载更多';
-                });
-            },
-            //滑动底部加载
-            bScrollInit: function (Fnname) {
-                var that = this;
-                $h.EventUtil.listenTouchDirection(document, false, false, false, function () {
-                    that[Fnname] && that[Fnname]();
-                }, false);
-            },
-            wechatUploadImg: function (wxApi, count, successCallback, errorCallback) {
-                var that = this;
-                wxApi.chooseImage({ count: count, sizeType: ['compressed'] }, function (localIds) {
-                    that.layerLoading(2, '图片上传中...');
-                    wxApi.uploadImage(localIds, function (serverIds) {
-                        axios.get(Url({
-                            c: "public_api",
-                            a: "wechat_media_id_by_image",
-                            p: { mediaIds: serverIds }
-                        })).then(function (result) {
-                            that.layerLoadClose();
-                            if (result.status == 200 && result.data.code == 200)
-                                return Promise.resolve(result.data.data);
-                            else
-                                return Promise.reject('上传失败!');
-                        }).then(function (picList) {
-                            that.layerLoadClose();
-                            if (!picList) return Promise.reject('请选择上传图片!');
-                            successCallback && successCallback(picList);
-                        }).catch(function (err) {
-                            that.layerLoadClose();
-                            that.msg(err);
-                            errorCallback && errorCallback(err);
+                            ]
+                        }, function (player) {
+                            console.log('播放器创建好了。')
                         });
+                        this.bindEvevt();
+                    }
+                    window.overallShare = false;
+                    mapleWx($jssdk(), function () {
+                        this.onMenuShareAll({
+                            title: that.liveInfo.live_title,
+                            desc: that.liveInfo.abstract,
+                            imgUrl: that.liveInfo.live_image,
+                            link: location.href.indexOf('?') == -1 ?
+                                location.href + '?spread_uid=' + that.userInfo.uid :
+                                location.href + '&spread_uid=' + that.userInfo.uid,
+                        });
+                    });
+                    document.addEventListener('touchstart', function (event) {
+                        var target = event.target;
+                        if (target.classList.contains('preview-img')) {
+                            layer.closeAll();
+                        }
+                    });
+                    $(document).on("change", ".images", function () {
+                        if (this.files.length > 1) return that.msg('您上传的图片不能大与1张');
+                        var file = this.files[0];
+                        if (file) {
+                            var formData = new FormData();
+                            formData.append('file', file);  /*获取上传的图片对象*/
+                            $.ajax({
+                                url: '{:Url("auth_api/upload")}',
+                                type: 'POST',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                dataType: 'json',
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.code == 200) {
+                                        that.isAnimate = true;
+                                        socket.ws.send('{"room":' + that.liveInfo.id + ',"content":"' + res.data.url + '","ms_type":"2","type":"send"}');
+                                    } else {
+                                        that.msg(res.msg);
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    window.vm = vm;
+                    this.KeyboardStatus();
+                    this.getCommentList();
+                    this.getOpenCommtList();
+                    this.createEmojiSwiper();
+                    this.createGiftSwiper();
+                });
+            },
+            methods: {
+                // 向下滚动加载
+                chatScroll: function (event) {
+                    var target = event.target;
+                    if (target.scrollTop) {
+                        return;
+                    }
+                    switch (this.navActive) {
+                        case 0:
+                            this.isDown = false;
+                            this.scrollHeight = target.scrollHeight;
+                            this.getOpenCommtList();
+                            break;
+                        case 1:
+                            this.getCommentList();
+                            break;
+                    }
+                },
+                // 预览图片
+                preview: function (img) {
+                    layer.open({
+                        style: 'background:none',
+                        className: 'preview',
+                        content: '<img class="preview-img" src="' + img + '">'
+                    });
+                },
+                getUrlStr: function (name) {
+                    var pattern = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
+                        array = document.location.search.slice(1).match(pattern);
+                    if (array) {
+                        return decodeURI(array[2]);
+                    }
+                    return null;
+                },
+                emojiKeyboardHide: function () {
+                    if (this.emojiShow) {
+                        this.emojiShow = false;
+                    }
+                },
+                // 滚动条滚到底部
+                contentScroll: function (params) {
+                    this.$nextTick(function () {
+                        params.parentNode.scrollTop = this.isDown ? params.scrollHeight : params.scrollHeight - this.scrollHeight;
+                    });
+                },
+                // 设置赠送礼物后的功功能
+                setGiftFloat: function (res) {
+                    console.log(res);
+                    var cont = '赠送给主播',
+                        gift = null,
+                        type = 1;
+                    if (!res.recharge_status) {
+                        return $h.pushMsgOnce('您的' + this.goldInfo.gold_name + '不足，请先去充值');
+                    }
+                    gift = this.giftList.find(function (value) {
+                        return value.id === res.live_gift_id;
+                    });
+                    if (!gift) {
+                        return $h.pushMsgOnce('gift异常');
+                    }
+                    res.gift = gift
+                    this.giftFloat = res;
+                    cont += gift.live_gift_name + '<img src="' + res.gift.live_gift_show_img + '"> ×' + res.live_gift_num;
+                    this.BarrageList.push({
+                        avatar: res.user_avatar,
+                        content: cont,
+                        type: type
+                    });
+                    this.OpenCommentList.push({
+                        nickname: res.username,
+                        uid: res.uid,
+                        content: cont,
+                        type: type,
+                        avatar: res.user_avatar,
+                        user_type: res.user_type
+                    });
+                    if (res.uid === this.userInfo.uid) {
+                        this.userInfo.gold_num = this.userInfo.gold_num - gift.live_gift_price * res.live_gift_num;
+                    }
+                },
+                // 创建表情包面板
+                createEmojiSwiper: function () {
+                    new Swiper('#emoji', {
+                        pagination: '#emoji-pagination',
+                        paginationClickable: false,
+                        speed: 1000,
+                        autoplayDisableOnInteraction: false,
+                        observer: true,
+                        observeParents: true
+                    });
+                },
+                // 创建打赏礼物面板
+                createGiftSwiper: function () {
+                    new Swiper('#gift', {
+                        pagination: '#gift-pagination',
+                        paginationClickable: false,
+                        speed: 1000,
+                        autoplayDisableOnInteraction: false,
+                        observer: true,
+                        observeParents: true
+                    });
+                },
+                play_audio: function (item, index, name) {
+                    var that = this;
+                    var is_play = item.is_play === undefined ? true : !item.is_play;
+                    $.each(that[name], function (key, item) {
+                        if (index != key) {
+                            item.is_play = false;
+                            if (item.audio && !item.audio.paused) item.audio.pause();
+                            item.audio = null;
+                        };
+                    });
+                    this.$set(that, name, this[name]);
+                    mapleWx($jssdk(), function () {
+                        console.log(this);
                     })
-                });
-            },
-            //发送图文消息处理
-            push: function () {
-                var that = this;
-                if (that.is_ban) return that.msg('您已被禁言！');
-                if (this.content) {
-                    that.sendMessage(this.content, 1);
-                } else {
-                    //发送图片微信端
-                    if (isWechat) {
-                        mapleWx($jssdk(), function () {
-                            that.wechatUploadImg(this, 1, function (res) {
-                                that.sendMessage(res[0], 2);
-                                that.isAnimate = true;
-                            });
+                    if (is_play) {
+                        audio = new Audio(item.content);
+                        audio.load();
+                        audio.preload = 'none';
+                        var plalyPromis = audio.play();
+                        if (plalyPromis !== null)
+                            plalyPromis.catch(function () {
+                                audio.play();
+                            })
+                        document.addEventListener('DOMContentLoaded', function () {
+                            function audioAutoPlay() {
+                                audio.play();
+                                document.addEventListener("WeixinJSBridgeReady", function () {
+                                    audio.play();
+                                }, false);
+                            }
+                            audioAutoPlay();
                         });
-                    } else {
-                        //其他端
-                        if (!$('.images').length) $('body').append('<input type="file" name="images" style="display: none" class="images">');
-                        $('.images').click();
+
+                        audio.addEventListener('ended', function () {
+                            that.$set(that[name][index], 'is_play', false);
+                        });
                     }
-                }
-            },
-            /*
-            *获取直播间人数
-            * */
-            countRoomUser: function () {
-                var joint = '{"type":"room_user_count","uid":' + window.uids + ',"room":' + window.room + '}';
-                socket.ws.send(joint);
-            },
-            /*
-            * 本人撤回消息
-            * */
-            recall: function (id, indexList) {
-                var that = this;
-                layer.open({
-                    content: '是否要撤回此消息？'
-                    , btn: ['是的', '不要']
-                    , yes: function (index) {
-                        socket.ws.send('{"room":' + that.liveInfo.id + ',"type":"recall","id":' + id + '}');
-                        that.CommentList.splice(indexList, 1);
-                        $.each(that.OpenCommentList, function (indexs, item) {
-                            if (item != undefined && item.id == id) that.OpenCommentList.splice(indexs, 1);
+                    this.$set(this[name][index], 'is_play', is_play);
+                    this.$set(this[name][index], 'audio', audio);
+                },
+                msg: function (err, success) {
+                    layer.open({ content: err, skin: 'msg', time: 2, success: success });
+                },
+                layerLoading: function (type, content) {
+                    type = type == undefined ? 2 : type;
+                    this.layerIndex = layer.open({ type: type, content: content });
+                },
+                layerLoadClose: function () {
+                    layer.close(this.layerIndex);
+                },
+                // 获取聊天内容
+                getOpenCommtList: function () {
+                    var that = this;
+                    if (that.Oloading || that.Oloadend) {
+                        return;
+                    }
+                    that.Oloading = true;
+                    store.baseGet($h.U({ c: 'live', a: 'get_open_comment_list', q: { page: that.Opage, limit: that.Olimit, live_id: that.liveInfo.id, add_time: OpenCommentTime } }), function (res) {
+                        res = res.data.data.list;
+                        that.Oloading = false;
+                        res.forEach(value => {
+                            if (value.type == 1) {
+                                value.content = that.replace_em(value.content);
+                            }
+                            that.OpenCommentList.unshift(value);
                         });
-                        layer.close(index);
+                        that.$nextTick(function () {
+                            if (that.Opage++ == 1) {
+                                that.countRoomUser();
+                                that.isDown = true;
+                            }
+                        });
+                        that.Oloadend = res.length < that.Olimit;
+                    }, function (res) {
+                        that.Oloading = false;
+                    });
+                },
+                // 获取课堂内容
+                getCommentList: function () {
+                    var that = this;
+                    if (that.loading) return;
+                    if (that.loadend) return;
+                    that.loading = true;
+                    that.loadTitle = '';
+                    store.baseGet($h.U({ c: 'live', a: 'get_comment_list', q: { page: that.page, limit: that.limit, live_id: that.liveInfo.id, add_time: CommentTime } }), function (res) {
+                        that.loading = false;
+                        var list = res.data.data.list;
+                        res = res.data.data.list;
+                        $.each(list, function (index, item) {
+                            if (item.type == 1) item.content = that.replace_em(item.content);
+                            that.CommentList.push(item);
+                        });
+                        if (that.page == Math.ceil(CommentCount / this.limit)) that.isAnimate = true;
+                        that.page++;
                         that.$set(that, 'CommentList', that.CommentList);
-                        that.$set(that, 'OpenCommentList', that.OpenCommentList);
-                    }
-                });
-            },
-            /*
-            * socket回撤直播间消息回调
-            * */
-            CommentRecall: function (id) {
-                var that = this;
-                $.each(this.CommentList, function (index, item) {
-                    if (item.id == id) that.CommentList.splice(index, 1);
-                });
-                $.each(this.OpenCommentList, function (index, item) {
-                    if (item.id == id) that.OpenCommentList.splice(index, 1);
-                });
-                this.OpenCommentCount--;
-                that.$set(that, 'CommentList', that.CommentList);
-                that.$set(that, 'OpenCommentList', that.OpenCommentList);
-            },
-            /*
-              * socket更新直播间人数和欢迎新用户回调
-              * */
-            setUserCount: function (onLine_user_count, notice_content, user_type) {
-                var that = this;
-                that.$set(that, 'UserSum', onLine_user_count);
-                this.notice = notice_content;
-                // if (user_type != 0 && user_type != 1) {
-                //     this.setCommentArea(notice_content, 1, that.CommentList[0], 1, '');
-                // }
-            },
-            /*
-            * 用户禁言回调
-            * */
-            setBanUser: function (value) {
-                this.is_ban = value;
-            },
-            /*
-            * 设置评论区内容
-            * */
-            setCommentArea: function (content, type, toUserInfo, user_type, id) {
-                switch (user_type) {
-                    case 0: case 1:
-                        this.CommentList.push({
-                            nickname: toUserInfo.nickname,
-                            uid: toUserInfo.uid,
-                            content: type == 1 ? this.replace_em(content) : content,
-                            type: type,
-                            avatar: toUserInfo.avatar,
-                            user_type: user_type,
-                            id: id,
-                        });
-                        this.$set(this, 'CommentList', this.CommentList);
-                        break;
-                    default:
-                        this.BarrageList.push({
-                            avatar: toUserInfo.avatar,
-                            content: type == 1 ? this.replace_em(content) : content,
-                            type: type
-                        });
-                        this.$set(this, 'BarrageList', this.BarrageList);
-                        break;
-                }
-                this.OpenCommentList.push({
-                    nickname: toUserInfo.nickname,
-                    uid: toUserInfo.uid,
-                    content: type == 1 ? this.replace_em(content) : content,
-                    type: type,
-                    avatar: toUserInfo.avatar,
-                    user_type: user_type,
-                    id: id,
-                });
-                this.OpenCommentCount++;
-                $(this.$refs.chat).animate({ scrollTop: $(this.$refs.chat).scrollTop() + 300 }, 300);
-
-                this.$set(this, 'OpenCommentList', this.OpenCommentList);
-            },
-            /*
-            * 发送消息
-            * */
-            sendMessage: function (content, type) {
-                var that = this;
-                if (that.is_SendOut === false) return that.msg('您发送消息过于频繁！');
-                that.isAnimate = true;
-                var cd = that.cd;
-                var index = setInterval(function () {
-                    cd--;
-                    if (cd <= 0) {
-                        clearInterval(index);
-                        that.is_SendOut = true;
-                    }
-                }, 1000);
-                that.content = '';
-                socket.ws.send('{"room":' + this.liveInfo.id + ',"content":"' + content + '","ms_type":"' + type + '","type":"send"}');
-            },
-            KeyboardStatus: function () {
-                var winHeight = $(window).height(), that = this, interval = null, bfscrolltop = document.body.scrollTop;;   //获取当前页面高度
-                if (phone_type == 2) {
-                    $(window).resize(function () {
-                        var thisHeight = $(this).height();
-                        if (winHeight - thisHeight > 50) {
-                            //当软键盘弹出，在这里面操作
-                            that.active = false;
+                        that.loadend = list.length < that.limit;
+                        that.loadTitle = that.loadend ? '已全部加载' : '点击加载更多';
+                        if (!list.length) {
+                            return;
+                        }
+                        that.anchor = {};
+                        for (const key in list[0]) {
+                            if (list[0].hasOwnProperty(key)) {
+                                that.anchor[key] = list[0][key];
+                            }
+                        }
+                        that.anchor.type = 1;
+                    }, function (res) {
+                        that.loading = false;
+                        that.loadTitle = '点击加载更多';
+                    });
+                },
+                //滑动底部加载
+                bScrollInit: function (Fnname) {
+                    var that = this;
+                    $h.EventUtil.listenTouchDirection(document, false, false, false, function () {
+                        that[Fnname] && that[Fnname]();
+                    }, false);
+                },
+                wechatUploadImg: function (wxApi, count, successCallback, errorCallback) {
+                    var that = this;
+                    wxApi.chooseImage({ count: count, sizeType: ['compressed'] }, function (localIds) {
+                        that.layerLoading(2, '图片上传中...');
+                        wxApi.uploadImage(localIds, function (serverIds) {
+                            store.baseGet($h.U({ c: 'public_api', a: 'wechat_media_id_by_image', p: { mediaIds: serverIds } }), function (res) {
+                                that.layerLoadClose();
+                                if (!res.data.data) {
+                                    that.msg('请选择上传图片!');
+                                    errorCallback && errorCallback(err);
+                                    return;
+                                }
+                                successCallback && successCallback(res.data.data);
+                            }, function (res) {
+                                that.layerLoadClose();
+                                that.msg('上传失败!');
+                                errorCallback && errorCallback(err);
+                            });
+                        })
+                    });
+                },
+                //发送图文消息处理
+                push: function () {
+                    var that = this;
+                    if (that.is_ban) return that.msg('您已被禁言！');
+                    if (this.content) {
+                        that.sendMessage(this.content, 1);
+                    } else {
+                        //发送图片微信端
+                        if (isWechat) {
+                            mapleWx($jssdk(), function () {
+                                that.wechatUploadImg(this, 1, function (res) {
+                                    that.sendMessage(res[0], 2);
+                                    that.isAnimate = true;
+                                });
+                            });
                         } else {
-                            //当软键盘收起，在此处操作
-
+                            //其他端
+                            if (!$('.images').length) $('body').append('<input type="file" name="images" style="display: none" class="images">');
+                            $('.images').click();
+                        }
+                    }
+                },
+                /*
+                *获取直播间人数
+                * */
+                countRoomUser: function () {
+                    var joint = '{"type":"room_user_count","uid":' + window.uids + ',"room":' + window.room + '}';
+                    socket.ws.send(joint);
+                },
+                /*
+                * 本人撤回消息
+                * */
+                recall: function (id, indexList) {
+                    var that = this;
+                    layer.open({
+                        content: '是否要撤回此消息？'
+                        , btn: ['是的', '不要']
+                        , yes: function (index) {
+                            socket.ws.send('{"room":' + that.liveInfo.id + ',"type":"recall","id":' + id + '}');
+                            that.CommentList.splice(indexList, 1);
+                            $.each(that.OpenCommentList, function (indexs, item) {
+                                if (item != undefined && item.id == id) that.OpenCommentList.splice(indexs, 1);
+                            });
+                            layer.close(index);
+                            that.$set(that, 'CommentList', that.CommentList);
+                            that.$set(that, 'OpenCommentList', that.OpenCommentList);
                         }
                     });
+                },
+                /*
+                * socket回撤直播间消息回调
+                * */
+                CommentRecall: function (id) {
+                    var that = this;
+                    $.each(this.CommentList, function (index, item) {
+                        if (item.id == id) that.CommentList.splice(index, 1);
+                    });
+                    $.each(this.OpenCommentList, function (index, item) {
+                        if (item.id == id) that.OpenCommentList.splice(index, 1);
+                    });
+                    this.OpenCommentCount--;
+                    that.$set(that, 'CommentList', that.CommentList);
+                    that.$set(that, 'OpenCommentList', that.OpenCommentList);
+                },
+                //  更新直播间在线人数和欢迎回调
+                setUserCount: function (onLine_user_count, notice_content, user_type) {
+                    var anchor = this.anchor,
+                        obj = null;
+                    this.UserSum = onLine_user_count;
+                    this.notice = notice_content;
+                    if (anchor && typeof anchor === 'object') {
+                        obj = {};
+                        for (const key in anchor) {
+                            if (anchor.hasOwnProperty(key)) {
+                                obj[key] = anchor[key];
+                            }
+                        }
+                        obj.content = notice_content;
+                        this.OpenCommentList.push(obj);
+                    }
+                },
+                // 用户禁言回调
+                setBanUser: function (value) {
+                    this.is_ban = value;
+                },
+                // 设置聊天和课堂内容
+                setCommentArea: function (content, type, toUserInfo, user_type, id) {
+                    switch (user_type) {
+                        case 0: case 1:
+                            this.CommentList.push({
+                                nickname: toUserInfo.nickname,
+                                uid: toUserInfo.uid,
+                                content: type == 1 ? this.replace_em(content) : content,
+                                type: type,
+                                avatar: toUserInfo.avatar,
+                                user_type: user_type,
+                                id: id,
+                            });
+                            this.$set(this, 'CommentList', this.CommentList);
+                            break;
+                        default:
+                            this.BarrageList.push({
+                                avatar: toUserInfo.avatar,
+                                content: type == 1 ? this.replace_em(content) : content,
+                                type: type
+                            });
+                            this.$set(this, 'BarrageList', this.BarrageList);
+                            break;
+                    }
+                    this.OpenCommentList.push({
+                        nickname: toUserInfo.nickname,
+                        uid: toUserInfo.uid,
+                        content: type == 1 ? this.replace_em(content) : content,
+                        type: type,
+                        avatar: toUserInfo.avatar,
+                        user_type: user_type,
+                        id: id
+                    });
+                    this.isDown = true;
+                    this.OpenCommentCount++;
+                },
+                /*
+                * 发送消息
+                * */
+                sendMessage: function (content, type) {
+                    var that = this;
+                    if (that.is_SendOut === false) return that.msg('您发送消息过于频繁！');
+                    that.isAnimate = true;
+                    var cd = that.cd;
+                    var index = setInterval(function () {
+                        cd--;
+                        if (cd <= 0) {
+                            clearInterval(index);
+                            that.is_SendOut = true;
+                        }
+                    }, 1000);
+                    that.content = '';
+                    socket.ws.send('{"room":' + this.liveInfo.id + ',"content":"' + content + '","ms_type":"' + type + '","type":"send"}');
+                },
+                KeyboardStatus: function () {
+                    var winHeight = $(window).height(), that = this, interval = null, bfscrolltop = document.body.scrollTop;;   //获取当前页面高度
+                    if (phone_type == 2) {
+                        $(window).resize(function () {
+                            var thisHeight = $(this).height();
+                            if (winHeight - thisHeight > 50) {
+                                //当软键盘弹出，在这里面操作
+                                that.emojiShow = false;
+                            } else {
+                                //当软键盘收起，在此处操作
+
+                            }
+                        });
+                        $(that.$refs.input).keydown(function (event) {
+                            if (event.keyCode == 13 && that.content) {
+                                that.sendMessage($(that.$refs.input).val(), 1);
+                                that.$refs.input.blur();
+                            }
+                        }).focus(function (e) {
+                            that.isAnimate = true;
+                            document.body.scrollTop = document.body.scrollHeight;
+                            that.focusInput(e);
+                        })
+                    } else if (phone_type == 1) {
+                        $(that.$refs.input).focus(function (e) {
+                            that.isAnimate = true;
+                            that.$nextTick(function () {
+                                that.emojiShow = false;
+                            })
+                            interval = setInterval(function () {
+                                document.documentElement.scrollTop = $("#app").height();
+
+                            }, 100)
+                        }).blur(function () {
+                            clearInterval(interval);
+                            document.documentElement.scrollTop = $("#app").height();
+                        })
+                    }
+
                     $(that.$refs.input).keydown(function (event) {
                         if (event.keyCode == 13 && that.content) {
                             that.sendMessage($(that.$refs.input).val(), 1);
                             that.$refs.input.blur();
                         }
-                    }).focus(function (e) {
-                        that.isAnimate = true;
-                        document.body.scrollTop = document.body.scrollHeight;
-                        that.focusInput(e);
+                    });
+                    $(that.$refs.chatList).click(function (event) {
+                        event.stopPropagation();
+                        if (that.emojiShow) that.emojiShow = false;
                     })
-                } else if (phone_type == 1) {
-                    $(that.$refs.input).focus(function (e) {
-                        that.isAnimate = true;
-                        that.$nextTick(function () {
-                            that.active = false;
+                    $(that.$refs.chat).click(function (event) {
+                        event.stopPropagation();
+                        if (that.emojiShow) that.emojiShow = false;
+                    })
+
+                },
+                changeContent: function (e) {
+                    // this.msg(e.value);
+                },
+                focusInput: function (obj) {
+                    var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1;
+                    var isIos = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+                    if (isAndroid) {
+                        window.addEventListener('resize', () => {
+                            if (document.activeElement.tagName == 'INPUT') {
+                                window.setTimeout(() => {
+                                    document.activeElement.scrollIntoViewIfNeeded()
+                                }, 0)
+                            }
                         })
-                        interval = setInterval(function () {
-                            document.documentElement.scrollTop = $("#app").height();
-
-                        }, 100)
-                    }).blur(function () {
-                        clearInterval(interval);
-                        document.documentElement.scrollTop = $("#app").height();
-                    })
-                }
-
-                $(that.$refs.input).keydown(function (event) {
-                    if (event.keyCode == 13 && that.content) {
-                        that.sendMessage($(that.$refs.input).val(), 1);
-                        that.$refs.input.blur();
+                    } else if (isIos) {
+                        // 使用定时器是为了让输入框上滑时更加自然
+                        var input_demo = document.getElementsByTagName('input')[0];
+                        setTimeout(function () {
+                            input_demo.scrollIntoViewIfNeeded();
+                            document.activeElement.scrollIntoViewIfNeeded()
+                        }, 100);
+                        // $('.footer').css('position','relative');
+                        window.addEventListener('focusin', () => {
+                            scrollTops = document.body.scrollHeight;
+                        })
+                        window.addEventListener('focusout', () => {
+                            window.scrollTo(0, 0);
+                        })
+                        $(this.$refs.chat).animate({ scrollTop: $(this.$refs.chat).scrollTop() + 300 }, 300);
                     }
-                });
-                $(that.$refs.chatList).click(function (event) {
-                    event.stopPropagation();
-                    if (that.active) that.active = false;
-                })
-                $(that.$refs.chat).click(function (event) {
-                    event.stopPropagation();
-                    if (that.active) that.active = false;
-                })
+                },
+                changeText: function (e) {
+                    var input = this.$refs.input;
+                    input.focus();
+                    //input.scrollTop = input.scrollHeigHt;
+                },
+                mine: function (item) {
+                    this.$refs.input.value += item.type;
+                    this.content = this.$refs.input.value;
+                },
+                /*
+                * 替换表情
+                * */
+                replace_em: function (str) {
+                    str = str.replace(/\</g, '&lt;');
+                    str = str.replace(/\>/g, '&gt;');
+                    str = str.replace(/\n/g, '<br/>');
+                    str = str.replace(/\[qq_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji1/$1.gif' />");
+                    str = str.replace(/\[em_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji2/$1.png'  />");
+                    str = str.replace(/\[other_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji3/$1.png' />");
+                    return str;
+                },
+                delEmoji: function () {
+                    this.content = this.content.substring(0, this.content.length - 1);
+                },
+                /*
+                * 播放器错误事件处理
+                *
+                * */
+                bindEvevt: function () {
+                    var that = this;
+                    this.player.on('onM3u8Retry', function () {
+                        if (that.player) that.player.dispose();
+                        that.live_error = '主播暂时离开，请稍后.';
+                        that.live_status = -1;
+                        console.log('主播暂时离开，请稍后......');
 
-            },
-            changeContent: function (e) {
-                // this.msg(e.value);
-            },
-            focusInput: function (obj) {
-                var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1;
-                var isIos = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-                if (isAndroid) {
-                    window.addEventListener('resize', () => {
-                        if (document.activeElement.tagName == 'INPUT') {
-                            window.setTimeout(() => {
-                                document.activeElement.scrollIntoViewIfNeeded()
-                            }, 0)
-                        }
-                    })
-                } else if (isIos) {
-                    // 使用定时器是为了让输入框上滑时更加自然
-                    var input_demo = document.getElementsByTagName('input')[0];
-                    setTimeout(function () {
-                        input_demo.scrollIntoViewIfNeeded();
-                        document.activeElement.scrollIntoViewIfNeeded()
-                    }, 100);
-                    // $('.footer').css('position','relative');
-                    window.addEventListener('focusin', () => {
-                        scrollTops = document.body.scrollHeight;
-                    })
-                    window.addEventListener('focusout', () => {
-                        window.scrollTo(0, 0);
-                    })
-                    $(this.$refs.chat).animate({ scrollTop: $(this.$refs.chat).scrollTop() + 300 }, 300);
-                }
-            },
-            changeText: function (e) {
-                var input = this.$refs.input;
-                input.focus();
-                //input.scrollTop = input.scrollHeight;
-            },
-            mine: function (item) {
-                this.$refs.input.value += item.type;
-                this.content = this.$refs.input.value;
-            },
-            /*
-            * 替换表情
-            * */
-            replace_em: function (str) {
-                str = str.replace(/\</g, '&lt;');
-                str = str.replace(/\>/g, '&gt;');
-                str = str.replace(/\n/g, '<br/>');
-                str = str.replace(/\[qq_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji1/$1.gif' />");
-                str = str.replace(/\[em_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji2/$1.png'  />");
-                str = str.replace(/\[other_([0-9]*)\]/g, "<img class='img' src='/wap/first/zsff/face/emoji3/$1.png' />");
-                return str;
-            },
-            delEmoji: function () {
-                this.content = this.content.substring(0, this.content.length - 1);
-            },
-            /*
-            * 播放器错误事件处理
-            *
-            * */
-            bindEvevt: function () {
-                var that = this;
-                this.player.on('onM3u8Retry', function () {
-                    if (that.player) that.player.dispose();
-                    that.live_error = '主播暂时离开，请稍后.';
-                    that.live_status = -1;
-                    console.log('主播暂时离开，请稍后......');
+                    });
+                    this.player.on('liveStreamStop', function () {
+                        console.log('直播失败或直播已结束');
+                        that.live_error = '直播失败或直播已结束';
+                        that.live_status = -1;
+                        if (that.player) that.player.dispose();
+                    });
+                    this.player.on('error', function (e) {
+                        //隐藏
+                        $('.prism-ErrorMessage').hide();
+                        //解析
+                        var errorData = e.paramData;
 
-                });
-                this.player.on('liveStreamStop', function () {
-                    console.log('直播失败或直播已结束');
-                    that.live_error = '直播失败或直播已结束';
-                    that.live_status = -1;
-                    if (that.player) that.player.dispose();
-                });
-                this.player.on('error', function (e) {
-                    //隐藏
-                    $('.prism-ErrorMessage').hide();
-                    //解析
-                    var errorData = e.paramData;
-
-                    that.live_error = '直播失败或直播已结束';
-                    that.live_status = -1;
-                    if (that.player) that.player.dispose();
-                });
-            },
-            touchmoveDefault: function (e) {
-                e.preventDefault();
-            },
-            start(e) {
-                var that = this;
-                if (this.timeOutEvent) clearTimeout(this.timeOutEvent);
-                if (this.autoCloseRecord) clearInterval(this.autoCloseRecord);
-                this.longClick = 0;
-                this.starttime = new Date().getTime();
-                this.autoCloseRecord = setInterval(function () {
-                    that.timeEnd--;
-                    if (that.timeEnd === 10) that.showTimer = true;
-                    if (that.timeEnd === 0) that.end(e);
-                })
-                this.timeOutEvent = setTimeout(function () {
+                        that.live_error = '直播失败或直播已结束';
+                        that.live_status = -1;
+                        if (that.player) that.player.dispose();
+                    });
+                },
+                touchmoveDefault: function (e) {
                     e.preventDefault();
-                    that.longClick = 1;
-                    if (isWechat) {
+                },
+                start(e) {
+                    var that = this;
+                    if (this.timeOutEvent) clearTimeout(this.timeOutEvent);
+                    if (this.autoCloseRecord) clearInterval(this.autoCloseRecord);
+                    this.longClick = 0;
+                    this.starttime = new Date().getTime();
+                    this.autoCloseRecord = setInterval(function () {
+                        that.timeEnd--;
+                        if (that.timeEnd === 10) that.showTimer = true;
+                        if (that.timeEnd === 0) that.end(e);
+                    })
+                    this.timeOutEvent = setTimeout(function () {
+                        e.preventDefault();
+                        that.longClick = 1;
+                        if (isWechat) {
+                            mapleWx($jssdk(), function () {
+                                this.startRecord();
+                            });
+                        }
+                    }, 500);
+                    that.speak = '松开 结束';
+                    that.recording = true;
+                    return false;
+                },
+                move(e) {
+                    this.timeOutEvent = 0;
+                    e.preventDefault();
+                },
+                end(e) {
+                    var that = this;
+                    this.msg('333');
+                    clearInterval(that.autoCloseRecord);
+                    this.endtime = new Date().getTime();
+                    if ((this.endtime - this.starttime) < 2) {
+                        this.endtime = 0;
+                        this.starttime = 0;
+                        clearTimeout(this.timeOutEvent);
+                        that.msg('说话时间太短');
                         mapleWx($jssdk(), function () {
-                            this.startRecord();
+                            this.stopRecord();
+                        })
+                    } else {
+                        mapleWx($jssdk(), function () {
+                            var wx = this;
+                            this.stopRecord(function (localId, res) {
+                                wx.uploadVoice(localId, function (serverId) {
+                                    store.basePost($h.U({ c: 'live', a: 'upload_voice' }), { server_id: serverId }, function (res) {
+                                        socket.ws.send('{"room":' + that.liveInfo.id + ',"content":"' + Ks3Host + '/' + res.data.data.url + '","ms_type":3,"type":"send"}');
+                                    });
+                                }, 0)
+                            });
+                        })
+                    }
+                    e.preventDefault();
+                    this.speak = '按住 结束';
+                    this.recording = false;
+                    return false;
+                },
+                voiceBnt: function () {
+                    this.emojiShow = false;
+                    if (this.voice == true) {
+                        this.voice = false;
+                        this.$nextTick(function () {
+                            this.$refs.input.focus();
+                        });
+                    } else {
+                        this.voice = true;
+                    }
+                },
+                emoticon: function () {
+                    var that = this;
+                    this.voice = false;
+                    if (this.emojiShow == true) {
+                        this.emojiShow = false;
+                        this.$nextTick(function () {
+                            that.$refs.input.focus();
+                        })
+                    } else {
+                        this.emojiShow = true;
+                        this.$nextTick(function () {
+                            that.$refs.input.blur();
                         });
                     }
-                }, 500);
-                that.speak = '松开 结束';
-                that.recording = true;
-                return false;
-            },
-            move(e) {
-                this.timeOutEvent = 0;
-                e.preventDefault();
-            },
-            end(e) {
-                var that = this;
-                this.msg('333');
-                clearInterval(that.autoCloseRecord);
-                this.endtime = new Date().getTime();
-                if ((this.endtime - this.starttime) < 2) {
-                    this.endtime = 0;
-                    this.starttime = 0;
-                    clearTimeout(this.timeOutEvent);
-                    that.msg('说话时间太短');
-                    mapleWx($jssdk(), function () {
-                        this.stopRecord();
-                    })
-                } else {
-                    mapleWx($jssdk(), function () {
-                        var wx = this;
-                        this.stopRecord(function (localId, res) {
-                            wx.uploadVoice(localId, function (serverId) {
-                                RequestAxios.basePost(Url({ c: 'live', a: 'upload_voice' }), { server_id: serverId }, function (res) {
-                                    socket.ws.send('{"room":' + that.liveInfo.id + ',"content":"' + Ks3Host + '/' + res.data.url + '","ms_type":3,"type":"send"}');
-                                });
-                            }, 0)
-                        });
-                    })
-                }
-                e.preventDefault();
-                this.speak = '按住 结束';
-                this.recording = false;
-                return false;
-            },
-            voiceBnt: function () {
-                this.active = false;
-                if (this.voice == true) {
-                    this.voice = false;
-                    this.$nextTick(function () {
-                        this.$refs.input.focus();
-                    });
-                } else {
-                    this.voice = true;
-                }
-            },
-            emoticon: function () {
-                var that = this;
-                this.voice = false;
-                if (this.active == true) {
-                    this.active = false;
-                    this.$nextTick(function () {
-                        that.$refs.input.focus();
-                    })
-                } else {
-                    this.active = true;
-                    this.$nextTick(function () {
-                        that.$refs.input.blur();
-                    });
-                }
-                this.$nextTick(function () {
-                    window.scrollTo(0, document.body.scrollHeight);
-                    $(".chat").scrollTop($('.chat')[0].scrollHeight);
-                });
-            },
-            openBarrage: function () {
-                this.barrage = !this.barrage
-            },
-            openDiscuss: function () {
-                this.discuss = true;
-                $(this.$refs.chatlist).css({ overflow: 'hidden' });
-            },
-            closeDiscuss: function () {
-                this.discuss = false;
-                $(this.$refs.chatlist).css({ overflow: 'auto' });
-            },
-            changLive: function (type, pullUrl) {
-                //销毁播放器
-                var that = this;
-                if (this.player) this.player.dispose();
-                if (type) {
-                    this.liveInfo.is_play = 1;
-                    this.PullUrl = pullUrl;
-                    this.$nextTick(function () {
-                        that.player = new Aliplayer({
-                            id: 'J_prismPlayer',
-                            width: '100%',
-                            height: '4.22rem',
-                            autoplay: false,
-                            isLive: true,
-                            source: pullUrl,
-                        }, function (player) {
-                            console.log('播放器创建好了。')
-                        });
+                },
+                openBarrage: function () {
+                    this.barrage = !this.barrage
+                },
+                openDiscuss: function () {
+                    this.discuss = true;
+                    $(this.$refs.chatlist).css({ overflow: 'hidden' });
+                },
+                closeDiscuss: function () {
+                    this.discuss = false;
+                    $(this.$refs.chatlist).css({ overflow: 'auto' });
+                },
+                changLive: function (type, pullUrl) {
+                    //销毁播放器
+                    var that = this;
+                    if (this.player) this.player.dispose();
+                    if (type) {
+                        this.liveInfo.is_play = 1;
+                        this.PullUrl = pullUrl;
                         this.$nextTick(function () {
-                            $('#J_prismPlayer').css({ height: '4.22rem' });
+                            that.player = new Aliplayer({
+                                id: 'J_prismPlayer',
+                                width: '100%',
+                                height: '100%',
+                                autoplay: false,
+                                isLive: true,
+                                source: pullUrl,
+                            }, function (player) {
+                                console.log('播放器创建好了。')
+                            });
+                            this.$nextTick(function () {
+                                $('#J_prismPlayer').css({ height: '4.22rem' });
+                            });
+                            that.bindEvevt();
+                        })
+                    } else {
+                        this.PullUrl = false;
+                        this.live_status = 1;
+                        this.$set(this.liveInfo, 'is_play', 0);
+                        this.$nextTick(function () {
+                            $(that.$refs.column).css({ height: 'auto' });
                         });
-                        that.bindEvevt();
-                    })
-                } else {
-                    this.PullUrl = false;
-                    this.live_status = 1;
-                    this.$set(this.liveInfo, 'is_play', 0);
-                    this.$nextTick(function () {
-                        $(that.$refs.column).css({ height: 'auto' });
-                    });
+                    }
                 }
             }
-        }
-
+        });
     });
 </script>
 {/block}

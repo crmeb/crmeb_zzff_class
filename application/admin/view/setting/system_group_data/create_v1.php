@@ -182,7 +182,7 @@
      * 选择图片
      */
     file_image.on('click', function () {
-        ossUpload.createFrame('选择任务封面图', {}, {w: 700});
+        ossUpload.createFrame('选择任务封面图', {},{w:800,h:550});
     });
 
     Help.show();

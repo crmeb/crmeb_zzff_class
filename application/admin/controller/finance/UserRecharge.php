@@ -30,8 +30,11 @@ class UserRecharge extends AuthController
         $where = Util::getMore([
             ['order_id', ''],
         ], $this->request);
+        $list = UserRechargeModel::systemPage($where);
+        $recharge_type_cn = ['yue' => "余额", 'weixin' => "微信", 'zhifubao' => "支付宝"];
+        $this->assign('recharge_type_cn', $recharge_type_cn);
         $this->assign('where', $where);
-        $this->assign(UserRechargeModel::systemPage($where));
+        $this->assign($list);
         return $this->fetch();
     }
 

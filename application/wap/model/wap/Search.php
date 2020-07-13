@@ -2,12 +2,14 @@
 
 namespace app\wap\model\wap;
 
+use app\admin\model\special\SpecialSource;
 use app\wap\model\recommend\RecommendRelation;
 use app\wap\model\special\Special;
 use app\wap\model\special\SpecialTask;
 use traits\ModelTrait;
 use basic\ModelBasic;
 use app\wap\model\article\Article;
+use think\Db;
 
 /**
  * Class Search
@@ -32,7 +34,7 @@ class Search extends ModelBasic
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function getSearchContent($search, $limit = 3, $page = 0)
+    public static function getSearchContent($search, $limit = 3,$uid=0, $page = 0)
     {
         $specialModel = Special::PreWhere()->where('title|abstract', 'LIKE', "%$search%")->field(['is_pink', 'pink_money', 'label', 'id', 'title', 'abstract', 'image', 'money'])
             ->order('sort desc');
@@ -56,6 +58,12 @@ class Search extends ModelBasic
         }
         $searchList['special'] = $special;
         $searchList['tash'] = $tash;
+        $data=[
+            'uid'=>$uid,
+            'search'=>$search,
+            'add_time'=>time()
+        ];
+        Db::name('search_history')->insert($data);
         return $searchList;
     }
 
@@ -103,8 +111,22 @@ class Search extends ModelBasic
             if (!isset($item['money'])) $item['money'] = 0;
             $item['money'] = (float)$item['money'];
             $item['image'] = get_oss_process($item['image'],$where['typesetting']);
+            $item['count'] =0;
+            if($where['type']==0 || $where['type']==2){
+                $specialSourceId = SpecialSource::getSpecialSource($item['id']);
+                if($specialSourceId) $item['count']=count($specialSourceId);
+                else $item['count'] =0;
+            }
         }
         $page = $where['page'] + 1;
         return compact('list', 'page');
+    }
+
+    /**
+     * 用户搜索历史
+     */
+    public static function userSearchHistory($uid=0){
+        $list=Db::name('search_history')->where('uid',$uid)->limit(0,10)->order('add_time DESC')->select();
+        return $list;
     }
 }

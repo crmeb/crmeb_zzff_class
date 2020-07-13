@@ -109,31 +109,6 @@
             <a href="javascript:void(0);" class="roll-nav roll-right J_notice" data-toggle="dropdown" aria-expanded="true" title="消息"><i class="fa fa-bell"></i> <span class="badge badge-danger" id="msgcount">0</span></a>
             <ul class="dropdown-menu dropdown-alerts dropdown-menu-right" >
                 <li>
-                    <a class="J_menuItem" href="{:Url('order.store_order/index')}">
-                        <div>
-                            <i class="fa fa-building-o"></i> 待发货
-                            <span class="pull-right text-muted small" id="ordernum">0个</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a class="J_menuItem" href="{:Url('store.store_product/index',array('type'=>5))}">
-                        <div>
-                            <i class="fa fa-pagelines"></i> 库存预警 <span class="pull-right text-muted small" id="inventory">0个</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a class="J_menuItem" href="{:Url('store.store_product_reply/index')}">
-                        <div>
-                            <i class="fa fa-comments-o"></i> 新评论 <span class="pull-right text-muted small" id="commentnum">0个</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
                     <a class="J_menuItem" href="{:Url('finance.user_extract/index')}">
                         <div>
                             <i class="fa fa-cny"></i> 申请提现 <span class="pull-right text-muted small" id="reflectnum">0个</span>
@@ -161,7 +136,8 @@
             <iframe class="J_iframe" name="iframe_crmeb_main" width="100%" height="100%" src="{:Url('Index/main')}" frameborder="0" data-id="{:Url('Index/main')}" seamless></iframe>
         </div>
         <!--底部版权-->
-        <div class="footer"  @touchmove.prevent>
+        <div class="footer"  @touchmove.prevent >
+            <div class="pull-right" style="padding-left: 10px">版本号：v1.20</div>
             <div class="pull-right">© 2014-2020 <a href="http://www.crmeb.com/" target="_blank">CRMEB</a>
             </div>
         </div>
@@ -306,7 +282,6 @@
         getnotice();
         setInterval(getnotice, 60000);
     });
-
 </script>
 </body>
 </html>

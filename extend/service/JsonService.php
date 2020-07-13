@@ -49,13 +49,13 @@ class JsonService
         return self::result(200,$msg,compact('status','result'));
     }
 
-    public static function fail($msg,$data=[])
+    public static function fail($msg,$data=[],$code = false)
     {
         if(true == is_array($msg)){
             $data = $msg;
             $msg = self::$FAIL_DEFAULT_MSG;
         }
-        return self::result(400,$msg,$data);
+        return self::result($code ? $code : 400,$msg,$data);
     }
 
 }

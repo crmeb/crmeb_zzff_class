@@ -108,15 +108,17 @@
                     </script>
                     <!--商品信息-->
                     <script type="text/html" id="info">
-                        {{#  if(d.type==0){ }}
+                        {{#  if(d.type==0 && d._info){ }}
                         <p>
                             <span><img style="width: 30px;height: 30px;cursor: pointer;" src="{{d._info.image}}"></span>
-                            <span>{{d._info.title}}</span><span> | ￥{{d.total_num}}</span>
+                            <span>{{d._info.title}}</span><span></span>
                         </p>
-                        {{# }else{ }}
+                        {{# }else if(d.type==1 && d._info){ }}
                         <p>
                             <span>{{d._info.title}}</span><span> | ￥{{d.pay_price}}</span>
                         </p>
+                        {{# }else{ }}
+                        无
                         {{# };}}
                     </script>
                     <!--详情-->
@@ -434,7 +436,7 @@
                 orderStatus: [
                     {name: '全部', value: ''},
                     {name: '未支付', value: 0,count:orderCount.wz},
-                    {name: '已完成', value: 1,count:orderCount.wf,class:true},
+                    {name: '已支付', value: 1,count:orderCount.wf,class:true},
                     {name: '已退款', value: -2,count:orderCount.yt},
                 ],
                 dataList: [

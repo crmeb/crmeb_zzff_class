@@ -32,6 +32,14 @@ class LiveStudio extends ModelBasic
                 }
             })->toArray();
     }
+    public static function getLiveOne($live_one_id)
+    {
+        return self::where(['l.is_del' => 0, 's.is_show' => 1, 's.is_del' => 0])->alias('l')
+            ->join('special s', 's.id = l.special_id')
+            ->field(['s.title', 's.image','l.is_play', 's.id'])
+            ->where('l.is_play',1)->where('s.id',$live_one_id)
+            ->order('l.sort DESC,l.add_time DESC')->find();
+    }
 
     public function getStartPlayTimeAttr($time)
     {

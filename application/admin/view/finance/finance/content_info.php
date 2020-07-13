@@ -99,13 +99,13 @@
                         {/if}
                         <li class="layui-col-xs4">
                             <div class="backlog-body">
-                                <h3>佣金总输入</h3>
+                                <h3>佣金总收入</h3>
                                 <p><cite>{$userinfo.number}</cite></p>
                             </div>
                         </li>
                         <li class="layui-col-xs4">
                             <div class="backlog-body">
-                                <h3>佣金余额</h3>
+                                <h3>剩余余额</h3>
                                 <p><cite>{$userinfo.now_money}</cite></p>
                             </div>
                         </li>

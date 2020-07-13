@@ -22,6 +22,7 @@ if (file_exists("./install/") && !file_exists("./install/install.lock")) {
     header('Location:/install/index.php');
     exit();
 }
+
 define('APP_PATH', __DIR__ . '/../application/');
 //静态文件目录
 define('PUBILC_PATH', '/');

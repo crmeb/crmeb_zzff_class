@@ -4,6 +4,8 @@ namespace app\wap\model\live;
 /**
  * 直播间评论表
  */
+
+use app\admin\model\system\SystemGroupData;
 use basic\ModelBasic;
 use service\SystemConfigService;
 use traits\ModelTrait;
@@ -35,6 +37,16 @@ class LiveBarrage extends ModelBasic
                 $item['user_type'] = 2;
             else
                 $item['user_type'] = $type;
+            if ($item['type'] == 4) {
+                $live_reward_list = LiveReward::where(['id' => $item['content']])->find();
+                if ($live_reward_list ? $live_reward_list = $live_reward_list->toArray(): []){
+                    $live_gift = SystemGroupData::getDateValue($live_reward_list['gift_id']);
+                    $item['content'] = "赠送给主播";
+                    $item['gift_num'] = $live_reward_list['gift_num'];
+                    $item['gift_image'] = $live_gift ? $live_gift['live_gift_show_img'] : "";
+                    $item['gift_name'] = $live_reward_list['gift_name'];
+               }
+            }
         }
         $page--;
         if(count($list) == 0 || count($list) < $limit){

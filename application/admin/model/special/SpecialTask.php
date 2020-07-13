@@ -63,8 +63,14 @@ class SpecialTask extends ModelBasic
     {
         if (isset($where['special_type']) && $where['special_type'] == SPECIAL_COLUMN){
             unset($where['special_type']);
+            $where['store_name']=$where['title'];
             $data = Special::setWhere($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->page((int)$where['page'], (int)$where['limit'])->select();
-            //$data = self::setWhere($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->page((int)$where['page'], (int)$where['limit'])->select();
+            $data = count($data) ? $data->toArray() : [];
+            $count = Special::setWhere($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->count();
+        }elseif (isset($where['special_type']) && $where['special_type'] == SPECIAL_LIVE){
+            unset($where['special_type']);
+            $where['store_name']=$where['title'];
+            $data = Special::setWhere($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->page((int)$where['page'], (int)$where['limit'])->select();
             $data = count($data) ? $data->toArray() : [];
             $count = Special::setWhere($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->count();
         }else{
@@ -72,7 +78,6 @@ class SpecialTask extends ModelBasic
             $data = count($data) ? $data->toArray() : [];
             $count = self::setWhere($where)->count();
         }
-
         return compact('data', 'count');
     }
     /**

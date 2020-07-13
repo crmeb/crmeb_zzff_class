@@ -23,6 +23,9 @@ class MemberShip extends ModelBasic
         $model=self::setWhere($where)->order('sort DESC,add_time DESC');
         $data=($list=$model->page((int)$where['page'],(int)$where['limit'])
             ->select()) && count($list) ?  $list->toArray() : [];
+        foreach ($data as &$item){
+            if($item['vip_day']==-1) $item['vip_day']='永久';
+        }
         $count=self::setWhere($where)->count();
         return compact('data','count');
     }

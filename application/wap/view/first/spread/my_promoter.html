@@ -2,7 +2,31 @@
 {block name='head_top'}
 <style>
     body {
-        background-color: #f2f2f2;
+        background-color: #f5f5f5;
+    }
+
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
     }
 </style>
 <link href="{__WAP_PATH}zsff/layer_mobile/need/layer.css" rel="stylesheet">
@@ -24,7 +48,8 @@
     <div class="search acea-row row-center-wrapper" @click="dis=false">
         <form @submit.prevent='search'>
             <span class="iconfont icon-sousuo"></span>
-            <input type="text" placeholder="搜索" v-model="where.search" class="input" :class="dis==false?'on':''" style="border: none;margin: 0;padding: 0;">
+            <input type="text" placeholder="搜索" v-model="where.search" class="input" :class="dis==false?'on':''"
+                style="border: none;margin: 0;padding: 0;">
         </form>
     </div>
     <div class="list" v-cloak="" ref="list">
@@ -56,14 +81,15 @@
                 <div class="item item2" v-text="item.phone"></div>
                 <div class="item item3" v-text="item.sellout_count" v-if="!action"></div>
                 <div class="item item4" v-text="item.sellout_money" v-if="!action"></div>
-                <div class="item item3" v-if="action" @click="removeSpread(index,item.uid)" style="color:#509efb;">移除推广人</div>
+                <div class="item item3" v-if="action" @click="removeSpread(index,item.uid)" style="color:#509efb;">移除推广人
+                </div>
             </div>
-            <p class="loading-line" style="background-color: #ffffff" v-cloak="">
-                <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-                <span v-text="loadTitle">加载更多</span>
-            </p>
+            <div v-show="loading" class="loading">
+                <span class="fa fa-spinner"></span>
+            </div>
+            <div v-if="loadend && where.page > 2" class="loaded">已全部加载</div>
+            <div v-if="!spreadList.length && !loading" class="nothing"></div>
         </div>
-
     </div>
     <div style="height:1.2rem;"></div>
     <div class="footer acea-row row-center" v-if="is_promoter != 1 || is_senior">

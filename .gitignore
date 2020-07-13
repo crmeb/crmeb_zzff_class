@@ -4,7 +4,12 @@
 /public/uploads
 /public/nginx.htaccess
 *.txt
+think
+.htaccess
 *.log:
+/application/database.php
 /vendor/workerman/workerman.log
+/application/wap/controller/Login.php
+/application/wap/model/user/WechatUser.php
 /public/aa.mp4
 /public/audio.mp3

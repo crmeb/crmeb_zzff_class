@@ -13,7 +13,6 @@ use basic\ModelBasic;
 use behavior\system\SystemBehavior;
 use service\HookService;
 use think\Session;
-
 /**
  * Class SystemAdmin
  * @package app\admin\model\system
@@ -187,5 +186,16 @@ class SystemAdmin extends ModelBasic
             ->field('a.id as admin_id, a.account as admin_name, a.roles as role_id, a.level as admin_level, a.status as admin_status')
             ->select()
             ->toArray();
+    }
+
+    /**
+     * 检测用户权限身份
+     */
+    public static function testUserLevel($user){
+        $role=SystemRole::where('sign','verification')->where('status',1)->find();
+        if(!$role) return false;
+        $level=self::where('roles',$role['id'])->where('phone',$user['phone'])->find();
+        if($level) return true;
+        else return false;
     }
 }

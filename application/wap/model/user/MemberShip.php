@@ -14,7 +14,7 @@ class MemberShip extends ModelBasic
 
     public static function membershipList(){
         $list=self::where('is_publish',1)->where('is_del',0)->where('type',1)->where('is_free',0)->order('sort DESC')->select();
-        $list=count($list)>0 ? $list->toArray() :[];
+        $list=$list ? $list->toArray() :[];
         foreach ($list as &$vc){
             $vc['sale']=bcsub($vc['original_price'],$vc['price'],2);
         }
@@ -23,6 +23,7 @@ class MemberShip extends ModelBasic
 
     public static function getUserMember($order,$userInfo){
         $member=self::where('is_publish',1)->where('is_del',0)->where('type',1)->where('id',$order['member_id'])->find();
+        if(!$member) return false;
         $is_permanent=0;
         if($member['is_permanent']){
             $is_permanent=1;
@@ -61,7 +62,25 @@ class MemberShip extends ModelBasic
      * @throws \think\exception\DbException
      */
     public static function memberMinOne(){
-        return self::where('is_publish',1)->where('is_del',0)->where('type',1)->where('is_free',0)->order('price ASC')->find();
+         $member=self::where('is_publish',1)->where('is_del',0)->where('type',1)->where('is_free',0)->order('price ASC')->find();
+        if($member) {
+            $member=$member->toArray();
+            switch ($member['vip_day']){
+                case 30:
+                    $member['unit']='月';
+                  break;
+                case 90:
+                    $member['unit']='季';
+                   break;
+                case 365:
+                    $member['unit']='年';
+                   break;
+                case -1:
+                    $member['unit']='永久';
+                    break;
+            }
+        }
+        return $member;
     }
 
     /**
@@ -69,13 +88,11 @@ class MemberShip extends ModelBasic
      */
     public static function memberFree($uid){
         $free=self::where('is_publish',1)->where('is_del',0)->where('type',1)->where('is_free',1)->find();
-        $data['free']=count($free) >0 ? $free->toArray() :[];
+        $data['free']=$free ? $free->toArray() :[];
         $data['is_record'] = 0;
         if($data['free']) {
             $record = MemberRecord::where('uid', $uid)->where('is_free', 1)->find();
             if (count($record)>0) $data['is_record'] = 1;
-        }else{
-            $data['free']=[];
         }
         return $data;
     }
@@ -83,11 +100,10 @@ class MemberShip extends ModelBasic
     /**
      * 会员过期
      */
-    public static function memberExpiration(){
-        $userList=User::where('level',1)->where('is_permanent',0)->where('overdue_time','<=',time())->select();
-        foreach ($userList as $key=>$value){
-            $res=User::edit(['level'=>0],$value['uid'],'uid');
-            if(!$res) continue;
+    public static function memberExpiration($uid){
+        $user=User::where('uid',$uid)->find();
+        if($user['level'] && $user['is_permanent']==0 && bcsub($user['overdue_time'],time(),0)<=0){
+                User::edit(['level'=>0],$uid,'uid');
         }
         return true;
     }

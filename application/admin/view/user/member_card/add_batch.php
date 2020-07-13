@@ -145,7 +145,7 @@
                         layList.loadClear();
                         if(parseInt(id) == 0) {
                             layList.layer.confirm('添加成功,您要继续添加素材吗?', {
-                                btn: ['继续添加', '取消'] //按钮
+                                btn: ['继续添加', '立即提交'] //按钮
                             }, function () {
                                 window.location.reload();
                             }, function () {

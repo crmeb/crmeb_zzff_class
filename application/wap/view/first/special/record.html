@@ -3,15 +3,44 @@
 {block name="head_top"}
 <script src="/wap/first/zsff/js/scroll.js"></script>
 <script src="/wap/first/zsff/js/navbarscroll.js"></script>
+<style>
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
 {/block}
 {block name="content"}
 <div v-cloak id="app">
     <div class="study-record">
         <header>
             {if $homeLogo}
-            <img class="logo" src="{$homeLogo}">
+            <div class="image">
+                <img class="img" src="{$homeLogo}">
+            </div>
             {else}
-            <img class="logo" src="/wap/first/zsff/images/crmeb.png">
+            <div class="image">
+                <img class="img" src="/wap/first/zsff/images/crmeb.png">
+            </div>
             {/if}
             <form @submit.prevent="goSearch">
                 <img src="/wap/first/zsff/images/search.png">
@@ -27,33 +56,38 @@
                     </div>
                     <div class="text">
                         <div class="name">{{ item.title }}</div>
-                        <div v-for="(itm, idx) in item.label" :key="idx" class="label">
-                            <span v-if="idx < 2" class="cell">{{ itm }}</span>
+                        <div class="label">
+                            <template v-for="(itm, idx) in item.label">
+                                <span v-if="idx < 2" :key="idx" class="cell">{{ itm }}</span>
+                            </template>
                         </div>
                         <div class="price">
                             <template v-if="item.is_pink">
                                 <div class="money">¥<span>{{ item.pink_money }}</span></div>
                                 <div class="group-price-icon">拼团特惠</div>
+                                <div v-if="item.types!=4" class="total">共{{item.count}}节</div>
                             </template>
                             <template v-else>
                                 <div v-if="item.money === '0.00'" class="free">免费</div>
                                 <div v-else class="money">¥<span>{{ item.money }}</span></div>
+                                <div v-if="item.types!=4" class="total">共{{item.count}}节</div>
                             </template>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="foot">
-                <span v-show="loading" class="fa fa-spinner loadingpic"></span>
-                <div class="tip">{{ loadTitle }}</div>
+            <div v-show="loading" class="loading">
+                <span class="fa fa-spinner"></span>
             </div>
+            <div v-if="loadend && page > 2" class="loaded">已全部加载</div>
+            <div v-if="!specials.length && !loading" class="nothing"></div>
         </main>
     </div>
 </div>
 {/block}
 {block name='foot'}
 <script>
-    require(['vue', 'helper', 'store' , 'special-type'], function (Vue, $h, app, specialType) {
+    require(['vue', 'helper', 'store', 'special-type'], function (Vue, $h, app, specialType) {
         new Vue({
             el: '#app',
             data: {
@@ -61,6 +95,7 @@
                 search: '',
                 loadTitle: '',
                 loading: false,
+                loadend: false,
                 limit: 10,
                 page: 1,
             },
@@ -73,6 +108,7 @@
                             a: 'details',
                             q: { id: value.id }
                         });
+                        value.types = value.type;
                         value.type = specialType[value.type];
                         return value;
                     });

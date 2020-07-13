@@ -18,6 +18,30 @@
         -webkit-align-self: flex-start;
         align-self: flex-start;
     }
+
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 </style> 
 {/block}
 {block name="content"}
@@ -30,25 +54,30 @@
             </div>
             <div class="text">
                 <div class="name">{{ item.title }}</div>
-                <div v-for="(itm, idx) in item.label" :key="idx" class="label">
-                    <span v-if="idx < 2">{{ itm }}</span>
+                <div class="label">
+                    <template v-for="(itm, idx) in item.label">
+                        <span v-if="idx < 2" :key="idx">{{ itm }}</span>
+                    </template>
                 </div>
                 <div class="price">
                     <template v-if="item.is_pink">
                         <div class="money">¥<span>{{ item.pink_money }}</span></div>
                         <div class="group-price-icon">拼团特惠</div>
+                        <div v-if="item.types!=4" class="total">共{{item.count}}节</div>
                     </template>
                     <template v-else>
                         <div v-if="item.money === '0.00'" class="free">免费</div>
                         <div v-else class="money">¥<span>{{ item.money }}</span></div>
+                        <div v-if="item.types!=4" class="total">共{{item.count}}节</div>
                     </template>
                 </div>
             </div>
         </a>
-        <p class="loading-line" style="background-color:#ffffff">
-            <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-            <span v-text="loadTitle">加载更多</span>
-        </p>
+        <div v-show="loading" class="loading">
+            <span class="fa fa-spinner"></span>
+        </div>
+        <div v-if="loadend && page > 2" class="loaded">已全部加载</div>
+        <div v-if="!gradeList.length && !loading" class="nothing"></div>
         <div style="height: 1.2rem"></div>
     </div>
     <div class="my-course" ref="app">
@@ -89,7 +118,6 @@
                 navlist: [{title: '我的课程'}, {title: '我的收藏'}],
                 loadend: false,
                 loading: false,
-                loadTitle: '上拉加载更多',
                 active: 0,
                 gradeList: [],
                 min: 2,
@@ -106,8 +134,11 @@
             computed: {
                 makeGradeList: function () {
                     return this.gradeList.map(function (value) {
-                        value.type = specialType[value.type];
-                        value.path = $h.U({c: 'special', a: 'details', q: { id: value.id }}) + (this.active == 0 ? '#tash' : '');
+                        if(type==1){
+                            value.types=value.type;
+                            value.type = specialType[value.type];
+                        }
+                        value.path = $h.U({c: 'special', a: 'details', q: { id: value.s_id }}) + (this.active == 0 ? '#tash' : '');
                         return value;
                     });
                 }
@@ -188,7 +219,6 @@
                     var that = this;
                     if (that.loading) return;
                     if (that.loadend) return;
-                    that.loadTitle = '';
                     that.loading = true;
                     storeApi.baseGet($h.U({
                         c: 'special',
@@ -198,13 +228,11 @@
                         var list = res.data.data.list;
                         that.gradeList.push.apply(this.gradeList, list);
                         this.loadend = list.length < this.limit;
-                        this.loadTitle = this.loadend ? '已全部加载' : '上拉加载更多';
                         this.page = res.data.data.page;
                         this.loading = false;
                         this.$set(this, 'gradeList', this.gradeList);
                         this.EventUtil();
                     }.bind(this), function () {
-                        that.loadTitle = '上拉加载更多';
                         that.loading = false;
                     });
                 },

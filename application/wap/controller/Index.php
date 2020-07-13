@@ -4,6 +4,7 @@ namespace app\wap\controller;
 
 use app\admin\model\special\RecommendBanner;
 use app\admin\model\wechat\WechatQrcode;
+use app\wap\model\activity\EventRegistration;
 use app\wap\model\live\LiveStudio;
 use app\wap\model\user\SmsCode;
 use app\wap\model\recommend\Recommend;
@@ -47,6 +48,7 @@ class Index extends AuthController
             'get_more_list',
             'unified_list',
             'qcode_login',
+            'get_search_history',
         ];
     }
 
@@ -70,11 +72,13 @@ class Index extends AuthController
         $seo_title = SystemConfigService::get('seo_title');
         $site_logo = SystemConfigService::get('home_logo');
         $this->assign('confing', compact('site_name', 'seo_title', 'site_logo'));
+        $live_one_id=Session::get('live_one_id');
         $this->assign([
             'banner' => json_encode(GroupDataService::getData('store_home_banner') ?: []),
             'title' => SystemConfigService::get('site_name'),
             'activity' => json_encode(GroupDataService::getData('home_activity')),
             'liveList' => json_encode(LiveStudio::getLiveList(10)),
+            'liveOne' => json_encode(LiveStudio::getLiveOne($live_one_id)),
         ]);
         return $this->fetch();
     }
@@ -193,14 +197,28 @@ class Index extends AuthController
     {
         return JsonService::successful(Search::getHostSearch());
     }
-
+    /**
+     * 查找搜索历史内容
+     * */
+    public function get_search_history($search = '', $limit = 0)
+    {
+        $uid=$this->userInfo['uid'] ? $this->userInfo['uid'] : 0;
+       if($uid) {
+           $list=Search::userSearchHistory($uid);
+       }else{
+           $list=[];
+       }
+        return JsonService::successful($list);
+    }
     /**
      * 查找搜索内容
      * */
     public function go_search($search = '', $limit = 0)
     {
-        return JsonService::successful(Search::getSearchContent($search, $limit));
+        $uid=$this->userInfo['uid'] ? $this->userInfo['uid'] : 0;
+        return JsonService::successful(Search::getSearchContent($search, $limit,$uid));
     }
+
 
     /**
      * 搜索页面

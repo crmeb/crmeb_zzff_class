@@ -75,17 +75,13 @@ class MemberCard extends AuthController
                 $data['create_time'] = time();
                 $batch_id = MemberCardBatch::addBatch($data);
                 $batch_card = MemberCardMode::addCard($batch_id, $data['total_num']);
-                if($batch_id){
+                if($batch_id && $batch_card){
                     $qrcodeUrl=MemberCardBatch::qrcodes_url($batch_id,5);
                     MemberCardBatch::where('id',$batch_id)->update(['qrcode'=>$qrcodeUrl]);
                 }
             }
             MemberCardBatch::commitTrans();
             return JsonService::successful('添加成功');
-            if (!$batch_id || !$batch_card) {
-                MemberCardBatch::rollbackTrans();
-                return JsonService::fail('添加失败');
-            }
         }catch (\Exception $e) {
             MemberCardBatch::rollbackTrans();
             return JsonService::fail('添加失败');

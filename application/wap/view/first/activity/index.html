@@ -1,0 +1,264 @@
+{extend name="public/container"}
+{block name="title"}活动报名{/block}
+{block name="head_top"}
+<style>
+    body {
+        padding-bottom: 1rem;
+        background-color: #f2f2f2;
+    }
+   .link .cont{display:inline-block;vertical-align:middle;font-weight:400;font-size:.18rem;line-height:.36rem;color:#666;}
+    .link .cont img{width:0.4rem;height:0.4rem;margin:auto;display: block;}
+</style>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="activity">
+        <div class="header">
+            <div class="image">
+                <img class="img" :src="activity.image">
+            </div>
+            <div class="text">
+                <div class="name" v-text="activity.title"></div>
+                <div class="group">
+                    <div class="money" >¥<span class="num" v-text="activity.price"></span>
+                        <span class="vip-price" style="color: #0A0A0A;">¥{{ activity.member_price }}</span>
+                        <img class="vip-price-icon" src="{__WAP_PATH}zsff/images/vip.png">
+                    </div>
+                    <div>已报名:{{activity.count}} 剩余:{{activity.surplus}}</div>
+                </div>
+            </div>
+            <div class="info">
+                <div class="item">
+                    <div class="knowledge iconshijian2"></div>
+                    <div class="cont">报名截止时间：{{activity.signup_end_time}}</div>
+                </div>
+                <div class="item">
+                    <div class="knowledge iconshijian2"></div>
+                    <div class="cont">活动时间：{{activity.start_time}}至{{activity.end_time}}</div>
+                </div>
+                <div class="item">
+                    <div class="knowledge icondidian"></div>
+                    <div class="cont">活动地址：{{activity.province}}{{activity.city}}{{activity.district}}{{activity.detail}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat" v-if="is_pay">
+            <div class="text">赶紧加入活动群聊吧~</div>
+            <div class="btn"  @click=" open = true ">加入群聊</div>
+        </div>
+        <div class="main">
+            <div class="nav-bar">
+                <div :class="{ on: navOn === 1 }" class="item" @click="navOn = 1">活动详情</div>
+                <div :class="{ on: navOn === 2 }" class="item" @click="navOn = 2">活动规则</div>
+            </div>
+            <div class="nav-cont">
+                <!-- 详情 -->
+                <div v-show="navOn === 1" class="section">{$content}</div>
+                <!-- 规则 -->
+                <div v-show="navOn === 2" class="section">{$activity_rules}</div>
+            </div>
+        </div>
+        <div class="footer">
+            <a class="link" href="{:url('wap/index/index')}">
+                <div class="cont">
+                    <img src="{__WAP_PATH}zsff/images/special01.png">
+                    <div>首页</div>
+                </div>
+            </a>
+            <button class="button" type="button" v-if="activity.status==0" >未开始</button>
+            <button class="button" type="button" v-else-if="activity.status==1" @click="activityPopupShow">报名</button>
+            <button class="button" type="button" v-else-if="activity.status==2" >报名结束</button>
+            <button class="button" type="button" v-else-if="activity.status==3" >活动中</button>
+            <button class="button" type="button" v-else >活动结束</button>
+        </div>
+        <div class="groupCode" v-show="open" v-cloak="">
+            <div class="code"><img :src="activity.qrcode_img"></div>
+            <div class="codeTip">长按扫一扫<br>加进群哦</div>
+        </div>
+        <div :class="{ mask: open }" @click="open = false"></div>
+        <div :class="{ mask: popupShow }" @click="popupShow = false"></div>
+        <div :class="{ on: popupShow }" class="popup" >
+            <div class="head"><button class="iconfont icon-guanbi1" type="button"
+                    @click="popupShow = false"></button>报名信息
+            </div>
+            <div class="cont" v-if="is_fill">
+                <div class="label-group" >
+                    <label class="label">
+                        <span class="name">姓名*</span>
+                        <input v-model.trim="signs.name" class="input" placeholder="请填写您的姓名">
+                    </label>
+                    <label class="label">
+                        <span class="name">手机号*</span>
+                        <input v-model="signs.phone" class="input" type="tel" placeholder="请填写您的手机号" maxlength="11">
+                    </label>
+                    <label class="label">
+                        <span class="name">性别*</span>
+                        <input type="radio" name="sex" style="-webkit-appearance: radio;" v-model="signs.sex" value="1" title="男">&nbsp;男
+                        <input type="radio" name="sex" style="-webkit-appearance: radio;margin-left: 2px;" v-model="signs.sex" value="2" title="女">&nbsp;女
+                        <input type="radio" name="sex" style="-webkit-appearance: radio;margin-left: 2px;" v-model="signs.sex" value="0" title="女">&nbsp;保密
+                    </label>
+                    <label class="label">
+                        <span class="name">年龄</span>
+                        <input v-model="signs.age" type="number" class="input" placeholder="请填写您的年龄">
+                    </label>
+                    <label class="label">
+                        <span class="name">公司</span>
+                        <input v-model.trim="signs.company" class="input" placeholder="请填写您的公司">
+                    </label>
+                    <label class="label">
+                        <span class="name">备注</span>
+                        <input v-model.trim="signs.remarks" class="input" placeholder="请填写备注">
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="button" type="button" @click="submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <payment @change="changeVal" :payment="payment" :signs="signs" :money="money" :isyue="is_yue" :special_id="id" :iswechat="isWechat"  :pay_type_num="pay_type_num" ></payment>
+    <enter :appear="appear" @change="changeVal" :url="url" :site_name="site_name"></enter>
+</div>
+<script>
+    var activity={$activity},is_pay={$is_pay},is_restrictions={$is_restrictions};
+    var site_name = '{$Auth_site_name}';
+    var isWechat={$isWechat ? 'true' : 'false'},is_yue={$is_yue ? 'true' : 'false'},isMember={$is_member},
+        is_fill={$is_fill ? 'true' : 'false'};
+    require(['vue', 'store', 'helper', 'reg-verify','{__WAP_PATH}zsff/js/payment.js', '{__WAP_PATH}zsff/js/enter.js'], function (Vue, store, $h, $reg) {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                navOn: 1,
+                is_restrictions: is_restrictions,
+                popupShow: false,
+                is_fill: is_fill,
+                signs:{
+                    name: '',
+                    phone: '',
+                    sex: 0,
+                    age: '',
+                    company: '',
+                    remarks: '',
+                },
+                open:false,
+                activity:activity,
+                site_name: site_name,
+                is_pay:is_pay,
+                appear: true,
+                url:isWechat ? $h.U({c:'index',a:'login'}):$h.U({c:'login',a:'phone_check'}),
+                payment:true,
+                id:0,
+                money:0,
+                isWechat:isWechat,
+                pay_type_num:20,
+                is_yue:is_yue //余额是否开启
+            },
+            methods: {
+                activityPopupShow:function(){
+                    store.baseGet($h.U({c:'index',a:'user_login'}),function (res) {
+                        this.appear=true;
+                        if(this.is_restrictions){
+                            $h.pushMsgOnce('您的活动报名已超过限额');
+                        }else {
+                            if(this.is_fill){
+                                this.popupShow = true;
+                            }else{
+                                if(isMember){
+                                    this.money=this.activity.member_pay_type ? this.activity.member_price :0;
+                                }else{
+                                    this.money=this.activity.price;
+                                }
+                                this.id=this.activity.id;
+                                this.payment=false;
+                            }
+
+                        }
+                    }.bind(this),function (res) {
+                        this.appear=false;
+                        return false;
+                    }.bind(this));
+                },
+                submit: function () {
+                        if (!this.signs.name && this.is_fill) {
+                           return  $h.pushMsgOnce('请填写您的姓名');
+                        }
+                        if (!$reg.isPhone(this.signs.phone) && this.is_fill) {
+                            return $h.pushMsgOnce('请填写您的手机号');
+                        }
+                        if(isMember){
+                            this.money=this.activity.member_pay_type ? this.activity.member_price :0;
+                        }else{
+                            this.money=this.activity.price;
+                        }
+                        this.id=this.activity.id;
+                        this.payment=false;
+                        this.popupShow=false;
+                },
+                pay_order:function(data){
+                    this.orderId=data.result.orderId || '';
+                    switch (data.status){
+                        case "PAY_ERROR":case 'ORDER_EXIST':case 'ORDER_ERROR':
+                            this.extendOrder(data.msg);
+                            break;
+                        case 'WECHAT_PAY':
+                            this.wechatPay(data.result.jsConfig);
+                            break;
+                        case 'SUCCESS':
+                            this.successOrder(data.msg);
+                            break;
+                        case 'ZHIFUBAO_PAY':
+                            window.location.href=$h.U({c:'Alipay',a:'index',q:{info:data.result,params:'signup'}});
+                            break;
+                    }
+                },
+                wechatPay:function(config){
+                    var that = this;
+                    mapleWx($jssdk(),function(){
+                        this.chooseWXPay(config,function(){
+                            that.successOrder();
+                        },{
+                            fail:that.extendOrder,
+                            cancel:that.extendOrder
+                        });
+                    });
+                },
+                successOrder:function(msg){
+                    $h.showMsg({
+                        title:msg ? msg :'支付成功',
+                        icon:'success',
+                        success:function (){
+                            location.reload();
+                        }
+                    });
+                },
+                extendOrder:function(msg){
+                    location.reload();
+                },
+                //关闭支付
+                payClose:function(value){
+                    this.payment=value;
+                },
+                enter: function () {
+                    this.appear = false;
+                },
+                //关闭登录
+                loginClose:function(value){
+                    this.appear=value;
+                },
+                //登录完成回调事件
+                logComplete:function(){
+                    this.appear=true;
+                },
+                //所有插件回调处理事件
+                changeVal: function (opt) {
+                    if (typeof opt != 'object') opt = {};
+                    var action = opt.action || '';
+                    var value = opt.value || '';
+                    this[action] && this[action](value);
+                }
+            }
+        });
+    });
+</script>
+{/block}

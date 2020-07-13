@@ -41,20 +41,25 @@ class MemberCard extends ModelBasic
         if (!$batch_id || $batch_id == 0 || !$total_num || $total_num == 0) {
             return false;
         }
-        $inster_card = array();
-        for ($i = 0; $i < $total_num; $i++) {
-            $inster_card['card_number'] = UtilService::makeRandomNumber("CR", $batch_id);
-            $inster_card['card_password'] = UtilService::makeRandomNumber();
-            $inster_card['card_batch_id'] = $batch_id;
-            $inster_card['create_time'] = time();
-            $res[] = $inster_card;
-    }
-        //数据切片批量插入，提高性能
-        $chunk_inster_card = array_chunk($res, 100 ,true);
-        foreach ($chunk_inster_card as $v) {
-            Db::table('eb_member_card')->insertAll($v);
+        try{
+            $inster_card = array();
+            for ($i = 0; $i < $total_num; $i++) {
+                $inster_card['card_number'] = UtilService::makeRandomNumber("CR", $batch_id);
+                $inster_card['card_password'] = UtilService::makeRandomNumber();
+                $inster_card['card_batch_id'] = $batch_id;
+                $inster_card['create_time'] = time();
+                $res[] = $inster_card;
+            }
+            //数据切片批量插入，提高性能
+            $chunk_inster_card = array_chunk($res, 100 ,true);
+            foreach ($chunk_inster_card as $v) {
+                Db::table('eb_member_card')->insertAll($v);
+            }
+            return true;
+        }catch (\Exception $e){
+            echo $e->getMessage();
         }
-        return true;
+
 
     }
 

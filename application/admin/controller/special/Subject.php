@@ -19,9 +19,10 @@ use app\admin\controller\AuthController;
  */
 class Subject extends AuthController
 {
-    public function index()
+    public function index($pid=0)
     {
         $this->assign('grade', Grade::getAll());
+        $this->assign('pid',$pid);
         return $this->fetch();
     }
 
@@ -30,7 +31,7 @@ class Subject extends AuthController
         $where = Util::getMore([
             ['page', 1],
             ['limit', 20],
-            ['cid', ''],
+            ['pid',$this->request->param('pid','')],
             ['name', ''],
         ]);
         return Json::successlayui(SpecialSubject::get_subject_list($where));

@@ -187,13 +187,13 @@ class StoreOrder extends ModelBasic
         $model = self::where(['a.is_del' => 0, 's.is_del' => 0, 'a.uid' => $uid, 'a.paid' => 1])->order('a.add_time desc')->alias('a')->join('__SPECIAL__ s', 'a.cart_id=s.id');
         switch ($type) {
             case 1:
-                $model->where(['a.is_gift' => 1, 'a.combination_id' => 0, 'a.pink_id' => 0]);
+                $model= $model->where(['a.is_gift' => 1, 'a.combination_id' => 0, 'a.pink_id' => 0]);
                 break;
             case 2:
-                $model->where(['a.is_gift' => 0, 'a.combination_id' => 0, 'a.pink_id' => 0]);
+                $model=$model->where(['a.is_gift' => 0, 'a.combination_id' => 0, 'a.pink_id' => 0]);
                 break;
             case 3:
-                $model->where('a.is_gift', 0)->where('a.combination_id', 'NEQ', 0)->where('a.pink_id', 'NEQ', 0);
+                $model= $model->where('a.is_gift', 0)->where('a.combination_id', 'NEQ', 0)->where('a.pink_id', 'NEQ', 0);
                 break;
         }
         $list = $model->field(['a.*', 's.title', 's.image', 's.money', 's.pink_number'])->page($page, $limit)->select();
@@ -329,11 +329,17 @@ class StoreOrder extends ModelBasic
         $combination_id = 0;
         switch ((int)$pay_type) {
             case 1:
-                $total_price = $special->is_pink ? $special->pink_money : $special->money;
+                //送朋友
+                //$total_price = $special->is_pink ? $special->pink_money : $special->money;
+                $total_price = $special->money;
+                if(isset($userInfo['level']) && $userInfo['level'] > 0 && $special->member_pay_type == 1 && $special->member_money > 0){
+                    $total_price = $special->member_money;
+                }
                 break;
             case 2:
+                //自己买
                 $total_price = $special->money;
-                if(isset($userInfo['level']) && $userInfo['level'] >= 0 && $special->member_pay_type == 1 && $special->member_money > 0){
+                if(isset($userInfo['level']) && $userInfo['level'] > 0 && $special->member_pay_type == 1 && $special->member_money > 0){
                     $total_price = $special->member_money;
                 }
                 break;
@@ -602,8 +608,6 @@ class StoreOrder extends ModelBasic
         $res1 = false !== User::bcDec($uid, 'now_money', $orderInfo['pay_price'], 'uid');
         $res2 = UserBill::expend('购买专题', $uid, 'now_money', 'pay_product', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '余额支付' . floatval($orderInfo['pay_price']) . '元购买专题');
         $res3 = self::paySuccess($order_id);
-
-
         try {
             HookService::listen('yue_pay_product', $userInfo, $orderInfo, false, PaymentBehavior::class);
         } catch (\Exception $e) {
@@ -628,7 +632,7 @@ class StoreOrder extends ModelBasic
         if ($orderInfo['paid']) return self::setErrorInfo('该订单已支付!');
         $userInfo = User::getUserInfo($uid);
         self::beginTrans();
-        $res1 = UserBill::expend('购买专题成功', $uid, 'now_money', 'pay_special', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '微信支付' . floatval($orderInfo['pay_price']) . '元购买专题');
+        $res1 = UserBill::expend('购买专题', $uid, 'now_money', 'pay_special', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '微信支付' . floatval($orderInfo['pay_price']) . '元购买专题');
         $res2 = self::paySuccess($order_id);
         $res = $res1 && $res2;
         self::checkTrans($res);
@@ -647,7 +651,7 @@ class StoreOrder extends ModelBasic
         if ($orderInfo['paid']) return self::setErrorInfo('该订单已支付!');
         $userInfo = User::getUserInfo($uid);
         self::beginTrans();
-        $res1 = UserBill::expend('购买会员成功', $uid, 'now_money', 'pay_vip', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '微信支付' . floatval($orderInfo['pay_price']) . '元购买会员');
+        $res1 = UserBill::expend('购买会员', $uid, 'now_money', 'pay_vip', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '微信支付' . floatval($orderInfo['pay_price']) . '元购买会员');
         $res2 = self::payMeSuccess($order_id);
         $res = $res1 && $res2;
         self::checkTrans($res);
@@ -769,7 +773,7 @@ class StoreOrder extends ModelBasic
      */
     public static function paySuccess($orderId)
     {
-        $order = self::where('order_id', $orderId)->find();
+        $order = self::where('order_id', $orderId)->where('type',0)->find();
         $resPink = true;
         User::bcInc($order['uid'], 'pay_count', 1, 'uid');
         $res1 = self::where('order_id', $orderId)->update(['paid' => 1, 'pay_time' => time()]);
@@ -816,7 +820,7 @@ class StoreOrder extends ModelBasic
      */
     public static function payMeSuccess($orderId)
     {
-        $order = self::where('order_id', $orderId)->find();
+        $order = self::where('order_id', $orderId)->where('type',1)->find();
         $resMer = true;
         $res1 = self::where('order_id', $orderId)->update(['paid' => 1, 'pay_time' => time()]);
         $oid = self::where('order_id', $orderId)->value('id');

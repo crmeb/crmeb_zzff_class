@@ -137,8 +137,12 @@ class Reply extends AuthController
         $key = input('key');
         if (empty($key)) return $this->failed('参数错误,请重新修改');
         $replay = WechatReply::where('key', $key)->find();
-        $replay_arr = $replay->toArray();
-        $replay_arr['data'] = json_decode($replay_arr['data'], true);
+       if($replay){
+           $replay_arr = $replay->toArray();
+           $replay_arr['data'] = json_decode($replay_arr['data'], true);
+       }else{
+           $replay_arr=[];
+       }
         $this->assign('replay_arr', json_encode($replay_arr));
         $this->assign('key', $key);
         $this->assign('dis', 2);

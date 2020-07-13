@@ -1,0 +1,144 @@
+{extend name="public/container"}
+{block name="title"}{$title}{/block}
+{block name="head_top"}
+<style>
+    .studyCourse .item .info {
+        margin-top: .06rem;
+        font-size: .24rem;
+        color: #999;
+    }
+
+    .studyCourse .item .info .iconfont {
+        margin-right: .08rem;
+        font-size: .24rem;
+        color: #999;
+    }
+
+    .swiper-list2 .item .underline {
+        min-width: 0;
+    }
+
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="course-list index" id="app" v-cloak="" ref="index" style="-webkit-overflow-scrolling: touch;">
+
+    <div class="nav" v-if="category.length">
+        <div class="item" :class="where.cid==0 ? 'on':''" @click="where.cid=0">全部</div>
+        <div class="item" v-for="item in category" :class="where.cid==item.id ? 'on':''" @click="where.cid=item.id">
+            {{item.title}}</div>
+    </div>
+    <div class="studyCourse" ref="list">
+        <!--小图-->
+        <div v-if="List.length" class="swiper-list2">
+            <a class="item acea-row" v-for="vo in List" :href="getDetails(vo.id)">
+                <div class="pictrue">
+                    <img :src="vo.image_input">
+                </div>
+                <div class="underline">
+                    <div class="text-pic acea-row row-column">
+                        <div class="name line1" v-text="vo.title"></div>
+                        <div class="acea-row row-middle info">
+                            <span class="iconfont"></span>
+                            访问量{{vo.visit ? vo.visit : '0'}}
+                        </div>
+                        <div class="acea-row row-middle info">
+                            <span class="iconfont"></span>
+                            添加时间{{vo.add_time}}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div v-show="loading" class="loading">
+        <span class="fa fa-spinner"></span>
+    </div>
+    <div v-if="where.page > 2 && loadend" class="loaded">已全部加载</div>
+    <div v-if="!List.length && !loading" class="nothing"></div>
+</div>
+{/block}
+{block name='foot'}
+<script>
+    var category = {$category};
+    require(['vue', 'helper', 'store'], function (Vue, $h, storeApi) {
+        new Vue({
+            el: '#app',
+            data: {
+                where: {
+                    page: 1,
+                    limit: 10,
+                    cid: 0,
+                },
+                category: category,
+                loading: false,
+                loadend: false,
+                List: [],
+            },
+            watch: {
+                'where.cid': function (n) {
+                    this.where.page = 1;
+                    this.loadend = false;
+                    this.$set(this, 'List', []);
+                    this.get_unifiend_list();
+                }
+            },
+            methods: {
+                getDetails: function (id) {
+                    return $h.U({ c: 'article', a: 'details', q: { id: id } });
+                },
+                get_unifiend_list: function () {
+                    if (this.loading) return;
+                    if (this.loadend) return;
+                    this.loading = true;
+                    storeApi.baseGet($h.U({ c: 'article', a: 'get_unifiend_list', q: this.where }), function (res) {
+                        var list = res.data.data;
+                        var List = $h.SplitArray(list, this.List);
+                        this.loading = false;
+                        this.where.page = this.where.page + 1;
+                        this.loadend = list.length < this.where.limit;
+                        this.$set(this, 'List', List);
+                        this.$nextTick(function () {
+                            this.EventUtil();
+                        }.bind(this))
+                    }.bind(this), function (res) {
+                        this.loading = false;
+                    }.bind(this));
+                },
+                EventUtil: function () {
+                    var that = this;
+                    $h.EventUtil.listenTouchDirection(document, function () {
+                        that.loading == false && that.get_unifiend_list();
+                    }, false);
+                }
+            },
+            mounted: function () {
+                this.get_unifiend_list();
+            }
+        })
+    })
+</script>
+{/block}

@@ -4,6 +4,7 @@
 namespace app\admin\model\special;
 
 
+use app\admin\model\live\LiveGoods;
 use app\admin\model\live\LiveStudio;
 use app\admin\model\order\StoreOrder;
 use app\admin\model\system\RecommendRelation;
@@ -99,8 +100,9 @@ class Special extends ModelBasic
             $model = $model->order($alert . self::setOrder($where['order']));
         else
             $model = $model->order($alert . 'sort desc');
+//        if (isset($where['special_id']) && $where['special_id'])$model = $model->where($alert . 'id', $where['special_id']);
         if (isset($where['subject_id']) && $where['subject_id']) $model = $model->where($alert . 'subject_id', $where['subject_id']);
-        if ($where['title']) $model = $model->where($alert . 'title|' . $alert . 'abstract|' . $alert . 'phrase', "LIKE", "%$where[title]%");
+        if (isset($where['store_name']) && $where['store_name']!='') $model = $model->where($alert . 'title|' . $alert . 'abstract|' . $alert . 'phrase', "LIKE", "%$where[store_name]%");
         if ($where['is_show'] !== '') $model = $model->where($alert . 'is_show', $where['is_show']);
         if (isset($where['type'])) $model = $model->where($alert . 'type', $where['type']);
         if (isset($where['special_type']) && $where['special_type'] !== '') {
@@ -123,6 +125,15 @@ class Special extends ModelBasic
                 ->join('__RECOMMEND__ r', 'a.recommend_id=r.id', 'LEFT')->column('r.title');
             $item['pink_end_time'] = $item['pink_end_time'] ? strtotime($item['pink_end_time']) : 0;
             $item['sales'] = StoreOrder::where(['paid' => 1, 'cart_id' => $item['id'], 'refund_status' => 0])->count();
+            $liveGoods = LiveGoods::getOne(['special_id' => $item['id'], 'is_delete' => 0]);
+            $item['is_live_goods'] = 0;
+            $item['live_goods_id'] = 0;
+            if ($liveGoods) {
+                $item['live_goods_id'] = $liveGoods->id;
+                if ($liveGoods->is_show == 1) {
+                    $item['is_live_goods'] = 1;
+                }
+            }
             //查看拼团状态,如果已结束关闭拼团
             if ($item['is_pink'] && $item['pink_end_time'] < time()) {
                 self::update(['is_pink' => 0], ['id' => $item['id']]);
@@ -136,8 +147,10 @@ class Special extends ModelBasic
             $newTaskCount = SpecialSource::where('special_id', $item['id'])->count();
             $item['task_count'] = $newTaskCount + $oldTaskCount;
             $item['live_id'] = LiveStudio::where('special_id', $item['id'])->value('id');
+            $item['is_play'] =0;
             if ($item['live_id']) {
                 $item['online_num'] = LiveStudio::where('id', $item['live_id'])->value('online_num');
+                $item['is_play'] = LiveStudio::where('id', $item['live_id'])->value('is_play') ? 1 : 0;
             }
             $item['buy_user_num'] = StoreOrder::where(['paid' => 1, 'cart_id' => $item['id']])->count('id');
             $item['start_play_time'] = LiveStudio::where('special_id', $item['id'])->value('start_play_time');

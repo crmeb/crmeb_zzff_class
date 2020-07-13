@@ -18,7 +18,7 @@
                     <form class="layui-form layui-form-pane" action="">
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label">直播名称</label>
+                                <label class="layui-form-label">直播间号</label>
                                 <div class="layui-input-block">
                                     <input type="text" name="stream_name" class="layui-input" placeholder="请输入直播名称,关键字,编号">
                                 </div>
@@ -100,7 +100,12 @@
                             </li>
                             <li>
                                 <a href="javascript:;" lay-event='live_user'>
-                                    <i class="fa fa-paste"></i> 直播间用户管理
+                                    <i class="fa fa-user-circle"></i> 直播间用户管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" lay-event='live_goods' >
+                                    <i class="fa fa-bullhorn"></i> 直播推荐
                                 </a>
                             </li>
                             <li>
@@ -301,6 +306,9 @@
                 break;
             case 'live_remind':
                 action.live_remind(data);
+                break;
+            case 'live_goods' :
+                $eb.createModalFrame(data.live_title+'--推荐课程',layList.U({a:'live_goods',q:{live_id:data.id}}),{w:1200});
                 break;
 
         }

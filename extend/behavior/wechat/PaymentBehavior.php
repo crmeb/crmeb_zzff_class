@@ -14,7 +14,7 @@ use app\wap\model\user\UserRecharge;
 use service\HookService;
 use service\RoutineRefund;
 use service\WechatService;
-
+use app\wap\model\activity\EventSignUp;
 class PaymentBehavior
 {
 
@@ -72,7 +72,7 @@ class PaymentBehavior
         }
     }
     /**
-     * 专题订单支付成功后  微信公众号 支付宝
+     * 会员订单支付成功后  微信公众号 支付宝
      * @param $orderId
      * @param $notify
      * @return bool
@@ -82,6 +82,21 @@ class PaymentBehavior
         try{
             if(StoreOrderWapModel::be(['order_id'=>$orderId,'paid'=>1])) return true;
             return StoreOrderWapModel::payMeSuccess($orderId);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+    /**
+     * 活动报名订单支付成功后  微信公众号 支付宝
+     * @param $orderId
+     * @param $notify
+     * @return bool
+     */
+    public static function wechatPaySuccessSignup($orderId, $notify)
+    {
+        try{
+            if(EventSignUp::be(['order_id'=>$orderId,'paid'=>1])) return true;
+            return EventSignUp::paySuccess($orderId);
         }catch (\Exception $e){
             return false;
         }
@@ -110,7 +125,7 @@ class PaymentBehavior
      * @param $notify
      * @return bool
      */
-    public static function wechatPaySuccessUserRecharge($orderId, $notify)
+    public static function wechatPaySuccessRecharge($orderId, $notify)
     {
         try{
             if(UserRecharge::be(['order_id'=>$orderId,'paid'=>1])) return true;

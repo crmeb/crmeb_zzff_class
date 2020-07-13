@@ -46,7 +46,6 @@ class SpecialSource extends ModelBasic
                 $data->whereIn('source_id', $source_id);
             }
         }
-
         if ($page) {
             $data->page($page, !$limit ? 10 : $limit);
         }

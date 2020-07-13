@@ -59,10 +59,10 @@
     <div class="layui-tab layui-tab-brief" lay-filter="tab">
         <ul class="layui-tab-title">
             <li lay-id="list" {eq name='type' value='1'}class="layui-this" {/eq} >
-            <a href="{eq name='type' value='1'}javascript:;{else}{:Url('index',['type'=>1])}{/eq}">图文列表</a>
+            <a href="{eq name='type' value='1'}javascript:;{else}{:Url('index',['type'=>1])}{/eq}">新闻列表</a>
             </li>
             <li lay-id="list" {eq name='type' value='2'}class="layui-this" {/eq}>
-            <a href="{eq name='type' value='2'}javascript:;{else}{:Url('add_special',['type'=>2])}{/eq}">图文添加</a>
+            <a href="{eq name='type' value='2'}javascript:;{else}{:Url('add_special',['type'=>2])}{/eq}">新闻添加</a>
             </li>
         </ul>
     </div>
@@ -72,26 +72,35 @@
                 <div class="layui-card" v-cloak="">
                     <div class="layui-card-body" style="padding: 10px 150px;">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">图文名称</label>
+                            <label class="layui-form-label">新闻名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="title" v-model="formData.title" autocomplete="off" placeholder="请输入专题名称" class="layui-input">
+                                <input type="text" name="title" v-model="formData.title" autocomplete="off" placeholder="请输入新闻名称" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">图文简介</label>
+                            <label class="layui-form-label">新闻简介</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="请输入专题简介" v-model="formData.synopsis" class="layui-textarea"></textarea>
+                                <textarea placeholder="请输入新闻简介" v-model="formData.synopsis" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                       <div class="layui-form-item">
+                            <label class="layui-form-label">文章分类</label>
+                            <div class="layui-input-block">
+                               <select class="chosen-select"  style="width:100%;" lay-filter="getSelect">
+                                   <option value="0" >选择分类</option>
+                                    <option v-for="(item,idx) in all"  :value="idx" :key="idx">{{item}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item m-t-5">
-                            <label class="layui-form-label">图文排序</label>
+                            <label class="layui-form-label">新闻排序</label>
                             <div class="layui-input-block">
                                 <input type="number" style="width: 20%" name="sort" v-model="formData.sort" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item m-t-5" v-cloak="">
                             <div class="layui-inline">
-                                <label class="layui-form-label" style="margin-right: 28px">图文标签</label>
+                                <label class="layui-form-label" style="margin-right: 28px">新闻标签</label>
                                 <div class="layui-input-inline" style="width: 300px;">
                                     <input type="text" v-model="label" name="price_min" placeholder="最多4个字" autocomplete="off" class="layui-input" style="float: left;width: 200px">
                                     <p class="special-label" @click="addLabrl"><i class="fa fa-plus" aria-hidden="true"></i></p>
@@ -105,7 +114,7 @@
                             <div class="layui-form-mid layui-word-aux">输入标签名称点击添加+号进行添加;最多写入4个字;点击标签可删除</div>
                         </div>
                         <div class="layui-form-item m-t-5" v-cloak="">
-                            <label class="layui-form-label">图文封面</label>
+                            <label class="layui-form-label">新闻封面</label>
                             <div class="layui-input-block">
                                 <div class="upload-image-box" v-if="formData.image_input" @mouseenter="enter()" @mouseleave="leave()">
                                     <img :src="formData.image_input" alt="">
@@ -135,7 +144,7 @@
                             <div class="layui-form-mid layui-word-aux">输入链接将视为添加视频直接添加,请确保视频链接的正确性</div>
                         </div>
                         <div class="layui-form-item m-t-5">
-                            <label class="layui-form-label">图文内容</label>
+                            <label class="layui-form-label">新闻内容</label>
                             <div class="layui-input-block">
                                 <textarea id="myEditor" style="width:100%;height: 500px">{{formData.content}}</textarea>
                             </div>
@@ -158,6 +167,7 @@
 <script>
     var id={$id};
     var article=<?=isset($article) ? $article : "{}"?>;
+    var all={$all};
 
     require(['vue'],function(Vue) {
         new Vue({
@@ -165,12 +175,14 @@
             data: {
                 formData: {
                     title:article.title || '',
+                    cid:article.cid || 0,
                     synopsis:article.synopsis || '',
                     sort:article.sort || 0,
                     image_input:article.image_input || '',
                     label:article.label || [],
                     content:article.profile ? (article.profile.content || '') : '',
                 },
+                all:all,
                 but_title:'上传视频',
                 link:'',
                 label:'',
@@ -178,7 +190,7 @@
                 ue:null,
                 uploader:null,
                 is_video:false,
-                videoWidth:0
+                videoWidth:0,
             },
             methods:{
                 uploadVideo:function(){
@@ -193,19 +205,23 @@
                         'your browser does not support the video tag\n' +
                         '</video></div><br>',true);
                 },
+                getSelect:function(e){
+                    console.log(e);
+                },
                 save:function(){
                     var that=this;
                     that.formData.content = that.ue.getContent();
-                    if(!that.formData.title) return layList.msg('请输入图文标题!');
-                    if(!that.formData.synopsis) return layList.msg('请输入图文简介!');
+                    if(!that.formData.title) return layList.msg('请输入新闻标题!');
+                   if(!that.formData.cid) return layList.msg('请选择分类!');
+                    if(!that.formData.synopsis) return layList.msg('请输入新闻简介!');
                     if(that.formData.label.length < 1) return layList.msg('请输入标签!');
-                    if(!that.formData.image_input) return layList.msg('请上传图文封面图');
+                    if(!that.formData.image_input) return layList.msg('请上传新闻封面图');
                     layList.loadFFF();
                     layList.basePost(layList.U({a:'save_article',q:{id:id}}),that.formData,function (res) {
                         layList.loadClear();
                         if(parseInt(id)==0) {
                             layList.layer.confirm('添加成功,您要继续添加图文吗?', {
-                                btn: ['继续添加', '取消'] //按钮
+                                btn: ['继续添加', '立即提交'] //按钮
                             }, function () {
                                 window.location.reload();
                             }, function () {
@@ -235,7 +251,7 @@
                 },
                 //上传图片
                 upload:function(key,count){
-                    ossUpload.createFrame('请选择图片',{fodder:key,max_count:count === undefined ? 0 : count});
+                    ossUpload.createFrame('请选择图片',{fodder:key,max_count:count === undefined ? 0 : count},{w:800,h:550});
                 },
                 //删除图片
                 delect:function(act,key,index){
@@ -301,14 +317,18 @@
             },
             mounted:function () {
                 var that = this;
+
                 this.$nextTick(function () {
                     layList.form.render();
+                    layList.form.on('select(getSelect)',function (data) {
+                        that.formData.cid = data.value;
+                    });
                     //实例化编辑器
                     UE.registerUI('imagenone',function(editor,name){
                         var $btn = new UE.ui.Button({
                             name : 'image',
                             onclick : function(){
-                                ossUpload.createFrame('选择图片',{fodder:'editor'});
+                                ossUpload.createFrame('选择图片',{fodder:'editor'},{w:800,h:550});
                             },
                             title: '选择图片'
                         });
@@ -344,6 +364,9 @@
                     that.ue.execCommand('insertimage', list);
                 }
 
+            },
+            updated:function(){
+                layList.form.render();
             }
         })
     })

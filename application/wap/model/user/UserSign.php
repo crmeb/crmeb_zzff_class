@@ -8,15 +8,17 @@
 namespace app\wap\model\user;
 
 
-use basic\ModelBasic;
 use service\SystemConfigService;
-use think\Model;
-
-class UserSign
+use basic\ModelBasic;
+use service\WechatService;
+use traits\ModelTrait;
+class UserSign extends ModelBasic
 {
+    use ModelTrait;
+
     public static function checkUserSigned($uid)
     {
-        return UserBill::be(['uid'=>$uid,'add_time'=>['>',strtotime('today')],'category'=>'integral','type'=>'sign']);
+        return UserBill::be(['uid'=>$uid,'add_time'=>['>',strtotime('today')],'category'=>'gold_num','type'=>'sign']);
     }
 
     public static function userSignedCount($uid)
@@ -30,23 +32,46 @@ class UserSign
      */
     public static function userSignBillWhere($uid)
     {
-        return UserBill::where(['uid'=>$uid,'category'=>'integral','type'=>'sign']);
+        return UserBill::where(['uid'=>$uid,'category'=>'gold_num','type'=>'sign']);
     }
 
-    public static function sign($userInfo)
+    /**近期用户签到记录
+     * @param $uid
+     */
+    public static function userSignInlist($uid,$page,$limit){
+        $list=self::userSignBillWhere($uid)->field('number,add_time')->order('add_time DESC')
+            ->page((int)$page,(int)$limit)->select();
+         $list=count($list) >0 ? $list->toArray() : [] ;
+         foreach ($list as &$value){
+             $value['number']=(int)$value['number'];
+             $value['add_time']=date('Y-m-d H:i:s',$value['add_time']);
+         }
+         return $list;
+    }
+    public static function sign($userInfo,$gold_name)
     {
         $uid = $userInfo['uid'];
-        $min = SystemConfigService::get('sx_sign_min_int')?:0;
-        $max = SystemConfigService::get('sx_sign_max_int')?:5;
-        $integral = rand($min,$max);
-        ModelBasic::beginTrans();
-        $res1 = UserBill::income('用户签到',$uid,'integral','sign',$integral,0,$userInfo['integral'],'签到获得'.floatval($integral).'积分');
-        $res2 = User::bcInc($uid,'integral',$integral,'uid');
-        $res = $res1 && $res2;
-        ModelBasic::checkTrans($res);
+        $gold_coin= SystemConfigService::get('single_gold_coin')?:0;
+        $balance=bcadd($gold_coin,$userInfo['gold_num'],0);
+        self::beginTrans();
+        $res1 = UserBill::income('用户签到',$uid,'gold_num','sign',$gold_coin,0,$balance,'签到获得'.floatval($gold_coin).$gold_name);
+        $res2 = User::bcInc($uid,'gold_num',$gold_coin,'uid');
+        $res3=self::userSign($gold_coin,$uid,$balance);
+        $res = $res1 && $res2 && $res3;
+        self::checkTrans($res);
         if($res)
-            return $integral;
+            return $gold_coin;
         else
             return false;
+    }
+    public static function userSign($gold_coin,$uid,$balance){
+        $data=[
+            'uid'=>$uid,
+            'title'=>'签到奖励',
+            'number'=>$gold_coin,
+            'balance'=>$balance,
+            'add_time'=>time()
+        ];
+        return self::set($data);
     }
 }

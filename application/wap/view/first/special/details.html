@@ -5,6 +5,8 @@
 <script src="{__WAP_PATH}zsff/js/video.min.js"></script>
 <script src="{__WAP_PATH}zsff/js/video.zh.js"></script>
 <style>
+    body{padding-bottom:1rem;}
+    .thematic-details{background-color:#f5f5f5;}
     .video-js .vjs-big-play-button{top: 50%;left: 50%;transform: translate(-50%,-50%);}
     .layui-layer-shade{background-image: url("/wap/first/zsff/images/close.png")!important;background-repeat: no-repeat!important;background-size: 0.8rem 0.8rem;background-position: 50% 88%;}
     .navCon{position: relative;}
@@ -22,16 +24,16 @@
         to {transform:scale(0.9);}
     }
     /*这里开始*/
-    footer{position: fixed;width: 100%;height: 1.3rem;bottom: 0;border-top: 1px solid #eee;background: #fff;padding: 0 0.3rem;box-sizing: border-box;}
-    .video_footer_img{width:0.4rem;height:0.4rem;margin-bottom:.09rem;vertical-align:middle;}
+    .video_footer_img{width:0.4rem;height:0.4rem;margin-right:auto;margin-left:auto;}
     .video_footer_img img{width: 100%;height: 100%;display: block;}
-    .video_footer_img2{width:0.4rem;height:0.4rem;margin-bottom:.09rem;vertical-align:middle;}
+    .video_footer_img2{width:0.4rem;height:0.4rem;margin-right:auto;margin-left:auto;}
     .video_footer_img2 img{width: 100%;height: 100%;display: block;}
-    .video_footer_tit{font-size: 0.2rem;line-height:.2rem;color: #333;}
-    .video_footer_left{height: 1rem;margin-right:.34rem;}
+    .video_footer_tit{font-weight:400;font-size: 0.18rem;line-height:.36rem;color: #666;}
+    .video_footer_left{width:.9rem;height:1rem;line-height:1rem;text-align:center;}
+    .video_footer_left .cont{display:inline-block;vertical-align:middle;font-weight:400;font-size:.18rem;line-height:.36rem;color:#666;}
     .video_footer_btn{-webkit-flex:1;flex:1;height: 0.76rem;border-radius:37px;}
     .video_footer_btn_left{width: 50%;height: 100%;border-radius:37px 0px 0px 37px;background:linear-gradient(90deg,rgba(248,162,1,1) 0%,rgba(255,186,37,1) 100%);}
-    .video_footer_btn_right{width: 100%;height: 100%;border-radius:37px 37px 37px 37px;background:linear-gradient(90deg,rgba(64,157,255,1) 0%,rgba(30,133,251,1) 100%);}
+    .video_footer_btn_right{width: 50%;height: 100%;border-radius:0px 37px 37px 0px;background:linear-gradient(90deg,rgba(64,157,255,1) 0%,rgba(30,133,251,1) 100%);}
     .video_footer_btn_left_pic{font-size: 0.28rem;line-height:.22rem; color: #fff;text-align: center;}
     .video_footer_btn_left_num{font-size: 0.2rem;line-height:.2rem; color: #fff;text-align: center;}
     .video_footer_btn_left_pic + .video_footer_btn_left_num{margin-top:.09rem;}
@@ -47,6 +49,8 @@
         border-radius: 0.06rem;
         color: #2C8EFF;
     }
+    .catalogue{background-color:#fff;}
+    .video-listn{background-color:#fff;}
 </style>
 {/block}
 {block name="content"}
@@ -92,37 +96,36 @@
                         </div>
                     </div>
                     <div class="collect" @click="collect">
-                        <div :class="[special.collect ? 'iconshoucang1' : '', 'iconfont', 'iconshoucang']"></div>
+                        <div :class="['knowledge', special.collect ? 'iconshoucang2' : 'iconshoucang11']"></div>
                         <div>{{special.collect ? '已收藏': '收藏'}}</div>
                     </div>
                 </div>
-                <div class="acea-row row-middle" style="height:.7rem;margin-top:.15rem;margin-bottom:.18rem;line-height:.7rem;">
+                <div class="acea-row row-middle">
                     <div class="pin-money" v-if="is_pay==false && is_partake==false">
-                        <span class="price">¥<b>{{ special.money }}</b></span>
+                        <span class="price">¥<b>{{ special.is_pink ? special.pink_money : special.money }}</b></span>
+                       <!-- <span class="vip-price">¥{{ special.member_money }}</span>-->
+                        <!--<img class="vip-price-icon" src="{__WAP_PATH}zsff/images/vip.png">-->
+                        <span class="total">共{{count}}节</span>
                     </div>
+                    <div class="pin-money" v-else v-show="is_pay==false">拼课价<span class="money">¥ {{special.pink_money}}</span></div>
                     <div class="collect">已有{{special.browse_count}}人学习</div>
                 </div>
-            </div>
-            <div class="peopleNum acea-row row-middle line1" v-if="pinkUser.length">
-                <div class="pictrue" v-for="(item,key) in pinkUser" v-if="key < 6"><img :src="item.avatar"></div>
-                <div class="iconfont icon-gengduo" v-if="pinkUser.length >= 6"></div>
-                <div class="text">{{special.fake_sales}}人参加</div>
             </div>
         </div>
         <div class="pinTip2 acea-row row-between-wrapper" v-if="is_pay">
             <div class="reminder line1">和小伙伴一起学习，有老师答疑哦~</div>
             <div class="chatBnt acea-row row-center-wrapper" @click=" open = false ">加入群聊</div>
         </div>
-        <div class="swiper-nav acea-row row-center-wrapper" v-cloak="" ref="list" >
+        <div class="swiper-nav" ref="list" >
             <div class="navCon acea-row row-middle">
                 <div v-if="special.type == 5" class="item" :class="active==index?'on':''" v-for="(nav,index) in cloumnNavlist" @click=" active = index">
-                    <span>{{nav.title}}</span>
+                    {{nav.title}}
                 </div>
                 <div v-if="special.type == 4" class="item" :class="active==index?'on':''" v-for="(nav,index) in liveNavlist" @click=" active = index">
-                    <span>{{nav.title}}</span>
+                    {{nav.title}}
                 </div>
                 <div v-if="special.type != 5 && special.type != 4" class="item" :class="active==index?'on':''" v-for="(nav,index) in otherNavlist" @click=" active = index">
-                    <span>{{nav.title}}</span>
+                    {{nav.title}}
                 </div>
             </div>
         </div>
@@ -138,14 +141,17 @@
                     <li v-for="(item, index) in updateOtherTaskList" :key="item.id" :class="[parentActive === index ? 'active' : '']" @click="parentActive = index">
                         <div class="parent-title">
                             <div class="name">{{item.title}}</div>
-                            <div :class="[parentActive === index ? 'iconxiangshang' : 'iconxiangxia', 'iconfont']"></div>
+                            <div :class="[parentActive === index ? 'iconxiangshang' : 'iconxiangxia', 'knowledge']"></div>
                         </div>
                         <ul v-if="item.special_task.length" class="catalogue">
-                            <li v-for="(itm, idx) in item.special_task" :key="itm.id" @click="play(itm)">
-                                <div class="label">{{ itm.type }}</div>
+                            <li v-for="(itm, idx) in item.special_task" :key="itm.id" :class="{ gray: itm.taskTrue }" @click="play(itm)">
+                                <img v-if="itm.type === '视频'" class="label" src="{__WAP_PATH}zsff/images/media1.png">
+                                <img v-else-if="itm.type === '图文'" class="label" src="{__WAP_PATH}zsff/images/media2.png">
+                                <img v-else-if="itm.type === '音频'" class="label" src="{__WAP_PATH}zsff/images/media3.png">
+                                <div v-else class="label">{{ itm.type }}</div>
                                 <div class="title">{{idx < 9 ? '0' + (idx + 1) : idx + 1}} | {{itm.title}}</div>
                                 <template v-if="item.pay_status">
-                                    <div v-if="itm.pay_status" class="iconfont iconsuozi"></div>
+                                    <div v-if="itm.pay_status" class="knowledge iconsuozi"></div>
                                     <div v-else class="free">免费</div>
                                 </template>
                                 <div v-else class="free">免费</div>
@@ -155,10 +161,13 @@
                 </ul>
                 <!-- 专题目录 -->
                 <ul v-else class="catalogue">
-                    <li v-for="(item, index) in updateOtherTaskList" :key="item.id" @click="play(item)">
-                        <div class="label">{{ item.type }}</div>
+                    <li v-for="(item, index) in updateOtherTaskList" :key="item.id" :class="{ gray: item.taskTrue }" @click="play(item)">
+                        <img v-if="item.type === '视频'" class="label" src="{__WAP_PATH}zsff/images/media1.png">
+                        <img v-else-if="item.type === '图文'" class="label" src="{__WAP_PATH}zsff/images/media2.png">
+                        <img v-else-if="item.type === '音频'" class="label" src="{__WAP_PATH}zsff/images/media3.png">
+                        <div v-else class="label">{{ item.type }}</div>
                         <div class="title">{{index < 9 ? '0' + (index + 1) : index + 1}} | {{item.title}}</div>
-                        <div v-if="item.pay_status" class="iconfont iconsuozi"></div>
+                        <div v-if="item.pay_status" class="knowledge iconsuozi"></div>
                         <div v-else class="free">免费</div>
                     </li>
                 </ul>
@@ -167,7 +176,6 @@
                 <span v-show="otherLoading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
                 <span v-text="otherLoadTitle">加载更多</span>
             </p>
-            <div style="height:1.5rem"></div>
         </div>
         <!-- /**直播回放目录
          **/-->
@@ -182,10 +190,9 @@
             </ul>
             <div class="foot">
                 <span v-show="liveLoading" class="fa fa-spinner loadingpic"></span>
-                <div class="tip">{{ liveLoadTitle }}</div>
+                <!-- <div class="tip">{{ liveLoadTitle }}</div> -->
             </div>
          </div>
-
         <div class="video-list" v-show="active==2 && special.type == 5" v-cloak=""  style="-webkit-overflow-scrolling: touch;">
             <div v-if="columnTaskList.length && active==2" ref="list">
                 <div class="video-listn">
@@ -202,6 +209,10 @@
                                 </div>
                                 <template v-if="special.pay_type">
                                     <template v-if="vo.pay_status">
+                                        <template v-if="isMember">
+                                            <div v-if="vo.member_pay_type" class="price">¥{{vo.member_money === '0.00' ? vo.money : vo.member_money}}</div>
+                                            <div v-else class="free">免费</div>
+                                        </template>
                                         <div v-else class="price">¥<span>{{vo.money}}</span></div>
                                     </template>
                                     <div v-else class="free">免费</div>
@@ -214,60 +225,110 @@
             </div>
             <p class="loading-line" style="background-color: #ffffff" v-cloak="">
                 <span v-show="columnLoading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-                <span v-text="columnLoadTitle">加载更多</span>
+                <!-- <span v-text="columnLoadTitle">加载更多</span> -->
             </p>
-            <div style="height:1.5rem"></div>
+            <!-- <div style="height:1.5rem"></div> -->
         </div>
     </div>
 
-    <footer class="acea-row row-wrap-all" ref="storeMenu" v-if="is_pay==false && is_partake==false && is_gift==false && isPink==false">
-        <a class="video_footer_left acea-row row-column row-center-wrapper" href="{:Url('wap/index/index')}">
-            <div class="video_footer_img"><img src="/wap/first/zsff/images/footer1.png"></div>
-            <span class="video_footer_tit">首页</span>
+    <footer class="acea-row row-middle" ref="storeMenu" v-if="is_pay==false && is_partake==false && is_gift==false && isPink==false">
+        <a class="link" href="{:Url('wap/index/index')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special01.png">
+                <div>首页</div>
+            </div>
         </a>
-        <div class="video_footer_left acea-row row-column row-center-wrapper" @click="OpenPay(1)" v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0">
-            <div class="video_footer_img2"><img src="/wap/first/zsff/images/footer2.png"></div>
-            <span class="video_footer_tit">送朋友</span>
-        </div>
-        <div class="video_footer_btn acea-row" :class="(special.pay_type == 1 && special.type == 4) || special.money > 0 ? '': 'item2'">
-
-            <div class="video_footer_btn_right acea-row row-column row-center-wrapper" :class="((special.pay_type == 0 || special.pay_type == 2 ) && special.type == 4 ) || special.money <= 0? 'item2 on': 'item1' " :class="" v-if="special.type == 4 && (is_pay || special.money <= 0)">
-                <span class="video_footer_btn_left_pic" @click="OpenPay(6)" v-if="special.type == 4">进入直播间</span>
-                <span class="video_footer_btn_left_num" @click="OpenPay(5)" v-if="special.type != 4">免费学习</span>
+        <a class="link" href="{:Url('service/service_list')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special02.png">
+                <div>客服</div>
             </div>
-            <div class="video_footer_btn_right acea-row row-column row-center-wrapper" :class="" @click="OpenPay(2)" v-if="special.money > 0 || special.pink_money > 0">
-                <span class="video_footer_btn_left_pic">￥{{special.money}}</span>
-                <span class="video_footer_btn_left_num">单独购</span>
+        </a>
+        <a v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0" class="link" href="javascript:;" @click="OpenPay(1)">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special03.png">
+                <div>送朋友</div>
             </div>
+        </a>
+        <div class="wrap">
+            <div class="video_footer_btn acea-row" :class="special.pay_type == 1 ? '': 'item2'">
+                <div class="video_footer_btn_right acea-row row-column row-center-wrapper on"  v-if="special.type == 4">
+                    <span class="video_footer_btn_left_pic" @click="OpenPay(6)" v-if="special.pay_type == 0 || is_pay">进入直播间</span>
+                    <span class="video_footer_btn_left_pic" @click="OpenPay(2)" v-if="isMember == 0 && special.pay_type == 1">￥{{special.money}}</span>
+                </div>
 
+                <div class="video_footer_btn_right acea-row row-column row-center-wrapper on"  v-if="special.type != 4">
+                    <span v-if="special.pay_type == 0 || is_pay" @click="OpenPay(5)" class="video_footer_btn_left_pic">免费学习</span>
+                    <span v-if="isMember == 0 && special.pay_type == 1" @click="OpenPay(2)" class="video_footer_btn_left_pic">￥{{special.money}}</span>
+                </div>
+            </div>
         </div>
     </footer>
 
 
-    <footer class="acea-row row-wrap-all" ref="storeMenu" v-if="is_pay==true && is_gift==false && paid">
-        <a class="video_footer_left acea-row row-column row-center-wrapper" href="{:Url('wap/index/index')}">
-            <div class="video_footer_img"><img src="{__WAP_PATH}zsff/images/footer1.png"></div>
-            <span class="video_footer_tit">首页</span>
+    <footer class="acea-row row-wrap-all" ref="storeMenu" v-if="is_pay==true && is_partake==false && is_gift==false && paid && isPink==false">
+        <a class="link" href="{:Url('wap/index/index')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special01.png">
+                <div>首页</div>
+            </div>
         </a>
-        <div class="video_footer_left acea-row row-column row-center-wrapper" @click="OpenPay(1)" v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0">
-            <div class="video_footer_img2"><img src="{__WAP_PATH}zsff/images/footer2.png"></div>
-            <span class="video_footer_tit">送朋友</span>
-        </div>
-        <div class="video_footer_btn acea-row">
-            <div class="video_footer_btn_right acea-row row-column row-center-wrapper on">
-                <span class="video_footer_btn_left_pic"  v-if="special.type != 4" @click="OpenPay(5)">去学习</span>
-                <span class="video_footer_btn_left_pic"  v-if="special.type == 4" @click="OpenPay(6)">进入直播间</span>
+        <a class="link" href="{:Url('service/service_list')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special02.png">
+                <div>客服</div>
+            </div>
+        </a>
+        <a v-if="(special.pay_type == 1 && special.type == 4) || special.money > 0" class="link" href="javascript:;" @click="OpenPay(1)">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special03.png">
+                <div>送朋友</div>
+            </div>
+        </a>
+        <div class="wrap">
+            <div class="video_footer_btn acea-row">
+                <div class="video_footer_btn_right acea-row row-column row-center-wrapper on" v-if="special.type != 4" @click="OpenPay(5)">
+                    <span class="video_footer_btn_left_pic">去学习</span>
+                </div>
+                <div class="video_footer_btn_right acea-row row-column row-center-wrapper on" v-if="special.type == 4" @click="OpenPay(6)">
+                    <span class="video_footer_btn_left_pic">进入直播间</span>
+                </div>
             </div>
         </div>
     </footer>
-    <footer class="acea-row row-wrap-all" v-if="is_gift" ref="storeMenu">
-        <!--        <div class="video_footer_left acea-row row-column row-center-wrapper">-->
-        <!--            <div class="video_footer_img"><img src="{__WAP_PATH}zsff/images/footer1.png"></div>-->
-        <!--            <span class="video_footer_tit">首页</span>-->
-        <!--        </div>-->
-        <div class="video_footer_btn acea-row item2">
-            <div class="video_footer_btn_right acea-row row-column row-center-wrapper on" @click="OpenPay(4)">
-                <span class="video_footer_btn_left_pic">领取课程</span>
+    <footer class="acea-row row-wrap-all" v-if="is_partake" ref="storeMenu">
+        <a class="link" href="{:Url('wap/index/index')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special01.png">
+                <div>首页</div>
+            </div>
+        </a>
+        <a class="link" href="{:Url('service/service_list')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special02.png">
+                <div>客服</div>
+            </div>
+        </a>
+    </footer>
+
+    <footer class="acea-row row-middle" v-if="is_gift" ref="storeMenu">
+        <a class="link" href="{:Url('wap/index/index')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special01.png">
+                <div>首页</div>
+            </div>
+        </a>
+        <a class="link" href="{:Url('service/service_list')}">
+            <div class="cont">
+                <img src="{__WAP_PATH}zsff/images/special02.png">
+                <div>客服</div>
+            </div>
+        </a>
+        <div class="wrap">
+            <div class="video_footer_btn acea-row">
+                <div class="video_footer_btn_right acea-row row-column row-center-wrapper on" @click="OpenPay(4)">
+                    <span class="video_footer_btn_left_pic">领取课程</span>
+                </div>
             </div>
         </div>
     </footer>
@@ -280,14 +341,8 @@
         <img :src="wechat_qrcode" alt="" style="width: 5rem;height: 5rem;margin: 0 auto;">
     </div>
     <div class="mask" @touchmove.prevent :hidden="open" @click="open=true"></div>
-    <payment @change="changeVal" :payment="payment" :money="money" :special_id="special.id" :iswechat="isWechat" :link_pay_uid="link_pay_uid" :pay_type_num="pay_type_num" :pink-id="pinkId"></payment>
+    <payment @change="changeVal" :payment="payment" :money="money" :special_id="special.id" :iswechat="isWechat" :isYue="is_yue" :link_pay_uid="link_pay_uid" :pay_type_num="pay_type_num"></payment>
     <enter :appear="appear" @change="changeVal" :url="url" :site_name="site_name"></enter>
-    <div class="initiate-group">
-        <a class="service acea-row row-center-wrapper" href="{:Url('service/service_list')}">
-            <span class="iconfont icon-wodekefu"></span>
-            <div>客服</div>
-        </a>
-    </div>
 
     <div class="password" :class="password?'on':''">
         <div class="title">请输入密码</div>
@@ -300,8 +355,8 @@
 {/block}
 {block name='foot'}
 <script type="text/javascript">
-    var swiperlist={$swiperlist},special={$special},pinkUser={$pinkUser},pinkIngList={$pinkIngList},pinkId={$pinkId},
-        orderId='{$orderId ? $orderId : ""}',link_pay_uid={$link_pay_uid},wechat_qrcode='{$code_url}',
+    var swiperlist={$swiperlist},special={$special},count={$count},pinkId={$pinkId},
+        orderId='{$orderId ? $orderId : ""}',link_pay_uid={$link_pay_uid},wechat_qrcode='{$code_url}',is_yue={$is_yue ? 'true' : 'false'},
         isWechat={$isWechat ? 'true' : 'false'},isPay={$isPay ? 'true':'false'},partake={$partake},gift={$gift},
         link_pay={$link_pay},isPink={$isPink ? 'true':'false'},BarrageShowTime={$BarrageShowTime ? $BarrageShowTime : 5},
         barrage_index={$barrage_index ? $barrage_index : 0},uid={$userInfo['uid'] ? $userInfo['uid']:0},liveInfo={$liveInfo},site_name = '{$Auth_site_name}',isMember={$is_member};
@@ -318,10 +373,11 @@
                 parentActive: 0,
                 site_name:site_name,
                 RecordId:'',
+                count:count,
                 special:special,
-                pinkUser:pinkUser,
+               // pinkUser:pinkUser,
                 swiperlist:swiperlist,
-                pinkIngList:pinkIngList,
+                //pinkIngList:pinkIngList,
                 otherTaskList:[],
                 columnTaskList:[],
                 liveTaskList:[],
@@ -374,7 +430,8 @@
                 password:false,
                 liveInfo:liveInfo,
                 qr_password:'',
-                studio_pwd:liveInfo.studio_pwd
+                studio_pwd:liveInfo.studio_pwd,
+                is_yue:is_yue //余额是否开启
             },
             computed: {
                 updateOtherTaskList: function (value) {
@@ -404,7 +461,7 @@
                 }
             },
             created:function(){
-                this.CountDown({name:'pinkIngList',time_name:"stop_time"});
+               // this.CountDown({name:'pinkIngList',time_name:"stop_time"});
             },
             mounted:function(){
                 var that=this;
@@ -516,15 +573,12 @@
                         },BarrageShowTime);
                     });
                 },
-                goPink:function(){
-                    return $h.U({c:'special',a:'order_pink',q:{pink_id:pinkId}});
-                },
                 follow:function(){
                     return $h.openImage(wechat_qrcode);
                 },
-                getPartakePinkUrl:function(){
+                /*getPartakePinkUrl:function(){
                     return $h.U({c:'special',a:'details',q:{id:this.special.id}});
-                },
+                },*/
                 pay_order:function(data){
                     this.orderId=data.result.orderId || '';
                     switch (data.status){
@@ -538,7 +592,7 @@
                             this.successOrder(data.msg);
                             break;
                         case 'ZHIFUBAO_PAY':
-                            window.location.href=$h.U({c:'Alipay',a:'index',q:data.result});
+                            window.location.href=$h.U({c:'Alipay',a:'index',q:{info:data.result,params:'special'}});
                             break;
                     }
                 },
@@ -586,7 +640,7 @@
                     })
                 },
                 play:function(item){
-                    if(item.pay_status == 1 && this.is_pay==false && this.special.type != 5) return $h.showMsg('请先购买~');
+                    if(item.pay_status == 1 && this.is_pay==false) return $h.showMsg('请先购买~');
                     if(item.is_pay == 2){
                         this.password = true;
                         this.studio_pwd = item.studio_pwd;
@@ -705,10 +759,10 @@
 
                     },false);
                 },
-                //获取参加拼团跳转链接
+               /* //获取参加拼团跳转链接
                 getAttendUrl:function(pink_id,special_id){
                     return $h.U({c:'special',a:'details',q:{id:special_id,pinkId:pink_id}})+'#partake';
-                },
+                },*/
                 //收藏和取消收藏
                 collect:function(){
                     app.baseGet($h.U({c:'special',a:'collect',q:{id:this.special.id}}),function (res) {
@@ -725,11 +779,16 @@
                     app.baseGet($h.U({c:'index',a:'user_login'}),function (res) {
                         switch (is_pink){
                             case 1:
+                               // this.money=this.special.is_pink ? this.special.pink_money : this.special.money;
                                 this.money= this.special.money;
                                 this.payment=false;
                                 break;
                             case 2:
-                                this.money=this.special.money;
+                                if(isMember){
+                                    this.money=this.special.member_pay_type ? this.special.member_money :0;
+                                }else{
+                                    this.money=this.special.money;
+                                }
                                 this.payment=false;
                                 break;
                             case 3:
@@ -756,7 +815,7 @@
                                 this.active=1;
                                 break;
                             case 6:
-                                if(this.liveInfo.studio_pwd && this.liveInfo.pay_type==2){
+                                if(this.liveInfo.studio_pwd && this.special.pay_type==2){
                                     this.password = true;
                                 }else {
                                     window.location.href = $h.U({
@@ -796,7 +855,7 @@
                 logComplete:function(){
                     this.appear=true;
                     if(this.pay_type_num==3 || this.pay_type_num==1)
-                        this.money=this.special.money;
+                        this.money=this.special.is_pink ? this.special.pink_money : this.special.money;
                     else
                         this.money=this.special.money;
                     if(this.pay_type_num != 4) this.payment=false;
@@ -884,7 +943,7 @@
                 },
                 //播放回放
                 playBackRecord:function (item) {
-                    this.RecordId = item.RecordId;
+                    this.RecordId = item;
                     this.OpenPay(6);
                 },
             },

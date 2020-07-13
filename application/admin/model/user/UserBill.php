@@ -259,7 +259,7 @@ class UserBill extends ModelBasic
          return $list;
     }
     //设置where条件分页.返回数据
-    public static function setWhereList($where,$type='',$field=[],$category='integral'){
+    public static function setWhereList($where,$type='',$field=[],$category='gold_num'){
         $models=self::where('uid',$where['uid'])
             ->where('category',$category)
             ->page((int)$where['page'],(int)$where['limit'])

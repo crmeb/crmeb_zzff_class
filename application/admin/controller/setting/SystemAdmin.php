@@ -3,6 +3,7 @@
 namespace app\admin\controller\setting;
 
 use app\admin\controller\AuthController;
+use app\wap\model\user\User;
 use service\FormBuilder as Form;
 use service\JsonService;
 use service\UtilService as Util;
@@ -60,6 +61,7 @@ class SystemAdmin extends AuthController
             }
             return $options;
         })->multiple(1);
+        $f[] = Form::input('phone', '前端登录手机号')->type('phone');
         $f[] = Form::radio('status', '状态', 1)->options([['label' => '开启', 'value' => 1], ['label' => '关闭', 'value' => 0]]);
         $form = Form::make_post_form('添加管理员', $f, Url::build('save'));
         $this->assign(compact('form'));
@@ -79,11 +81,21 @@ class SystemAdmin extends AuthController
             'conf_pwd',
             'pwd',
             'real_name',
+            'phone',
             ['roles', []],
             ['status', 0]
         ], $request);
         if (!$data['account']) return Json::fail('请输入管理员账号');
         if (!$data['roles']) return Json::fail('请选择至少一个管理员身份');
+        if (!$data['phone']) return Json::fail('请填写前端登录电话');
+        $user = User::where('phone',$data['phone'])->find();
+        if (!$user) return Json::fail('请至前端-个人中心-点击头像补充个人资料');
+        foreach ($data['roles'] as $v) {
+            $role = SystemRole::where('id',$v)->find();
+            if ($role && $role['sign'] == 'verification') {
+                if (!$data['phone']) return Json::fail('请选择至少一个管理员身份');
+            }
+        }
         if (!$data['pwd']) return Json::fail('请输入管理员登陆密码');
         if ($data['pwd'] != $data['conf_pwd']) return Json::fail('两次输入密码不想同');
         if (AdminModel::be($data['account'], 'account')) return Json::fail('管理员账号已存在');
@@ -138,6 +150,7 @@ class SystemAdmin extends AuthController
             'conf_pwd',
             'pwd',
             'real_name',
+            'phone',
             ['roles', []],
             ['status', 0]
         ], $request);
@@ -149,6 +162,9 @@ class SystemAdmin extends AuthController
             if (isset($data['pwd']) && $data['pwd'] != $data['conf_pwd']) return Json::fail('两次输入密码不想同');
             $data['pwd'] = md5($data['pwd']);
         }
+        if (!$data['phone']) return Json::fail('请填写前端登录电话');
+        $user = User::where('phone',$data['phone'])->find();
+        if (!$user) return Json::fail('请至前端-个人中心-点击头像补充个人资料');
         if (AdminModel::where('account', $data['account'])->where('id', '<>', $id)->count()) return Json::fail('管理员账号已存在');
         unset($data['conf_pwd']);
         AdminModel::edit($data, $id);

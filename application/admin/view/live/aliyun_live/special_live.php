@@ -70,8 +70,6 @@
                                 <div class="layui-input-inline">
                                     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
                                         <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                    <!--                                    <button class="layui-btn layui-btn-primary layui-btn-sm export"  lay-submit="export" lay-filter="export">-->
-                                    <!--                                        <i class="fa fa-floppy-o" style="margin-right: 3px;"></i>导出</button>-->
                                 </div>
                             </div>
                         </div>
@@ -120,7 +118,7 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" lay-event='go_live'>
-                                    <i class="fa fa-street-view"></i> 去直播
+                                    <i class="fa fa-video-camera"></i> 去直播
                                 </a>
                             </li>
                             {if condition='isset($login_role["sign"]) && $login_role["sign"] eq "admin"'}
@@ -132,9 +130,16 @@
                             {/if}
                             <li>
                                 <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('special.special_type/recommend')}?special_id={{d.id}}',{h:300,w:400})">
-                                    <i class="fa fa-check-circle"></i> 推荐至
+                                    <i class="fa fa-check-circle"></i> 推荐至首页
                                 </a>
                             </li>
+                            {{# if(d.is_play){ }}
+                            <li>
+                                <a lay-event='recommend' href="javascript:void(0)">
+                                    <i class="fa fa-check-circle"></i> 首页弹窗
+                                </a>
+                            </li>
+                            {{# } }}
                            <!-- <li>
                                 <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-关联课程','{:Url('relation_task')}?special_id={{d.id}}',{w:1100})">
                                     <i class="fa fa-link"></i> 关联课程
@@ -460,6 +465,20 @@
                         $eb.$swal('error',err);
                     });
                 })
+                break;
+                case 'recommend':
+                var url=layList.U({a:'recommend',q:{id:data.id}});
+                    $eb.$swal('delete',function(){
+                        $eb.axios.get(url).then(function(res){
+                            if(res.status == 200 && res.data.code == 200) {
+                                $eb.$swal('success',res.data.msg);
+                                obj.update({is_publish:1});
+                            }else
+                                return Promise.reject(res.data.msg || '删除失败')
+                        }).catch(function(err){
+                            $eb.$swal('error',err);
+                        });
+                    },{title:"确认要把该直播专题推荐到首页弹窗吗?",text:'确认后无法修改',confirm:'确认'});
                 break;
             case 'open_image':
                 $eb.openImage(data.image);

@@ -1,7 +1,7 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid" style="background: #fff">
-    <div class="layui-tab layui-tab-brief" lay-filter="tab">
+    <!--<div class="layui-tab layui-tab-brief" lay-filter="tab">
         <ul class="layui-tab-title">
             <li lay-id="list" {eq name='activity_type' value='1'}class="layui-this" {/eq} >
             <a href="{eq name='activity_type' value='1'}javascript:;{else}{:Url('index',['activity_type'=>1, 'special_type'=>$special_type])}{/eq}">{$special_title}列表</a>
@@ -10,7 +10,7 @@
             <a href="{eq name='activity_type' value='2'}javascript:;{else}{:Url('source_index',['activity_type'=>2, 'special_type'=>$special_type])}{/eq}">{$special_title}素材列表</a>
             </li>
         </ul>
-    </div>
+    </div>-->
     <div class="layui-row layui-col-space15"  id="app">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -94,6 +94,9 @@
                         <span class="layui-badge">拼团关闭</span>
                         {{# } }}
                     </script>
+                    <script type="text/html" id="is_live_goods">
+                        <input type='checkbox' name='is_live_goods' lay-skin='switch' value="{{d.id}}" lay-filter='is_live_goods' lay-text='是|否'  {{ d.is_live_goods == 1 ? 'checked' : '' }}>
+                    </script>
                     <script type="text/html" id="is_show">
                         <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
                     </script>
@@ -103,11 +106,6 @@
                     <script type="text/html" id="act">
                         <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
                         <ul class="layui-nav-child layui-anim layui-anim-upbit">
-                            <li>
-                                <a lay-event='turnTo' href="javascript:void(0)">
-                                    <i class="fa fa-paste"></i> 转至其他
-                                </a>
-                            </li>
                             <li>
                                 <a  href="javascript:void(0)" onclick="action.open_add('{:Url('add')}?id={{d.id}}&special_type={$special_type}','编辑专题')">
                                     <i class="fa fa-paste"></i> 编辑专题
@@ -120,7 +118,7 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?special_id={{d.id}}',{h:300,w:400})">
-                                    <i class="fa fa-check-circle"></i> 添加推荐
+                                    <i class="fa fa-check-circle"></i> 推荐至首页
                                 </a>
                             </li>
                             <li>
@@ -163,10 +161,11 @@
             {field: 'image', title: '封面图',templet:'#image',align: 'center'},
             {field: 'recommend', title: '首页推荐版块',templet:'#recommend',align: 'center'},
             {field: 'task_count', title: '课程数量',align: 'center'},
-            // {field: 'sales', title: '实际销量'},
-            // {field: 'fake_sales', title: '虚拟销量',edit:'fake_sales'},
+            {field: 'sales', title: '实际销量'},
+            {field: 'fake_sales', title: '虚拟销量',edit:'fake_sales'},
             {field: 'is_pink', title: '拼团状态',templet:'#is_pink',align: 'center'},
             {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',align: 'center'},
+            /*{field: 'is_live_goods', title: '直播带货',templet:'#is_live_goods',align: 'center'},*/
             {field: 'is_show', title: '是否显示',templet:'#is_show',align: 'center'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'10%'},
         ];
@@ -239,6 +238,18 @@
         }
         action.set_value('is_show',value,is_show_value,'special');
     });
+    /*layList.switch('is_live_goods',function (odj,value) {
+        var is_live_goods = 0
+        if(odj.elem.checked==true){
+            var is_live_goods = 1
+        }
+        layList.baseGet(layList.Url({
+            a: 'set_live_goods',
+            q: {special_id: value, is_live_goods: is_live_goods}
+        }), function (res) {
+            layList.msg(res.msg);
+        });
+    });*/
     //快速编辑
     layList.edit(function (obj) {
         var id=obj.data.id,value=obj.value;

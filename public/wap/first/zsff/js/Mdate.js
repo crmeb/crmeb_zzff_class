@@ -7,7 +7,7 @@
         link.href = url;
         d.getElementsByTagName("head")[0].appendChild(link)
     };
-    includeCss("/public/wap/first/dunixue/css/Mdate.css");
+    includeCss("/wap/first/css/Mdate.css");
     var dateopts = {
         beginYear: 2000,
         beginMonth: 1,

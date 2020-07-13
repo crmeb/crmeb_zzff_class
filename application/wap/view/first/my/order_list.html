@@ -1,0 +1,188 @@
+{extend name="public/container"}
+{block name="title"}我的拼课订单{/block}
+{block name="head_top"}
+<style>
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="my-spelling-order swiper-details" v-cloak id="app">
+    <div class="video-listn">
+        <div class="list" v-for="item in pinkList" @click="goPinkUrl(item)">
+            <div class="item acea-row row-between-wrapper">
+                <div class="pictrue"><img :src="item.image"></div>
+                <div class="text acea-row row-between row-column" style="flex: 1;margin-left: 0.2rem;">
+                    <div class="name line1" v-text="item.title"></div>
+                    <div class="num acea-row row-middle">{{item.pink_number}}人团<span class="money">¥
+                            {{item.money}}</span></div>
+                </div>
+            </div>
+
+            <div class="bottom acea-row row-between-wrapper" v-if="item.pink_status==1">
+                <div class="status line1">拼团进行中...</div>
+                <div class="time">剩余时间 {{item.difftime.hour}} ：{{item.difftime.minute}} ：{{item.difftime.second}}</div>
+            </div>
+
+            <div class="bottom acea-row row-between-wrapper" v-else-if="item.pink_status==2">
+                <div class="status line1">拼团成功</div>
+            </div>
+
+            <div class="bottom acea-row row-between-wrapper" v-else-if="item.pink_status==3">
+                <div class="status line1">拼团失败</div>
+            </div>
+
+            <div class="bottom acea-row row-between-wrapper" v-else-if="item.pink_status==4">
+                <div class="status line1">已退款</div>
+            </div>
+
+        </div>
+    </div>
+    <div v-show="loading" class="loading">
+        <span class="fa fa-spinner"></span>
+    </div>
+    <div v-if="page > 2 && loadend" class="loaded">已全部加载</div>
+    <div v-if="!pinkList.length && !loading" class="nothing"></div>
+</div>
+<script>
+    (function () {
+        require(['vue', 'helper', 'store',], function (Vue, $h, app) {
+            new Vue({
+                el: "#app",
+                data: {
+                    loadTitle: '加载更多',
+                    loadend: false,
+                    loading: false,
+                    pinkList: [],
+                    page: 1,
+                    limit: 10
+                },
+                methods: {
+                    goPinkUrl: function (item) {
+                        if (item.pink_status != 4) window.location.href = $h.U({ c: 'special', a: 'order_pink', q: { pink_id: item.pink_id } });
+                    },
+                    get_pink_list: function () {
+                        var that = this;
+                        if (this.loadend) return;
+                        if (this.loading) return;
+                        this.loadTitle = '';
+                        this.loading = true;
+                        app.baseGet($h.U({ c: 'my', a: 'get_order_list', q: { type: 3, page: this.page, limit: this.limit } }), function (res) {
+                            var list = res.data.data.list;
+                            var pinkList = $h.SplitArray(list, that.pinkList);
+                            that.loading = false;
+                            that.loadend = list.length < that.limit;
+                            that.loadTitle = that.loadend ? '已全部加载' : '加载更多';
+                            that.page = res.data.data.page;
+                            that.$set(that, 'pinkList', pinkList);
+                            that.CountDown({ name: 'pinkList', time_name: 'stop_time' });
+                        }, function (res) {
+                            that.loadTitle = '加载更多';
+                            that.loading = false;
+                        });
+                    },
+                    CountDown: function (opt, that) {
+                        if (typeof opt != 'object') opt = {};
+                        var name = opt.name || '', value = null, that = that ? that : this;
+                        if (name.indexOf('.') === -1)
+                            value = that[name];
+                        else {
+                            var nameArray = name.split('.');
+                            value = that[nameArray[0]][nameArray[1]];
+                        }
+                        var tiem = opt.time || 1000, timeName = opt.time_name || 'datatime', strName = { hour: "00", minute: "00", second: "00" },
+                            outputName = opt.output || 'difftime';
+                        if (!name) return false;
+                        if (value === undefined) return false;
+                        opt.nowTime = function () {
+                            if (Array.isArray(value)) {
+                                for (var i = 0; i < value.length; i++) {
+                                    var intDiff = value[i][timeName] - Date.parse(new Date()) / 1000;//获取数据中的时间戳的时间差；
+                                    var days = 0, hour = 0, minute = 0, second = 0;
+                                    if (intDiff > 0) {
+                                        hour = Math.floor(intDiff / (60 * 60)) - (days * 24);
+                                        minute = Math.floor(intDiff / 60) - (hour * 60);
+                                        second = Math.floor(intDiff) - (hour * 60 * 60) - (minute * 60);
+                                        if (hour <= 9) hour = '0' + hour;
+                                        if (minute <= 9) minute = '0' + minute;
+                                        if (second <= 9) second = '0' + second;
+                                        strName = {
+                                            hour: hour,
+                                            minute: minute,
+                                            second: second
+                                        };
+                                    } else {
+                                        strName = {
+                                            hour: "00",
+                                            minute: "00",
+                                            second: "00"
+                                        };
+                                    }
+                                    that.$set(that[name][i], outputName, strName);
+                                }
+                            } else {
+                                var intDiff = value[timeName] - Date.parse(new Date()) / 1000;
+                                var days = 0, hour = 0, minute = 0, second = 0;
+                                if (intDiff > 0) {
+                                    hour = Math.floor(intDiff / (60 * 60)) - (days * 24);
+                                    minute = Math.floor(intDiff / 60) - (hour * 60);
+                                    second = Math.floor(intDiff) - (hour * 60 * 60) - (minute * 60);
+                                    if (hour <= 9) hour = '0' + hour;
+                                    if (minute <= 9) minute = '0' + minute;
+                                    if (second <= 9) second = '0' + second;
+                                    strName = {
+                                        hour: hour,
+                                        minute: minute,
+                                        second: second
+                                    };
+                                } else {
+                                    strName = {
+                                        hour: "00",
+                                        minute: "00",
+                                        second: "00"
+                                    };
+                                }
+                                if (name.indexOf('.') === -1)
+                                    that.$set(that[name], outputName, strName);
+                                else {
+                                    var nameArray = name.split('.');
+                                    that.$set(that[nameArray[0]][nameArray[1]], outputName, strName);
+                                }
+                            }
+                        };
+                        opt.nowTime();
+                        setInterval(opt.nowTime, tiem);
+                    }
+                },
+                mounted: function () {
+                    this.get_pink_list();
+                    $h.EventUtil.listenTouchDirection(document, function () {
+                        this.loading == false && this.get_pink_list();
+                    }.bind(this), false);
+                }
+            })
+        })
+    })();
+</script>
+{/block}

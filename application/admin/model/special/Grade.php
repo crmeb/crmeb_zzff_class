@@ -34,4 +34,9 @@ class Grade extends ModelBasic
         if ($where['cid'] != '') $model = $model->where('id', $where['cid']);
         return $model;
     }
+
+    public function SpecialSubject()
+    {
+        return $this->hasMany('SpecialSubject','grade_id');
+    }
 }

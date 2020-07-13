@@ -30,7 +30,7 @@ class SpecialSubject extends ModelBasic
     public static function setWhere($where){
         $model=self::order('sort desc,add_time desc');
         if($where['name']) $model=$model->where('name','like',"%$where[name]%");
-        if($where['cid']) $model=$model->where('grade_id',$where['cid']);
+        if($where['pid']) $model=$model->where('grade_id',$where['pid']);
         return $model;
     }
 

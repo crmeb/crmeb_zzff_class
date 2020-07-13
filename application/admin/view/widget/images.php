@@ -338,16 +338,15 @@
                     }
                 }
                 //编辑器中
-                if (parentinputname == 'editor') {
+                if (parentinputname == 'editor' || parentinputname == 'editors') {
                     var list = [];
-                    console.log(this.selectImages);
                     for (var i = 0; i < this.selectImages.length; i++) {
                         list.push({
                             _src: this.selectImages[i],
                             src: this.selectImages[i]
                         });
                     }
-                    parent.insertEditor(list);
+                    parent.insertEditor(list,parentinputname);
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 } else {

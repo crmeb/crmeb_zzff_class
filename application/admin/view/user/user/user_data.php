@@ -3,7 +3,7 @@
 <style>
     .clearfix:after{content:'';visibility:hidden;display:block;height:0;clear:both;}
     .data .avatar{width: 100px;height: 100px;float: left;margin-left: 10px}
-    .data .item{color: #000000;font-size: 20px;text-align: center;float: left;    float: left;line-height: 100px;padding-left: 20px;}
+    .data .item{color: #000000;font-size: 20px;text-align: center;float: left;line-height: 100px;padding-left: 20px;}
     .data .avatar img{width: 100px;height: 100px;border-radius: 50%}
     .data .item .text{color: #1E9FFF;cursor: pointer}
     .data .item-right{float: right;padding-right: 25px}
@@ -79,23 +79,23 @@
                                         </tr>
                                         <tr>
                                             <td class="text-right">已推广人数:</td>
-                                            <td>{{userinfo.spread_count}}</td>
+                                            <td>{{count.spread_count}}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-right">直推订单金额:</td>
-                                            <td>{{userinfo.spread_one}}￥</td>
+                                            <td>￥{{userinfo.spread_one}}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-right">裂变订单金额:</td>
-                                            <td>{{userinfo.spread_two}}￥</td>
+                                            <td>￥{{userinfo.spread_two}}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-right">佣金总额:</td>
-                                            <td>{{userinfo.bill_sum}}￥</td>
+                                            <td>￥{{userinfo.bill_sum}}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-right">待提现:</td>
-                                            <td>{{userinfo.now_money}}￥</td>
+                                            <td>￥{{userinfo.now_money}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -109,7 +109,7 @@
                 <div class="layui-card-body">
                     <div class="layui-tab" lay-filter="tab">
                         <ul class="layui-tab-title">
-                            <li class="layui-this">开通记录</li>
+                            <li class="layui-this">我的课程</li>
                             <li>推广记录</li>
                         </ul>
                         <div class="layui-tab-content">
@@ -119,7 +119,7 @@
                                         <thead>
                                             <tr>
                                                 <th>时间</th>
-                                                <th>商品</th>
+                                                <th>课程</th>
                                                 <th>实付金额</th>
                                                 <th>开通类型</th>
                                             </tr>
@@ -217,7 +217,7 @@
                                                             <th>时间</th>
                                                             <th>订单号</th>
                                                             <th>用户名</th>
-                                                            <th>商品名</th>
+                                                            <th>课程名</th>
                                                             <th>订单金额</th>
                                                         </tr>
                                                     </thead>
@@ -258,7 +258,7 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <div ref="spread_page" v-show="count.spread_count > limit" style="text-align: right;"></div>
+                                                <div ref="spread_page" v-show="spread_list.length > limit" style="text-align: right;"></div>
                                             </div>
                                         </div>
                                     </div>

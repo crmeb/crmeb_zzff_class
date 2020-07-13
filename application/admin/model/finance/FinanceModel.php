@@ -56,6 +56,13 @@ class FinanceModel extends ModelBasic
     }
     public static function getBillList($where){
         $data=($data=self::setWhereList($where)->page((int)$where['page'],(int)$where['limit'])->select()) && count($data) ? $data->toArray():[];
+        if ($data) {
+            foreach ($data as &$v) {
+                if ($where['category'] != "now_money") {
+                    $v['number'] = floor($v['number']);
+                }
+            }
+        }
         $count=self::setWhereList($where)->count();
         return compact('data','count');
     }
@@ -82,19 +89,60 @@ class FinanceModel extends ModelBasic
         if($where['start_time']!='' && $where['end_time']!=''){
             $time['data']=$where['start_time'].' - '.$where['end_time'];
         }
+        /*if (isset($where['category']) && $where['category'] == "now_money") {
+            $category_where['op'] = 'not in';
+            $category_where['condition'] = 'integral,gold_num';
+            $type_where['op'] = 'not in';
+            $type_where['type'] = 'gain,system_sub,deduction,sign,recharge';
+        }else{
+            $category_where['op'] = 'in';
+            $category_where['condition'] = 'gold_num';
+            $type_where['op'] = 'in';
+            $type_where['type'] = 'sign,recharge';
+        }*/
+        $bill_where_op = self::bill_where_op($where['category']);
+        if (!$bill_where_op) return false;
         $model=self::getModelTime($time,self::alias('A')
             ->join('user B','B.uid=A.uid')
-            ->where('A.category','not in','integral')
+            ->where('A.category', $bill_where_op['category']['op'],$bill_where_op['category']['condition'])
             ->order('A.add_time desc'),'A.add_time');
         if(trim($where['type'])!=''){
             $model=$model->where('A.type',$where['type']);
         }else{
-            $model=$model->where('A.type','not in','gain,system_sub,deduction,sign');
+            $model=$model->where('A.type', $bill_where_op['type']['op'],$bill_where_op['type']['condition']);
+
+
         }
         if($where['nickname']!=''){
             $model=$model->where('B.nickname|B.uid','like',"%$where[nickname]%");
         }
         return $model->field(['A.*','FROM_UNIXTIME(A.add_time,"%Y-%m-%d %H:%i:%s") as add_time','B.uid','B.nickname','B.name']);
+    }
+
+    /**
+     * @param $category
+     * @return array|bool
+     */
+    public static function bill_where_op($category){
+        if (!$category || !in_array($category,['now_money','gold_num'])) {
+            return false;
+        }
+        switch($category){
+            case "now_money" :
+                $bill_where_op['category']['op'] = 'not in';
+                $bill_where_op['category']['condition'] = 'integral,gold_num';
+                $bill_where_op['type']['op'] = 'not in';
+                $bill_where_op['type']['condition'] = 'gain,system_sub,deduction,sign,recharge';
+                break;
+            case "gold_num" :
+                $bill_where_op['category']['op'] = 'in';
+                $bill_where_op['category']['condition'] = 'gold_num';
+                $bill_where_op['type']['op'] = 'in';
+                $bill_where_op['type']['condition'] = 'sign,recharge,live_reward';
+                break;
+
+        }
+        return $bill_where_op;
     }
     /**
      * 获取营业数据

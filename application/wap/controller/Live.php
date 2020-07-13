@@ -5,16 +5,23 @@ namespace app\wap\controller;
 
 use Api\AliyunLive;
 use Api\AliyunLive as ApiAliyunLive;
+use app\admin\model\system\SystemGroupData;
 use app\wap\model\live\LiveBarrage;
+use app\wap\model\live\LiveGoods;
 use app\wap\model\live\LiveHonouredGuest;
+use app\wap\model\live\LiveReward;
 use app\wap\model\live\LiveStudio;
 use app\wap\model\live\LiveUser;
 use app\wap\model\special\SpecialBuy;
 use app\wap\model\special\Special;
 use app\wap\model\special\SpecialTask;
+use app\wap\model\user\User;
+use app\wap\model\user\UserBill;
+use service\GroupDataService;
 use service\UtilService;
 use think\Config;
 use service\JsonService;
+use think\Db;
 use think\Url;
 use service\SystemConfigService;
 
@@ -82,7 +89,9 @@ class Live extends AuthController
         $specialLive = \app\wap\model\special\Special::where(['is_show' => 1, 'is_del' => 0, 'id' => $liveInfo->special_id])->find();
         if (!$specialLive) return $this->failed('专题不存在或者已被删除');
         if ($specialLive->pay_type == 1 && !SpecialBuy::PaySpecial($specialLive->id, $this->uid)) {
-            return $this->failed('您还没有支付请支付后再进行观看', Url::build('special/details', ['id' => $liveInfo->special_id]));
+            if ($specialLive->member_pay_type == 1){
+                return $this->failed('您还没有支付请支付后再进行观看', Url::build('special/details', ['id' => $liveInfo->special_id]));
+            }
         }
         $AliyunLive = $this->aliyunLive;
         if ($liveInfo->is_play)
@@ -90,7 +99,7 @@ class Live extends AuthController
         else {
             $record_id = $record_id ? $record_id : $liveInfo->playback_record_id;
             if ($liveInfo->is_playback && $record_id) {
-                $res = $AliyunLive->queryLiveRecordFile($liveInfo->stream_name, $liveInfo->playback_record_id);
+                $res = $AliyunLive->queryLiveRecordFile($liveInfo->stream_name, $record_id);
                 if ($res === false) {
                     $liveInfo->is_playback = 0;
                     $liveInfo->playback_record_id = '';
@@ -114,11 +123,12 @@ class Live extends AuthController
         $uids = LiveHonouredGuest::where(['live_id' => $liveInfo->id])->column('uid');
         $liveInfo['abstract'] = $specialLive->abstract;
         $this->assign([
+            'goldInfo' => json_encode(SystemConfigService::more("gold_name,gold_rate,gold_image")),
             'liveInfo' => json_encode($liveInfo),
             'UserSum' => bcadd(LiveUser::where(['live_id' => $liveInfo->id, 'is_open_ben' => 0, 'is_online' => 1])->sum('visit_num'), $liveInfo->online_num, 0),
             'live_title' => $liveInfo->live_title,
             'PullUrl' => $PullUrl,
-            'requirejs' => true,
+            //'requirejs' => true,
             'is_ban' => $userInfo->is_ban,
             'room' => $liveInfo->id,
             'datatime' => $datatime,
@@ -226,23 +236,10 @@ class Live extends AuthController
                 }
             }
             if (isset($res['TotalNum'])) $count = $res['TotalNum'];
-           /* $list = array();
-            for($i=0;$i<2;$i++){
-                $list[$i]=[
-                    'StreamName' => "95292930",
-                    'RecordId' => "12",
-                    'playback_record_id' => 23,
-                    'RecordUrl' => "http://crmeb-live-v1.oss-cn-shenzhen.aliyuncs.com/live/crmebzsff/95292930/242020-04-22-10-55-332020-04-22-11-00-02.mp4",
-                    'StartTime' => time(),
-                    'EndTime' => time(),
-                ];
-            }*/
-            //$data['list'] = $list;
             $data['page'] = $page++;
             $data['count'] = $count;
             return JsonService::successful($data);
         } else {
-           // return JsonService::fail(ApiAliyunLive::getErrorInfo());
             return JsonService::fail("网络错误");
         }
     }

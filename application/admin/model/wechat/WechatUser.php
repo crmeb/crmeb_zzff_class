@@ -196,9 +196,9 @@ use app\admin\model\user\UserBill;
              //发展会员人数
              $data['spread_sum'] = User::where('spread_uid','in',$uids)->count();
              //订单总数
-             $data['order_count'] = StoreOrder::where('uid','in',$uids)->count();
+             $data['order_count'] = StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0,'type'=>0])->count();
              //订单金额
-             $data['pay_price'] = StoreOrder::where('uid','in',$uids)->sum('pay_price');
+             $data['pay_price'] = StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0,'type'=>0])->sum('pay_price');
              //可提现金额
              $data['number'] = User::where('uid','in',$uids)->sum('brokerage_price');
              //提现次数
@@ -294,8 +294,8 @@ use app\admin\model\user\UserBill;
                  $item['extract_sum_price'] = self::getModelTime($where,UserExtract::where('uid',$item['uid']))->sum('extract_price');
                  $item['extract_count_price'] = UserExtract::getUserCountPrice($item['uid']);//累计提现金额
                  $item['extract_count_num'] = UserExtract::getUserCountNum($item['uid'],$where);//提现次数
-                 $item['order_price'] = count($uids) ? StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0])->sum('pay_price') : 0;//订单金额
-                 $item['order_count'] = count($uids) ? StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0])->count() : 0;//订单数量
+                 $item['order_price'] = count($uids) ? StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0,'type'=>0])->sum('pay_price') : 0;//订单金额
+                 $item['order_count'] = count($uids) ? StoreOrder::where('uid','in',$uids)->where(['paid'=>1,'refund_status'=>0,'type'=>0])->count() : 0;//订单数量
                  $item['stair']              = self::getUserSpreadUidCount($item['uid'],0,$where);//一级推荐人
                  $item['second']             = self::getUserSpreadUidCount($item['uid'],1,$where);//二级推荐人
                  $item['order_stair']        = self::getUserSpreadOrderCount($item['uid'],0,$where);//一级推荐人订单

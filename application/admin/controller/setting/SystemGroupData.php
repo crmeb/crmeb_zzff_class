@@ -89,10 +89,10 @@ class SystemGroupData extends AuthController
                     $f[] = Form::select($value["title"], $value["name"], isset($info[0]) ? $info[0] : '')->options($info)->multiple(false);
                     break;
                 case 'upload':
-                    $f[] = Form::frameImageOne($value["title"], $value["name"], Url::build('admin/widget.images/index', array('fodder' => $value["title"])))->icon('image')->width('100%')->height('550px');
+                    $f[] = Form::frameImageOne($value["title"], $value["name"], Url::build('admin/widget.images/index', array('fodder' => $value["title"])))->icon('image')->width('100%')->height('500px');
                     break;
                 case 'uploads':
-                    $f[] = Form::frameImages($value["title"], $value["name"], Url::build('admin/widget.images/index', array('fodder' => $value["title"])))->maxLength(5)->icon('images')->width('100%')->height('550px')->spin(0);
+                    $f[] = Form::frameImages($value["title"], $value["name"], Url::build('admin/widget.images/index', array('fodder' => $value["title"])))->maxLength(5)->icon('images')->width('100%')->height('500px')->spin(0);
                     break;
                 default:
                     $f[] = Form::input($value["title"], $value["name"]);
@@ -185,11 +185,14 @@ class SystemGroupData extends AuthController
                     $f[] = Form::input($value['title'], $value['name'], $GroupDataValue[$value['title']]['value'])->type('textarea');
                     break;
                 case 'radio':
-
                     $f[] = Form::radio($value['title'], $value['name'], $GroupDataValue[$value['title']]['value'])->options($info);
                     break;
                 case 'checkbox':
-                    $f[] = Form::checkbox($value['title'], $value['name'], $GroupDataValue[$value['title']]['value'])->options($info);
+                    if(array_key_exists($value['title'],$GroupDataValue)){
+                        $f[] = Form::checkbox($value['title'], $value['name'], $GroupDataValue[$value['title']]['value'])->options($info);
+                    }else{
+                        $f[] = Form::checkbox($value["title"], $value["name"], isset($info[0]) ? $info[0] : '')->options($info);
+                    }
                     break;
                 case 'upload':
                     if (!empty($GroupDataValue[$value['title']]['value'])) {
@@ -234,7 +237,7 @@ class SystemGroupData extends AuthController
         foreach ($params as $key => $param) {
             foreach ($Fields['fields'] as $index => $field) {
                 if ($key == $field["title"]) {
-                    if ($param == "" || count($param) == 0)
+                    if ($param == "" || !$param || empty($param))
                         return Json::fail($field["name"] . "不能为空！");
                     else {
                         $value[$key]["type"] = $field["type"];

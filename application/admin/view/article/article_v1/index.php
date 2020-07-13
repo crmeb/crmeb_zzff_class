@@ -25,6 +25,17 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
+                                <label class="layui-form-label">分类</label>
+                                <div class="layui-input-block">
+                                <select name="cid" aria-controls="editable" class="form-control input-sm">
+                                    <option value="">所有分类</option>
+                                    {volist name="cate" id="vo"}
+                                    <option value="{$vo.id}" {eq name="cid" value="$vo.id"}selected="selected"{/eq}>{$vo.html}{$vo.title}</option>
+                                    {/volist}
+                                </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
                                 <label class="layui-form-label">是否显示</label>
                                 <div class="layui-input-block">
                                     <select name="is_show">
@@ -35,21 +46,9 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">时间范围</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="start_time" placeholder="开始时间" id="start_time" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid">-</div>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="end_time" placeholder="结束时间" id="end_time" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
                                         <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                    <!--                                    <button class="layui-btn layui-btn-primary layui-btn-sm export"  lay-submit="export" lay-filter="export">-->
-                                    <!--                                        <i class="fa fa-floppy-o" style="margin-right: 3px;"></i>导出</button>-->
                                 </div>
                             </div>
                         </div>
@@ -81,9 +80,9 @@
                         <a class="layui-btn layui-btn-xs" href="{:Url('add_article',['type'=>2])}?id={{d.id}}">
                             <i class="fa fa-paste"></i> 编辑
                         </a>
-                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?article_id={{d.id}}',{h:300,w:400})">
+                        <!--<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?article_id={{d.id}}',{h:300,w:400})">
                             <i class="fa fa-check-circle"></i> 推荐
-                        </button>
+                        </button>-->
                         <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event='delete'>
                             <i class="fa fa-warning"></i> 删除
                         </button>
@@ -99,15 +98,14 @@
 <script>
     //实例化form
     layList.form.render();
-    layList.date({elem:'#start_time',theme:'#393D49',type:'datetime'});
-    layList.date({elem:'#end_time',theme:'#393D49',type:'datetime'});
     //加载列表
-    layList.tableList('List',"{:Url('article_list')}",function (){
+    layList.tableList('List',"{:Url('article_list',['cid'=>$cid])}",function (){
         return [
             {field: 'id', title: '编号', sort: true,event:'id',width:'5%',align: 'center'},
             {field: 'title', title: '新闻名称',edit:'title',align: 'center'},
+            {field: 'cate_name', title: '分类名称',align: 'center'},
             {field: 'image_input', title: '封面图',templet:'#image_input',align: 'center'},
-            {field: 'recommend', title: '推荐至',templet:'#recommend',align: 'center'},
+            /*{field: 'recommend', title: '推荐至',templet:'#recommend',align: 'center'},*/
             {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',align: 'center'},
             {field: 'is_show', title: '是否显示',templet:'#is_show',align: 'center'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'25%'},

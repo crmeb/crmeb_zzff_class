@@ -81,6 +81,47 @@ class CanvasService
         return $filename;
     }
 
+    /**签到海报
+     * @param $special_id
+     * @param $url
+     * @param $backgroundImg
+     * @param string $ext
+     * @return string
+     */
+    public static function foundSignCode($uid, $url, $backgroundImg,$urls, $ext = 'poster_sign_')
+    {
+        vendor('phpqrcode.phpqrcode');
+        $qrcodename = self::FILELINK . time() . 'qrcode.png';
+        \QRcode::png($url, $qrcodename, 'L', 10, 2);
+        $image = self::ReatetrueColor();
+        //放背景
+        list($canvas, $borderRes) = self::CreatJpeg($backgroundImg);
+        imagecopyresampled($image, $canvas, 0, 0, 0, 0, imagesx($canvas), imagesy($canvas), imagesx($canvas), imagesy($canvas));
+
+        list($code, $codeRes) = self::CreatJpeg($qrcodename);
+        imagecopyresampled($image, $code, 505, 1090, 0, 0, 156, 156, (int)$codeRes[0], (int)$codeRes[1]);
+        $red = imagecolorallocate($image,255,00,00);    // 字体颜色
+        $reds = imagecolorallocate($image,00,00,00);    // 字体颜色
+        $weekarray=array("日","一","二","三","四","五","六");//先定义一个数组
+        $font = 'wap/first/zsff/css/simsun.ttc';
+        $text = date('d',time());
+        $text1 = date('m',time()).'月';
+        $text2 = "星 期 ".$weekarray[date("w")];;
+        imageTTFText($image, 80, 0, 50, 1190, $red, $font,$text);
+        imageTTFText($image, 40, 0, 155, 1190, $reds, $font,$text1);
+        imageTTFText($image, 30, 0, 70, 1240, $reds, $font,$text2);
+        $FileService = new FileService();
+        $FileService->create_dir(self::FILELINK);
+        $filename = self::FILELINK . $ext . $uid . '.jpg';
+        imagejpeg($image, $filename, 70);
+
+        imagedestroy($image);
+
+        $FileService->unlink_file($qrcodename);
+
+        return $filename;
+    }
+
     public static function startPosterSpeclialIng($special_id, $backgroundImg, $url)
     {
         vendor('phpqrcode.phpqrcode');

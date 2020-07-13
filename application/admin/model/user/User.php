@@ -602,7 +602,7 @@ class User extends ModelBasic
     public static function getUserinfo($uid)
     {
         $userinfo = self::where(['uid' => $uid])->field(['nickname', 'spread_uid', 'now_money', 'add_time'])->find()->toArray();
-        $userinfo['number'] = UserBill::where(['category' => 'now_money', 'type' => 'brokerage'])->sum('number');
+        $userinfo['number'] = UserBill::where(['category' => 'now_money','uid'=>$uid,'type' => 'brokerage'])->sum('number');
         $userinfo['spread_name'] = $userinfo['spread_uid'] ? self::where(['uid' => $userinfo['spread_uid']])->value('nickname') : '';
         return $userinfo;
     }
@@ -637,7 +637,7 @@ class User extends ModelBasic
     public static function getSpreadListV1($where)
     {
         $spread = self::where(['spread_uid' => $where['uid']])->column('uid') ?: [0];
-        $list = self::where('uid', 'in', $spread)->where('is_promoter', 'neq', 0)->order('add_time desc')->page((int)$where['page'], (int)$where['limit'])->select();
+        $list = self::where('uid', 'in', $spread)->order('add_time desc')->page((int)$where['page'], (int)$where['limit'])->select();
         $list = count($list) ? $list->toArray() : [];
         foreach ($list as &$item) {
             $item['order_count'] = self::getLinkCount($item['uid'], ['rake_back_one', 'rake_back_two', 'rake_back']);
@@ -650,6 +650,7 @@ class User extends ModelBasic
     //获取某用户的详细信息
     public static function getUserDetailed($uid)
     {
+        $gold_name=SystemConfigService::get('gold_name');//虚拟币名称
         $key_field = ['real_name', 'phone', 'province', 'city', 'district', 'detail', 'post_code'];
         $Address = ($thisAddress = db('user_address')->where(['uid' => $uid, 'is_default' => 1])->field($key_field)->find()) ?
             $thisAddress :
@@ -676,7 +677,7 @@ class User extends ModelBasic
             ['name' => '访问日期', 'value' => $time],
             ['name' => '邮箱', 'value' => ''],
             ['name' => '生日', 'value' => ''],
-            ['name' => '积分', 'value' => UserBill::where(['category' => 'integral', 'uid' => $uid])->where('type', 'in', ['sign', 'system_add'])->sum('number')],
+            ['name' => "$gold_name".'余额', 'value' => $UserInfo['gold_num']],
             ['name' => '上级推广人', 'value' => $UserInfo['spread_uid'] ? self::where(['uid' => $UserInfo['spread_uid']])->value('nickname') : ''],
             ['name' => '账户余额', 'value' => $UserInfo['now_money']],
             ['name' => '佣金总收入', 'value' => UserBill::where(['category' => 'now_money', 'type' => 'brokerage', 'uid' => $uid])->sum('number')],
@@ -1259,8 +1260,7 @@ class User extends ModelBasic
     }
 
 
-    public
-    static function guestWhere($where, $guest, $model = null)
+    public static function guestWhere($where, $guest, $model = null)
     {
         if ($model == null) $model = new self;
         if (isset($where['guest_name']) && $where['guest_name'] != '') $model = $model->where('nickname|uid', 'LIKE', "%$where[guest_name]%");

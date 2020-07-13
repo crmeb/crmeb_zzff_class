@@ -233,7 +233,7 @@
                 //上传图片
                 upload:function() {
                     console.log(11);
-                    ossUpload.createFrame('选择头像',{fodder:'avatar'},{w:700});
+                    ossUpload.createFrame('选择头像',{fodder:'avatar'},{w:800,h:550});
                 },
                 get_barrage_list:function(){
                     var that=this;

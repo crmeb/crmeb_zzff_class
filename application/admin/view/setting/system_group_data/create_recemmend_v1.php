@@ -39,7 +39,7 @@
                                     <select name="type" lay-verify="type">
                                         <option value="">请选择类型</option>
                                         <option value="0" {if isset($recemmend) && $recemmend.type==0}selected{/if}>专题</option>
-                                        <option value="1" {if isset($recemmend) && $recemmend.type==1}selected{/if}>图文</option>
+                                        <!--<option value="1" {if isset($recemmend) && $recemmend.type==1}selected{/if}>资讯</option>-->
 <!--                                        <option value="2" {if isset($recemmend) && $recemmend.type==2}selected{/if}>直播</option>-->
                                     </select>
                                 </div>

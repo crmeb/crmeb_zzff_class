@@ -44,6 +44,7 @@ class User extends AuthController
     public function index()
     {
         $this->assign('count_user', UserModel::count());
+        $this->assign('gold_name', SystemConfigService::get("gold_name"));
         return $this->fetch();
     }
 
@@ -69,11 +70,12 @@ class User extends AuthController
     public function user_data($uid = 0)
     {
         $spread = UserModel::where(['spread_uid' => $uid])->column('uid');
+
         $count['pay_count'] = Db::name('special_buy')->where('uid', $uid)->count();
         $count['bill_count'] = UserBill::where(['category' => 'now_money'])->where('uid', $uid)
             ->where('type', 'in', ['rake_back', 'rake_back_one', 'rake_back_two', 'extract'])
             ->count();
-        array_push($spread, $uid);
+//        array_push($spread, $uid);
         $count['order_count'] = UserBill::where('u.uid', $uid)->alias('u')->join('__STORE_ORDER__ a', 'a.id=u.link_id')
             ->where('u.category', 'now_money')->where('u.type', 'in', ['rake_back', 'rake_back_one'])
             ->where(['a.paid' => 1, 'a.is_gift' => 0, 'a.is_receive_gift' => 0])->count();
@@ -161,7 +163,7 @@ class User extends AuthController
             ['start_date', ''],
             ['end_date', ''],
         ]);
-        return JsonService::successful(\app\admin\model\user\UserBill::getBillList($where, $where['uid']));
+        return JsonService::successful(UserBillAdmin::getBillList($where, $where['uid']));
     }
 
     public function update_user_spread($uid = 0, $type = 0)
@@ -229,8 +231,8 @@ class User extends AuthController
         $f[] = Form::input('nickname', '用户姓名', $user->getData('nickname'));
         $f[] = Form::radio('money_status', '修改余额', 1)->options([['value' => 1, 'label' => '增加'], ['value' => 2, 'label' => '减少']]);
         $f[] = Form::number('money', '余额')->min(0);
-        $f[] = Form::radio('integration_status', '修改积分', 1)->options([['value' => 1, 'label' => '增加'], ['value' => 2, 'label' => '减少']]);
-        $f[] = Form::number('integration', '积分')->min(0);
+//        $f[] = Form::radio('integration_status', '修改积分', 1)->options([['value' => 1, 'label' => '增加'], ['value' => 2, 'label' => '减少']]);
+//        $f[] = Form::number('integration', '积分')->min(0);
         $f[] = Form::radio('status', '状态', $user->getData('status'))->options([['value' => 1, 'label' => '开启'], ['value' => 0, 'label' => '锁定']]);
         $f[] = Form::radio('is_promoter', '推广员', $user->getData('is_promoter'))->options([
             ['value' => 0, 'label' => '关闭'],
@@ -675,29 +677,12 @@ class User extends AuthController
     {
         return Json::successful(StoreOrder::getOneorderList(compact('uid', 'page', 'limit')));
     }
-
     /**
-     * 获取某用户的积分列表
-     */
-    public function getOneIntegralList($uid, $page = 1, $limit = 20)
-    {
-        return Json::successful(UserBillAdmin::getOneIntegralList(compact('uid', 'page', 'limit')));
-    }
-
-    /**
-     * 获取某用户的积分列表
+     * 获取某用户的签到列表
      */
     public function getOneSignList($uid, $page = 1, $limit = 20)
     {
         return Json::successful(UserBillAdmin::getOneSignList(compact('uid', 'page', 'limit')));
-    }
-
-    /**
-     * 获取某用户的持有优惠劵
-     */
-    public function getOneCouponsList($uid, $page = 1, $limit = 20)
-    {
-        return Json::successful(StoreCouponUser::getOneCouponsList(compact('uid', 'page', 'limit')));
     }
 
     /**

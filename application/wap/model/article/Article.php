@@ -18,9 +18,23 @@ class Article extends ModelBasic
             $model->alias($alias);
             $alias.='.';
         }
-        return $model->where(["{$alias}is_show"=>1]);
+        return $model->where(["{$alias}is_show"=>1,"{$alias}hide"=>0]);
     }
     public static function getLabelAttr($value){
         return is_string($value) ? json_decode($value,true) : $value;
+    }
+
+    /**
+     * 活动列表
+     */
+    public static function getUnifiendList($where){
+        $model=self::PreWhere();
+        if($where['cid']) $model=$model->where('cid',$where['cid']);
+        $list=$model->page((int)$where['page'],(int)$where['limit'])->order('sort DESC,add_time DESC')->select();
+        $list=count($list) >0 ? $list->toArray() : [];
+        foreach ($list as &$item){
+            $item['add_time']=date('Y-m-d H:i',$item['add_time']);
+        }
+        return $list;
     }
 }

@@ -24,7 +24,7 @@
                             <th class="text-center">支付金额</th>
                             <th class="text-center">支付类型</th>
                             <th class="text-center">支付时间</th>
-                            <th class="text-center">操作</th>
+                            <!--<th class="text-center">操作</th>-->
                         </tr>
                         </thead>
                         <tbody class="">
@@ -39,11 +39,11 @@
                                 <p>退款金额：{$vo.refund_price}</p>
                                 {/if}
                             </td>
-                            <td class="text-center">微信支付</td>
+                            <td class="text-center">{$recharge_type_cn[$vo.recharge_type]}</td>
                             <td class="text-center">{$vo.pay_time|date='Y-m-d H:i:s',###}</td>
-                            <td class="text-center">
+                           <!-- <td class="text-center">
                                 <button class="btn btn-info btn-xs" type="button"  onclick="$eb.createModalFrame('退款','{:Url('edit',array('id'=>$vo['id']))}',{h:'300',w:'500'})"><i class="fa fa-paste"></i> 退款</button>
-                            </td>
+                            </td>-->
                         </tr>
                         {/volist}
                         </tbody>

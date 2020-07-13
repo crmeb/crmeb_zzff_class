@@ -11,6 +11,7 @@ use app\admin\controller\AuthController;
 use app\admin\model\user\UserBill;
 use service\JsonService as Json;
 use app\admin\model\finance\FinanceModel;
+use service\SystemConfigService;
 use service\UtilService as Util;
 use service\FormBuilder as Form;
 //use FormBuilder\Form;
@@ -32,14 +33,18 @@ class Finance extends AuthController
      */
     public function bill()
     {
-        $list = UserBill::where('type', 'not in', ['gain', 'system_sub', 'deduction', 'sign'])
-            ->where('category', 'not in', 'integral')
+        $category = $this->request->param('category','now_money');
+        $bill_where_op = FinanceModel::bill_where_op($category);
+        $list = UserBill::where('type', $bill_where_op['type']['op'], $bill_where_op['type']['condition'])
+            ->where('category', $bill_where_op['category']['op'], $bill_where_op['category']['condition'])
             ->field(['title', 'type'])
             ->group('type')
             ->distinct(true)
             ->select()
             ->toArray();
         $this->assign('selectList', $list);
+        $this->assign('category', $category);
+        $this->assign('gold_name', $category == "now_money" ? "金额" : SystemConfigService::get("gold_name"));
         return $this->fetch();
     }
 
@@ -55,6 +60,7 @@ class Finance extends AuthController
             ['limit', 20],
             ['page', 1],
             ['type', ''],
+            ['category', 'now_money'],
         ]);
         return Json::successlayui(FinanceModel::getBillList($where));
     }
@@ -69,6 +75,7 @@ class Finance extends AuthController
             ['end_time', ''],
             ['nickname', ''],
             ['type', ''],
+            ['category', 'gold_num'],
         ]);
         FinanceModel::SaveExport($where);
     }

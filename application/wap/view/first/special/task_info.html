@@ -5,20 +5,16 @@
 <script src="{__WAP_PATH}zsff/js/video.zh.js"></script>
 <script src="{__WAP_PATH}zsff/js/md5.js"></script>
 <style>
-    .video-js{height: 100% !important;width: 100% !important;}
-    .video-js .vjs-big-play-button{top: 50%;left: 50%;transform: translate(-50%, -50%);}
     .ml15{margin-left: 0.15rem;}
     .videoBox{padding: 0.25rem 0;box-sizing: border-box;border-bottom: 1px solid #f5f5f5;}
-    .app{width: 100%;height: 100%;background: #f5f5f5;}
-    .video{width: 100%;height: 4rem;border: 1px solid #000000;}
+    .app{background-color:#f5f5f5;}
     .video_tit{width: 100%;height: 1.6rem;background: #fff;padding: 0.3rem 0.2rem;}
-    .video_tit_top{font-size: 0.36rem;color: #333333;font-weight: 800;margin-bottom: 0.18rem;}
-    .video_tit_top{font-size: 0.36rem;color: #333333;font-weight: 800;}
-    .video_tit_down{color: #999999;font-size: 0.24rem;}
-    .video_tab{width: 100%;height: 0.86rem;background-color: #fff;line-height: 0.86rem;margin-top: .16rem;}
-    .video_tab .item{text-align: center;font-size: 0.3rem;color: #666666;}
-    .video_tab .item.on{font-weight: bold;color: #2c8eff;border-bottom: 0.05rem solid #2c8eff;}
-    .video_list{background: #fff;padding: 0 0.2rem;box-sizing: border-box;}
+    .video_tit_top{font-weight:400;font-size:.36rem;line-height:.5rem;}
+    .video_tit_down{margin-top:.09rem;font-weight:400;font-size:.24rem;color:#999;}
+    .video_tab{margin-top:.14rem;background-color:#fff;}
+    .video_tab .item{position:relative;-webkit-box-flex:1;-webkit-flex:1;flex:1;height:.96rem;font-weight:400;font-size:.3rem;line-height:.96rem;text-align:center;color:#333;}
+    .video_tab .item.on{font-weight:500;font-size:.32rem;color:#2c8eff;}
+    .video_tab .item.on::after{content:" ";position:absolute;bottom:0;left:50%;width:.6rem;height:.04rem;border-radius:.02rem;background-color:#2c8eff;-webkit-transform:translateX(-50%);transform:translateX(-50%);}
     .video_list_img{width: 2.18rem;height: 1.3rem;border-radius: 0.1rem;}
     .video_list_img img{width: 100%;height: 100%;}
     .video_list_on{width: 0.3rem;height: 0.23rem;border-radius: 5px;overflow: hidden;}
@@ -27,14 +23,15 @@
     .video_list_on img{width: 100%;height: 100%;}
     .video_list_sp{color: #999999;font-size: 0.26rem;}
     .video_list_btn{width: auto;height: auto;border: 1px solid #509efb;color: #509efb;font-size: 0.22rem;padding: 0.05rem 0.1rem;box-sizing: border-box;border-radius: 3px;}
-    .acea-row.row-around{justify-content: space-around;-webkit-justify-content: space-around;}
     video{width: 100%}
     #content img{width: 100%}
     .catalogue li{position:relative;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;height:1.02rem;padding-right:.3rem;padding-left:.3rem;}
     .catalogue li::before{content:" ";position:absolute;top:0;right:.3rem;left:1.1rem;height:1px;border-top:1px solid #f5f5f5;color:#f5f5f5;-webkit-transform-origin:center top;transform-origin:center top;-webkit-transform:scaleY(.5);transform:scaleY(.5);}
     .catalogue li:first-child::before{display:none;}
+    .catalogue li.gray{color:#999;}
     .catalogue .label{padding-right:.08rem;padding-left:.08rem;border:1px solid #666;border-radius:.03rem;font-weight:400;font-size:.22rem;line-height:.32rem;color:#333;}
-    .catalogue .title{-webkit-flex:1;flex:1;min-width:0;margin-right:.2rem;margin-left:.2rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:400;font-size:.3rem;color:#333;}
+    .catalogue img.label{padding:0;width:.6rem;border:none;border-radius:0;}
+    .catalogue .title{-webkit-flex:1;flex:1;min-width:0;margin-right:.2rem;margin-left:.2rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:400;font-size:.28rem;}
     .catalogue .free{padding-right:.21rem;padding-left:.21rem;border-radius:.19rem;background-color:rgba(254,183,32,.1);font-weight:400;font-size:.22rem;line-height:.38rem;color:#feb720;}
     .catalogue .iconsuozi{font-size:.3rem;color:#ccc;}
     .audio-player{padding-top:.25rem;padding-bottom:.49rem;background-color:#fff;}
@@ -44,23 +41,22 @@
     .audio-player .progress .bar .range{position:relative;height:.04rem;border-radius:.02rem;background-color:rgba(44,142,255,.8);-webkit-transition:.2s linear;transition:.2s linear;}
     .audio-player .progress .bar .range .dot{position:absolute;top:50%;left:100%;width:.16rem;height:.16rem;border-radius:50%;background-color:#2c8eff;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}
     .audio-player .control{display:-webkit-flex;display:flex;-webkit-justify-content:center;justify-content:center;-webkit-align-items:center;align-items:center;margin-top:.34rem;}
-    .audio-player .control .iconfont{font-size:.36rem;color:#46505b;}
+    .audio-player .control .knowledge{font-size:.36rem;color:#46505b;}
     .audio-player .control button:nth-child(2){margin-right:.88rem;margin-left:.88rem;}
     .audio-player .control .icon{font-size:1.1rem;}
-
+    .catalogue{background-color:#fff;}
 </style>
 {/block}
 {block name="content"}
 <div v-cloak id="app" class="app">
-    <div class="video" v-if="specialInfo.type == 3 && taskInfo.link">
-        <video id="play" class="video-js" controls="controls" webkit-playsinline="true" playsinline="true">
-            <source :src="taskInfo.link"></source>
-        </video>
-    </div>
+    <video v-if="specialInfo.type === 3 && taskInfo.link" id="video-player" class="video-js vjs-big-play-centered" controls
+        :poster="taskInfo.image" preload="auto" :width="windowWidth" webkit-playsinline playsinline>
+        <source :src="taskInfo.link" type="video/mp4">
+    </video>
     <div class="banner slider-banner"  v-if="specialInfo.type == 1 || specialInfo.type == 2 || !taskInfo.link">
         <ul class="swiper-wrapper">
             <li class="swiper-slide">
-                <img :src="audio.bannerImg || taskInfo.image"/>
+                <img :src="audioPlayer.bannerImg || taskInfo.image"/>
             </li>
         </ul>
         <div class="swiper-pagination"></div>
@@ -72,74 +68,47 @@
     <!-- 音频播放器 -->
     <div v-if="specialInfo.type === 2" class="audio-player">
         <div class="progress">
-            <div class="time">{{audio.currentTime}}</div>
-            <div class="bar">
-                <div class="range" :style="{width:audio.range + '%'}">
+            <div class="time">{{audioPlayer.currentTime}}</div>
+            <div ref="bar" class="bar" @click="tapAudio">
+                <div class="range" :style="{width:audioPlayer.range + '%'}" @touchmove.self="moveAudio" @touchend="endAudio">
                     <div class="dot"></div>
                 </div>
             </div>
-            <div class="time">{{audio.duration}}</div>
+            <div class="time">{{audioPlayer.duration}}</div>
         </div>
         <div class="control">
-            <button class="iconfont iconleft" type="button" @click="onAudioPrev"></button>
+            <button class="knowledge iconleft" type="button" @click="onAudioPrev"></button>
             <button type="button" @click="onAudioPlayPause">
                 <svg class="icon" aria-hidden="true">
-                    <use :xlink:href="'#' + (audio.paused ? 'iconbofang1' : 'iconzanting')"></use>
+                    <use :xlink:href="'#' + (audioPlayer.paused ? 'iconbofang1' : 'iconzanting')"></use>
                 </svg>
             </button>
-            <button class="iconfont iconright" type="button" @click="onAudioNext"></button>
+            <button class="knowledge iconright" type="button" @click="onAudioNext"></button>
         </div>
-        <audio ref="audio" :src="audio.src" @durationchange="onAudioDurationChange($event)" @timeupdate="onAudioTimeUpdate" @ended="onAudioEnded">您的浏览器不支持 H5 audio</audio>
+        <audio ref="audio" :src="audioPlayer.src" @durationchange="onAudioDurationChange($event)" @timeupdate="onAudioTimeUpdate" @ended="onAudioEnded">您的浏览器不支持 H5 audio</audio>
     </div>
     <div class="video_tab acea-row row-around">
-        <div class="item" :class="{ on: type === 0 }" @click="type = 0">
-            <div>详情</div>
-        </div>
-        <div class="item" :class="{ on: type === 1 }" @click="type = 1">
-            <div>目录</div>
-        </div>
-        <!--<div class="item" :class="{ on: type === 2 }" @click="type = 2" v-if="specialInfo.type == 5">
-            <div>套餐</div>
-        </div>-->
+        <div class="item" :class="{ on: type === 0 }" @click="type = 0">详情</div>
+        <div class="item" :class="{ on: type === 1 }" @click="type = 1">目录</div>
     </div>
     <div v-if="type === 0" v-html="taskInfo.content" id="content" style="padding:.3rem;background-color:#fff;"></div>
     <div v-if="type === 1" class="video_list">
-        <!-- <div class="videoBox acea-row" v-for="item in taskList" @click="play(item)">
-            <div class="video_list_img">
-                <img :src="item.image"/>
-            </div>
-            <div class="video_list_box">
-                <div class="video_list_tit" v-text="item.type_name"></div>
-                <div class="video_list_tit" v-text="item.title"></div>
-                <div class="acea-row row-middle">
-                    <div class="video_list_on">
-                        <img src="/wap/first/zsff/images/play.png"/>
-                    </div>
-                    <span class="video_list_sp ml15">{{item.play_count}}次观看</span>
-                    <span class="video_list_btn ml15" v-if="item.is_pay == 0">免费</span>
-                    <span class="video_list_btn ml15" v-if="specialInfo.pay_type == 0 && specialInfo.type != 4">免费</span>
-                    <span class="video_list_btn ml15" v-if="specialInfo.pay_type == 1 && specialInfo.type != 4 && is_pay == false && item.is_pay == 1">收费</span>
-                </div>
-            </div>
-        </div> -->
         <ul class="catalogue">
-            <li v-for="(item, index) in taskList" :key="item.id" @click="play(item)">
-                <div class="label">
-                    <template v-if="item.type === 1">图文</template>
-                    <template v-else-if="item.type === 2">音频</template>
-                    <template v-else-if="item.type === 3">视频</template>
-                    <template v-else-if="item.type === 4">直播</template>
-                    <template v-else-if="item.type === 5">付费专栏</template>
-                    <template v-else-if="item.type === 6">其他</template>
-                </div>
+            <li v-for="(item, index) in taskList" :key="item.id" :class="{ gray: item.taskTrue }" @click="play(item)">
+                <img v-if="item.type === 3" class="label" src="{__WAP_PATH}zsff/images/media1.png">
+                <img v-else-if="item.type === 1" class="label" src="{__WAP_PATH}zsff/images/media2.png">
+                <img v-else-if="item.type === 2" class="label" src="{__WAP_PATH}zsff/images/media3.png">
+                <div v-else-if="item.type === 4" class="label">直播</div>
+                <div v-else-if="item.type === 5" class="label">付费专栏</div>
+                <div v-else-if="item.type === 6" class="label">其他</div>
                 <div class="title">{{index < 9 ? '0' + (index + 1) : index + 1}} | {{item.title}}</div>
-                <div v-if="item.pay_status" class="iconfont iconsuozi"></div>
+                <div v-if="item.pay_status" class="knowledge iconsuozi"></div>
                 <div v-else class="free">免费</div>
             </li>
         </ul>
-        <p class="loading-line" style="background-color: #ffffff" v-cloak="">
+        <p class="loading-line" style="background-color: #fff">
             <span v-show="loading == true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-            <span v-text="loadTitle">加载更多</span>
+            <span v-show="taskList.length > 10" v-text="loadTitle">加载更多</span>
         </p>
     </div>
 </div>
@@ -154,7 +123,7 @@
             data: {
                 taskInfo: taskInfo,
                 specialInfo: specialInfo,
-                isMember:isMember ? isMember : 0,
+                isMember: isMember ? isMember : 0,
                 taskList: [],
                 type: 0,
                 where: {
@@ -167,24 +136,98 @@
                 loadend: false,
                 loadTitle: '上拉加载更多',
                 bannerImg: '',
-                audio: {
+                audio: null,
+                audioBar: null,
+                audioPlayer: {
                     src: taskInfo.link,
                     currentIndex: 0,
                     currentTime: '00:00',
                     duration: '00:00',
                     range: 0,
                     paused: true
-                }
+                },
+                currentMedia: null,
+                windowWidth: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+                timer: null
             },
             watch: {
-                'audio.src': function () {
-                    this.bannerImg = this.taskList[this.audio.currentIndex].image;
+                'audioPlayer.src': function () {
+                    this.bannerImg = this.taskList[this.audioPlayer.currentIndex].image;
                 },
-                'audio.paused': function (value) {
-                    value ? this.$refs.audio.pause() : this.$refs.audio.play();
+                'audioPlayer.paused': function (value) {
+                    value ? this.audio.pause() : this.audio.play();
+                },
+                currentMedia: function () {
+                    clearTimeout(this.timer);
+                    this.initTimer();
                 }
             },
+            created: function () {
+                console.log(window);
+                document.title = this.taskInfo.title;
+                this.getCourseList();
+            },
+            mounted: function () {
+                this.$nextTick(function () {
+                    this.timer = setTimeout(() => {
+                        this.setMemory(30);
+                        clearTimeout(this.timer);
+                    }, 30000);
+                    switch (this.specialInfo.type) {
+                        case 2:
+                            this.audio = this.$refs.audio;
+                            this.audioBar = this.$refs.bar;
+                            break;
+                        case 3:
+                            this.videoPlayer = videojs('video-player', {
+                                aspectRatio: '16:9',
+                                crossorigin: 'anonymous',
+                                playsinline: 'playsinline'
+                            });
+                            break;
+                    }
+                });
+
+                // var width = $('#content').width();
+                // if (this.specialInfo.type == 4) {
+                //     var myPlayer = videojs('play');
+                //     $('.video-ue').each(function (index) {
+                //         var id = "video-ue-" + index, videoUrl = $(this).attr('src');
+                //         $(this).attr('id', id);
+                //         $(this).children('video').attr('src', videoUrl);
+                //         $(this).append("<source src='" + videoUrl + "' type='video/mp4' />")
+                //         $(this).addClass("video-js");
+                //         videojs(id, {}, function () {
+                //             this.width(width);
+                //             this.src(videoUrl);
+                //         });
+                //     })
+                // }
+            },
             methods: {
+                // 拖动音频进度条
+                moveAudio: function (event) {
+                    var range = (event.targetTouches[0].pageX - event.target.offsetLeft) / this.audioBar.offsetWidth * 100;
+                    this.audioPlayer.paused = true;
+                    if (range > 100) {
+                        range = 100;
+                    }
+                    this.audioPlayer.range = range;
+                },
+                // 拖到音频进度条结束
+                endAudio: function (event) {
+                    console.log(event);
+                    this.audio.currentTime = this.audio.duration * this.audioPlayer.range / 100;
+                    this.audioPlayer.paused = false;
+                },
+                // 点击音频进度条
+                tapAudio: function (event) {
+                    var range = event.offsetX / this.audioBar.offsetWidth,
+                        currentTime = this.audio.duration * range;
+                    this.audioPlayer.range = range * 100;
+                    this.audio.currentTime = currentTime;
+                    this.audioPlayer.paused = false;
+                },
                 // 音频时长
                 onAudioDurationChange: function (event) {
                     var duration = event.target.duration,
@@ -196,11 +239,11 @@
                     if (seconds < 10) {
                         seconds = '0' + seconds;
                     }
-                    this.audio.duration = minutes + ':' + seconds;
+                    this.audioPlayer.duration = minutes + ':' + seconds;
                 },
                 // 音频播放/暂停
                 onAudioPlayPause: function () {
-                    this.audio.paused = !this.audio.paused;
+                    this.audioPlayer.paused = !this.audioPlayer.paused;
                 },
                 // 音频播放进度
                 onAudioTimeUpdate: function (event) {
@@ -214,45 +257,49 @@
                     if (seconds < 10) {
                         seconds = '0' + seconds;
                     }
-                    this.audio.currentTime = minutes + ':' + seconds;
-                    this.audio.range = Math.floor(currentTime / target.duration * 100);
+                    this.audioPlayer.currentTime = minutes + ':' + seconds;
+                    this.audioPlayer.range = Math.floor(currentTime / target.duration * 100);
                 },
                 // 音频播放结束
                 onAudioEnded: function () {
-                    this.audio.paused = true;
-                    this.onAudioNext();
+                    this.audioPlayer.paused = true;
                 },
                 // 音频上一首
                 onAudioPrev: function () {
                     var taskListLength = this.taskList.length,
-                        currentIndex = this.audio.currentIndex,
+                        currentIndex = this.audioPlayer.currentIndex,
                         currentTask;
                     currentIndex = (taskListLength + currentIndex - 1) % taskListLength;
                     currentTask = this.taskList[currentIndex];
                     if (currentTask.pay_status) {
                         return $h.pushMsgOnce('请购买后再播放');
                     }
-                    this.audio.currentIndex = currentIndex;
-                    this.audio.src = currentTask.link;
+                    this.audioPlayer.currentIndex = currentIndex;
+                    this.audioPlayer.src = currentTask.link;
                     this.$nextTick(function () {
-                        this.audio.paused = false;
+                        this.audioPlayer.paused = false;
                     });
                 },
                 // 音频下一首
                 onAudioNext: function () {
                     var taskListLength = this.taskList.length,
-                        currentIndex = this.audio.currentIndex,
+                        currentIndex = this.audioPlayer.currentIndex,
                         currentTask;
                     currentIndex = (taskListLength + currentIndex + 1) % taskListLength;
                     currentTask = this.taskList[currentIndex];
                     if (currentTask.pay_status) {
                         return $h.pushMsgOnce('请购买后再播放');
                     }
-                    this.audio.currentIndex = currentIndex;
-                    this.audio.src = currentTask.link;
+                    this.audioPlayer.currentIndex = currentIndex;
+                    this.audioPlayer.src = currentTask.link;
                     this.$nextTick(function () {
-                        this.audio.paused = false;
+                        this.audioPlayer.paused = false;
                     });
+                },
+                // 播放记忆
+                setMemory: function (time) {
+                    var id = this.currentMedia ? this.currentMedia.id : this.taskInfo.id;
+                    app.baseGet($h.U({ c: 'special', a: 'viewing', q: { special_id: this.where.special_id, task_id: id, time: time } }));
                 },
                 play: function (item) {
                     if (this.specialInfo.pay_type == 1 && item.pay_status == 1 && this.is_pay == false) return $h.pushMsgOnce('请先购买~');
@@ -263,6 +310,7 @@
                         return;
                     }
                     var that = this;
+                    that.currentMedia = item;
                     app.baseGet($h.U({c: 'special', a: 'get_task_link', q: {task_id: item.id, special_id: item.special_id}}), function (res) {
                         if (item.type == 4) {
                             window.location.href = $h.U({c: 'live', a: 'index', q: {stream_name: item.stream_name}});
@@ -308,30 +356,6 @@
                         that.loadTitle = '加载更多';
                     });
                 }
-            },
-            mounted: function () {
-                var that = this;
-                this.$nextTick(function () {
-                    
-                    console.log(that.$refs); 
-                });
-                document.title = this.taskInfo.title;
-                this.getCourseList();
-                var width = $('#content').width();
-                if (this.specialInfo.type == 4){
-                    var myPlayer = videojs('play');
-                    $('.video-ue').each(function (index) {
-                        var id = "video-ue-" + index, videoUrl = $(this).attr('src');
-                        $(this).attr('id', id);
-                        $(this).children('video').attr('src', videoUrl);
-                        $(this).append("<source src='" + videoUrl + "' type='video/mp4' />")
-                        $(this).addClass("video-js");
-                        videojs(id, {}, function () {
-                            this.width(width);
-                            this.src(videoUrl);
-                        });
-                    })
-            }
             }
         })
     })

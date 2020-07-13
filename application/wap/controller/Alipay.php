@@ -6,7 +6,7 @@ use app\wap\model\store\StoreOrder;
 use basic\WapBasic;
 use service\AlipayTradeWapService;
 use service\UtilService;
-
+use app\wap\model\activity\EventSignUp;
 
 /**
  * 支付宝支付
@@ -27,7 +27,7 @@ class Alipay extends WapBasic
      * @param string $info 加密后的支付参数
      * @return mixed|void
      */
-    public function index($info = '')
+    public function index($info = '',$params = false)
     {
         if (!$info) return $this->failed('缺少支付参数');
         $info = json_decode(base64_decode($info), true);
@@ -36,7 +36,7 @@ class Alipay extends WapBasic
         if ($isWechat) {
             return $this->fetch();
         } else {
-            AlipayTradeWapService::init()->AliPayWap($info['orderId'], $info['pay_price'], $info['orderName'], 'special');
+            AlipayTradeWapService::init()->AliPayWap($info['orderId'], $info['pay_price'], $info['orderName'], $params);
         }
     }
 
@@ -48,7 +48,15 @@ class Alipay extends WapBasic
     {
         $res = AlipayTradeWapService::init()->AliPayReturn();
         $result = $res['result'];
-        if (isset($res['get']['trade_no']) && isset($res['get']['out_trade_no'])) StoreOrder::where('order_id', $res['get']['out_trade_no'])->update(['trade_no' => $res['get']['trade_no']]);
+        if (isset($res['get']['trade_no']) && isset($res['get']['out_trade_no']) && isset($res['get']['passback_params'])){
+            if($res['get']['passback_params']=='special') {
+                StoreOrder::where('order_id', $res['get']['out_trade_no'])->where('type',0)->update(['trade_no' => $res['get']['trade_no']]);
+            }elseif ($res['get']['passback_params']=='signup'){
+                EventSignUp::where('order_id', $res['get']['out_trade_no'])->update(['trade_no' => $res['get']['trade_no']]);
+            }elseif ($res['get']['passback_params']=='member'){
+                StoreOrder::where('order_id', $res['get']['out_trade_no'])->where('type',1)->update(['trade_no' => $res['get']['trade_no']]);
+            }
+        }
         if ($result) $is_pay = true;
         else $is_pay = false;
         $this->assign('is_pay', $is_pay);

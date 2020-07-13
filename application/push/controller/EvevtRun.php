@@ -4,7 +4,7 @@ namespace app\push\controller;
 
 use app\wap\model\live\LiveUser;
 use GatewayWorker\Lib\Gateway;
-use app\wap\model\user\MemberShip;
+
 
 /*
  * 定时任务
@@ -83,7 +83,6 @@ class EvevtRun
      * */
     public function task_60()
     {
-        MemberShip::memberExpiration();
     }
     /*
      * 每隔180秒执行

@@ -34,6 +34,7 @@ use app\wap\model\user\UserExtract;
 use app\wap\model\user\UserRecharge;
 use app\wap\model\user\UserNotice;
 use app\wap\model\user\UserSign;
+use app\wap\model\user\SignPoster;
 use app\wap\model\user\WechatUser;
 use behavior\wap\StoreProductBehavior;
 use service\AliMessageService;
@@ -97,15 +98,36 @@ class AuthApi extends AuthController
     }
 
     /**
+     * 用户签到信息
+     */
+    public function getUserList(){
+        $signList = UserSign::userSignInlist($this->userInfo['uid'],1,3);
+        return JsonService::successful($signList);
+    }
+
+    /**
+     * 签到明细
+     */
+    public function getUserSignList($page,$limit){
+        $signList = UserSign::userSignInlist($this->userInfo['uid'],$page,$limit);
+        return JsonService::successful($signList);
+    }
+    /**
      * 签到
      */
     public function user_sign()
     {
+        $gold_name=SystemConfigService::get('gold_name');//虚拟币名称
         $signed = UserSign::checkUserSigned($this->userInfo['uid']);
         if ($signed) return JsonService::fail('已签到');
-        if (false !== $integral = UserSign::sign($this->userInfo))
-            return JsonService::successful('签到获得' . floatval($integral) . '积分');
-        else
+        if (false !== $gold_coin = UserSign::sign($this->userInfo,$gold_name)){
+            $poster=SignPoster::todaySignPoster($this->userInfo['uid']);
+            if($poster){
+                return JsonService::successful('签到获得' . floatval($gold_coin).$gold_name,$poster);
+            }else{
+                return JsonService::fail('生成海报失败!');
+            }
+        }else
             return JsonService::fail('签到失败!');
     }
 
@@ -549,25 +571,97 @@ class AuthApi extends AuthController
             return JsonService::fail(StoreOrder::getErrorInfo());
     }
 
-    public function user_wechat_recharge($price = 0)
+    public function user_wechat_recharge($price = 0,$payType = 0)
     {
-        if (!$price || $price <= 0) return JsonService::fail('参数错误');
-        $storeMinRecharge = SystemConfigService::get('store_user_min_recharge');
-        if ($price < $storeMinRecharge) return JsonService::fail('充值金额不能低于' . $storeMinRecharge);
-        $rechargeOrder = UserRecharge::addRecharge($this->userInfo['uid'], $price);
-        if (!$rechargeOrder) return JsonService::fail('充值订单生成失败!');
+        if (!$price || $price <= 0 || !is_numeric($price)) return JsonService::fail('参数错误');
+        if (!isset($this->userInfo['uid']) || !$this->userInfo['uid']) return JsonService::fail('用户不存在');
+        //$storeMinRecharge = SystemConfigService::get('store_user_min_recharge');
+        //if ($price < $storeMinRecharge) return JsonService::fail('充值金额不能低于' . $storeMinRecharge);
         try {
-            return JsonService::successful(UserRecharge::jsPay($rechargeOrder));
+        //充值记录
+        $rechargeOrder = UserRecharge::addRecharge($this->userInfo['uid'], $price, $payType);
+        if (!$rechargeOrder) return JsonService::fail('充值订单生成失败!');
+        $orderId = $rechargeOrder['order_id'];
+       /* $a = UserRecharge::rechargeSuccess($orderId);
+        print_r($a);return false;*/
+        //资金监管记录
+        //$goldNum = money_rate_num((int)$price, 'gold');
+        $goldName = SystemConfigService::get("gold_name");
+       // UserBill::income('用户充值'.$goldName,$this->userInfo['uid'],'gold_num','recharge',$goldNum,0,$this->userInfo['gold_num'],'用户充值'.$price.'元人民币获得'.$goldNum.'个'.$goldName);
+       // User::bcInc($this->userInfo['uid'],'gold_num',$goldNum,'uid');
+        switch ($payType) {
+                case 'weixin':
+                    try {
+                        $jsConfig = UserRecharge::jsRechargePay($orderId);
+                    } catch (\Exception $e) {
+                        return JsonService::status('pay_error', $e->getMessage(), $rechargeOrder);
+                    }
+                    $rechargeOrder['jsConfig'] = $jsConfig;
+                    return JsonService::status('wechat_pay', '订单创建成功', $rechargeOrder);
+                    break;
+                case 'yue':
+                    if (UserRecharge::yuePay($orderId, $this->userInfo))
+                        return JsonService::status('success', '余额支付成功', $rechargeOrder);
+                    else
+                        return JsonService::status('pay_error', StoreOrder::getErrorInfo());
+                    break;
+                case 'zhifubao':
+                    $rechargeOrder['orderName'] = $goldName."充值";
+                    $rechargeOrder['orderId'] = $orderId;
+                    $rechargeOrder['pay_price'] = $price;
+                    return JsonService::status('zhifubao_pay','订单创建成功', base64_encode(json_encode($rechargeOrder)));
+                    break;
+            }
         } catch (\Exception $e) {
             return JsonService::fail($e->getMessage());
         }
     }
 
-    public function user_balance_list($first = 0, $limit = 8)
+    /**余额明细
+     * @param int $index
+     * @param int $first
+     * @param int $limit
+     */
+    public function user_balance_list($index = 0,$first = 0, $limit = 8)
     {
-        $list = UserBill::where('uid', $this->userInfo['uid'])->where('category', 'now_money')
-            ->field('mark,pm,number,add_time')
-            ->where('status', 1)->order('add_time DESC')->limit($first, $limit)->select()->toArray();
+        $model = UserBill::where('uid', $this->userInfo['uid'])->where('category', 'now_money')
+            ->field('title,mark,pm,number,add_time')
+            ->where('status', 1)->where('number','>',0);
+        switch ($index){
+            case 1:
+                $model=$model->where('pm',0);
+            break;
+            case 2:
+                $model=$model->where('pm',1);
+            break;
+        }
+        $list=$model->order('add_time DESC')->page((int)$first, (int)$limit)->select();
+        $list=count($list) >0 ? $list->toArray() : [];
+        foreach ($list as &$v) {
+            $v['add_time'] = date('Y/m/d H:i', $v['add_time']);
+        }
+        return JsonService::successful($list);
+    }
+    /**金币明细
+     * @param int $index
+     * @param int $first
+     * @param int $limit
+     */
+    public function user_gold_num_list($index = 0,$first = 0, $limit = 8)
+    {
+        $model = UserBill::where('uid', $this->userInfo['uid'])->where('category', 'gold_num')
+            ->field('title,mark,pm,number,add_time')
+            ->where('status', 1)->where('number','>',0);
+        switch ($index){
+            case 1:
+                $model=$model->where('pm',0);
+            break;
+            case 2:
+                $model=$model->where('pm',1);
+            break;
+        }
+        $list=$model->order('add_time DESC')->page((int)$first, (int)$limit)->select();
+        $list=count($list) >0 ? $list->toArray() : [];
         foreach ($list as &$v) {
             $v['add_time'] = date('Y/m/d H:i', $v['add_time']);
         }

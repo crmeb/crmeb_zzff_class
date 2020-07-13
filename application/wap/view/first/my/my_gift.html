@@ -1,76 +1,115 @@
 {extend name="public/container"}
 {block name="title"}我的赠送{/block}
-{block name='head_top'}{/block}
+{block name="head_top"}
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+{/block}
 {block name="content"}
-<div class="my-gift my-spelling-order swiper-details" id="app">
-    <div class="video-listn" v-cloak="">
-        <div class="list" v-for="item in giftList">
-            <div class="item acea-row row-between-wrapper">
-                <div class="pictrue"><img :src="item.image"></div>
-                <div class="text acea-row row-between row-column">
-                    <div class="name line1" v-text="item.title"></div>
-                    <div class="num acea-row row-middle"><span class="money">¥ {{item.money}}</span></div>
+<div v-cloak id="app">
+    <div class="gift-given">
+        <div class="main">
+            <ul v-if="updateGiftList.length" class="list">
+                <li v-for="(item, index) in updateGiftList" :key="index" class="item">
+                    <div class="head">
+                        <div class="name">{{ item.is_draw ? '赠送成功' : '未赠送' }}</div>
+                        <a :href="item.path" :class="{ button: !item.is_draw }" class="link">
+                            {{ item.is_draw ? '领取人：' + item.gift_user.nickname : '去赠送' }}
+                        </a>
+                    </div>
+                    <div class="content">
+                        <div class="image">
+                            <img :src="item.image" class="img">
+                        </div>
+                        <div class="text">
+                            <div class="name">{{ item.title }} </div>
+                            <div class="money">¥<span class="number">{{ item.money }}</span></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <template v-if="giftList.length">
+                <div v-if="loaded && page > 2" class="loaded">已全部加载</div>
+            </template>
+            <template v-else>
+                <div v-show="loading" class="loading">
+                    <span class="fa fa-spinner"></span>
                 </div>
-            </div>
-            <a class="bottom acea-row row-between-wrapper" v-if="item.is_draw" :href="goGiveOk(item)">
-                <div class="status line1">赠送成功</div>
-                <div class="time">领取人:{{item.gift_user.nickname}}</div>
-            </a>
-            <div class="bottom acea-row row-between-wrapper" v-else>
-                <div class="status line1">未赠送</div>
-                <a class="time goBnt acea-row row-center-wrapper" :href="goGive(item)">去赠送</a>
-            </div>
+                <div v-if="!loading" class="nothing"></div>
+            </template>
         </div>
     </div>
-
-    <p class="loading-line" style="background-color: #ffffff" v-cloak="">
-        <span v-show="loading==true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-        <span v-text="loadTitle">加载更多</span>
-    </p>
 </div>
 <script>
-    require(['vue','helper','store'],function(Vue,$h,app){
+    require(['vue', 'store', 'helper'], function (Vue, store, $h) {
         new Vue({
             el: '#app',
             data: {
-                appear:true,
-                giftList:[],
-                loadTitle:'加载更多',
-                loadend:false,
-                loading:false,
-                page:1,
-                limit:10
+                appear: true,
+                giftList: [],
+                loaded: false,
+                loading: false,
+                page: 1,
+                limit: 10
             },
-            mounted:function(){
+            computed: {
+                updateGiftList: function () {
+                    var that = this;
+                    return this.giftList.map(function (value) {
+                        value.path = value.is_draw ? $h.U({ c: 'special', a: 'gift_receive', p: { orderId: value.order_id } }) : $h.U({ c: 'special', a: 'gift_special', q: { orderId: value.order_id } });
+                        return value;
+                    });
+                }
+            },
+            created: function () {
                 this.getMyGiftList();
-                $h.EventUtil.listenTouchDirection(document,function (){
-                    this.loading == false && this.getMyGiftList();
-                }.bind(this),false);
             },
-            methods:{
-                goGiveOk:function(item){
-                    return $h.U({c:'special',a:'gift_receive',p:{orderId:item.order_id}});
-                },
-                goGive:function(item){
-                    return $h.U({c:'special',a:'gift_special',q:{orderId:item.order_id}});
-                },
-                getMyGiftList:function () {
-                    var that=this;
-                    if(this.loading) return;
-                    if(this.loadend) return;
-                    this.loadTitle='';
-                    this.loading=true;
-                    app.baseGet($h.U({c:'my',a:'get_order_list',q:{type:1,page:this.page,limit:this.limit}}),function (res) {
-                        var list=res.data.data.list;
-                        var giftList=$h.SplitArray(list,that.giftList);
-                        that.loadend=list.length < that.limit;
-                        that.loadTitle=that.loadend ? '已全部加载': '加载更多';
-                        that.page=res.data.data.page;
-                        that.loading=false;
-                        that.$set(that,'giftList',giftList);
-                    },function (res) {
-                        that.loadTitle='加载更多';
-                        that.loading=false;
+            mounted: function () {
+                $h.EventUtil.listenTouchDirection(document, function () {
+                    this.loading == false && this.getMyGiftList();
+                }.bind(this), false);
+            },
+            methods: {
+                getMyGiftList: function () {
+                    var that = this;
+                    if (this.loading) return;
+                    if (this.loaded) return;
+                    this.loading = true;
+                    store.baseGet($h.U({ c: 'my', a: 'get_order_list', q: { type: 1, page: this.page, limit: this.limit } }), function (res) {
+                        var list = res.data.data.list;
+                        var giftList = $h.SplitArray(list, that.giftList);
+                        that.loaded = list.length < that.limit;
+                        that.page = res.data.data.page;
+                        that.loading = false;
+                        that.$set(that, 'giftList', giftList);
+                    }, function (res) {
+                        that.loading = false;
                     });
                 },
             }

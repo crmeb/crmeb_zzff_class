@@ -17,7 +17,7 @@ use app\admin\model\system\SystemConfig;
 class SystemUpgradeclient extends AuthController
 {
 
-    protected $serverweb = array('version' => '1.1.0', 'version_code' => 0);//本站点信息
+    protected $serverweb = array('version' => '1.20', 'version_code' => 0);//本站点信息
 
     public function _initialize()
     {

@@ -21,7 +21,7 @@ use think\Cache;
 use think\Cookie;
 use think\Session;
 use think\Url;
-
+use app\wap\model\user\MemberShip;
 class AuthController extends WapBasic
 {
     /**
@@ -51,7 +51,8 @@ class AuthController extends WapBasic
             $uid = User::getActiveUid();
             if (!empty($uid)) {
                 $this->userInfo = User::getUserInfo($uid);
-               if($spread_uid) $spreadUserInfo = User::getUserInfo($spread_uid);
+                MemberShip::memberExpiration($uid);
+                if($spread_uid) $spreadUserInfo = User::getUserInfo($spread_uid);
                 $this->uid = $this->userInfo['uid'];
                 $this->phone = User::getLogPhone($uid);
                 //绑定临时推广人
@@ -98,8 +99,10 @@ class AuthController extends WapBasic
         }
 
         if (!$codeUrl) $codeUrl = SystemConfigService::get('wechat_qrcode');
+        $balance_switch=SystemConfigService::get('balance_switch');
         $this->assign([
             'code_url' => $codeUrl,
+            'is_yue' => $balance_switch,
             'subscribe' => $subscribe,
             'subscribeQrcode' => SystemConfigService::get('wechat_qrcode'),
             'userInfo' => $this->userInfo,

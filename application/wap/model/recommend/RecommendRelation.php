@@ -2,6 +2,7 @@
 
 namespace app\wap\model\recommend;
 
+use app\admin\model\special\SpecialSource;
 use basic\ModelBasic;
 use traits\ModelTrait;
 
@@ -26,7 +27,7 @@ class RecommendRelation extends ModelBasic
                 ->join("__SPECIAL__ p", 'p.id=a.link_id')
                 ->join('__SPECIAL_SUBJECT__ j', 'j.id=p.subject_id', 'LEFT')
                 ->where(['p.is_show' => 1, 'p.is_del' => 0])
-                ->field(['p.pink_money', 'p.is_pink', 'p.title', 'p.image', 'p.abstract', 'p.label', 'p.image', 'p.money', 'p.pay_type', 'p.type as special_type','j.name as subject_name', 'a.link_id','p.browse_count'])
+                ->field(['p.id','p.pink_money', 'p.is_pink', 'p.title', 'p.image', 'p.abstract', 'p.label', 'p.image', 'p.money', 'p.pay_type', 'p.type as special_type','j.name as subject_name', 'a.link_id','p.browse_count','p.member_pay_type', 'p.member_money'])
                 ->select();
         else
             $list = self::alias('a')->join('__ARTICLE__ e', 'e.id=a.link_id')
@@ -37,6 +38,11 @@ class RecommendRelation extends ModelBasic
         foreach ($list as &$item) {
             if (!isset($item['subject_name'])) $item['subject_name'] = '';
             if (!isset($item['money'])) $item['money'] = 0;
+            if($type==0){
+                $specialSourceId = SpecialSource::getSpecialSource($item['id']);
+                if($specialSourceId) $item['count']=count($specialSourceId);
+                else $item['count']=0;
+            }else $item['count'] =0;
             $item['image'] = get_oss_process($item['image'],$imagetype);
             $item['label'] = $item['label'] ? json_decode($item['label']) : [];
             $special_type_name = "";

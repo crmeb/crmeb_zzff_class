@@ -957,7 +957,7 @@ INSERT INTO `eb_recommend_banner` (`id`, `recommend_id`, `pic`, `url`, `sort`, `
 
 CREATE TABLE `eb_recommend_relation` (
   `id` int(11) NOT NULL,
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型,0=专题,1=新闻，2=直播',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型,0=专题,1=新闻，2=直播，3=活动',
   `recommend_id` int(11) NOT NULL COMMENT '推荐id',
   `link_id` int(11) NOT NULL DEFAULT '0' COMMENT '关联id',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
@@ -1401,8 +1401,7 @@ CREATE TABLE `eb_member_card_batch` (
   `qrcode` varchar(255) NOT NULL COMMENT '二维码图路径',
   `remark` varchar(502) CHARACTER SET utf8mb4 NOT NULL COMMENT '备注',
   `create_time` int(11) NOT NULL,
-  `update_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `update_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员卡批次表';
 -- --------------------------------------------------------
 --
@@ -1417,8 +1416,7 @@ CREATE TABLE `eb_member_card` (
   `use_time` int(11) NOT NULL COMMENT '使用时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '卡状态：0：冻结；1：激活',
   `create_time` int(11) NOT NULL,
-  `update_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`,`card_batch_id`)
+  `update_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员卡表';
 
 -- 转存表中的数据 `eb_special_record`
@@ -3871,6 +3869,7 @@ CREATE TABLE `eb_system_admin` (
   `pwd` char(32) NOT NULL COMMENT '后台管理员密码',
   `real_name` varchar(16) NOT NULL COMMENT '后台管理员姓名',
   `roles` varchar(128) NOT NULL COMMENT '后台管理员权限(menus_id)',
+  `phone` varchar(11) NOT NULL COMMENT '前端登录电话号码',
   `last_ip` varchar(16) DEFAULT NULL COMMENT '后台管理员最后一次登录ip',
   `last_time` int(10) UNSIGNED DEFAULT NULL COMMENT '后台管理员最后一次登录时间',
   `add_time` int(10) UNSIGNED NOT NULL COMMENT '后台管理员添加时间',
@@ -4047,7 +4046,7 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (33, 'offline_postage', 'radio', 'input', 10, '0=不包邮\n1=包邮', 0, '', 0, 0, '\"1\"', '线下支付是否包邮', '用户选择线下支付时是否包邮', 0, 1),
 (34, 'integral_ratio', 'text', 'input', 11, '', 0, 'number:true', 100, 0, '\"0.01\"', '积分抵用比例', '积分抵用比例(1积分抵多少金额)', 0, 1),
 (35, 'site_service_phone', 'text', 'input', 1, '', 0, '', 100, 0, '\"\"', '客服电话', '客服联系电话', 0, 1),
-(44, 'store_user_min_recharge', 'text', 'input', 5, '', 0, 'required:true,number:true,min:0', 100, 0, '\"0.01\"', '用户最低充值金额', '用户单次最低充值金额', 0, 0),
+/*(44, 'store_user_min_recharge', 'text', 'input', 23, '', 0, 'required:true,number:true,min:0', 100, 0, '\"0.01\"', '用户最低充值金额', '用户单次最低充值金额', 0, 0),*/
 (45, 'site_store_admin_uids', 'text', 'input', 5, '', 0, '', 100, 0, '\"4\"', '管理员用户ID', '管理员用户ID,用于接收商城订单提醒，到微信用户中查找编号，多个英文‘,’隔开', 0, 1),
 (46, 'system_express_app_code', 'text', 'input', 10, '', 0, '', 100, 0, '\"dbc3c1426efe44fdb6c0aa04c52a4ca9\"', '快递查询密钥', '阿里云快递查询接口密钥购买地址：https://market.aliyun.com/products/57126001/cmapi011120.html', 0, 1),
 (47, 'main_business', 'text', 'input', 2, '', 0, 'required:true', 100, 0, '\" IT\\u79d1\\u6280 \\u4e92\\u8054\\u7f51|\\u7535\\u5b50\\u5546\\u52a1\"', '微信模板消息_主营行业', '微信公众号模板消息中选择开通的主营行业', 0, 0),
@@ -4104,14 +4103,21 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (164, 'uploadUrl', 'text', 'input', 19, NULL, NULL, '', 100, NULL, '\"\"', '空间域名 Domain', '空间域名 Domain', 0, 1),
 (165, 'OssBucket', 'text', 'input', 19, NULL, NULL, '', 100, NULL, '\"\"', '存储空间名称', '存储空间名称,又称桶名', 0, 1),
 (166, 'end_point', 'text', 'input', 19, NULL, NULL, '', 100, NULL, '\"oss-cn-beijing.aliyuncs.com\"', 'EndPoint（地域节点）', 'EndPoint（地域节点）', 0, 1),
-(168, 'home_logo', 'upload', 'input', 22, NULL, 1, NULL, NULL, NULL, '\"http:\\/\\/testcrmeb.oss-cn-beijing.aliyuncs.com\\/a0c4b202002091840112762.png\"', '首页图标', '首页图标', 0, 1),
+(168, 'home_logo', 'upload', 'input', 22, NULL, 1, NULL, NULL, NULL, '\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/34285202002171340371181.gif\"', '首页图标', '首页图标', 0, 1),
 (169, 'aliyun_live_rtmpLink', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '推流地址', '推流地址', 0, 1),
 (170, 'aliyun_live_playLike', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '播放地址', '播放地址', 0, 1),
 (171, 'aliyun_live_push_key', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '推流主key', '推流主key', 0, 1),
 (172, 'aliyun_live_play_key', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '播放主key', '播放主key', 0, 1),
 (173, 'aliyun_live_appName', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '直播应用名', '直播应用名(只能为英文数字组合)', 0, 1),
 (174, 'aliyun_live_oss_bucket', 'text', 'input', 21, NULL, NULL, '', 100, NULL, '\"\"', '直播录制OSS桶名', '直播录制OSS桶名', 0, 1),
-(175, 'aliyun_live_end_point', 'text', 'input', 21, NULL, NULL, NULL, 100, NULL, '\"oss-cn-shenzhen.aliyuncs.com\"', '直播录制OssEndpoint', '直播录制OssEndpoint地域节点', 0, 1);
+(175, 'aliyun_live_end_point', 'text', 'input', 21, NULL, NULL, NULL, 100, NULL, '\"oss-cn-shenzhen.aliyuncs.com\"', '直播录制OssEndpoint', '直播录制OssEndpoint地域节点', 0, 1),
+(176, 'gold_rate', 'text', 'input', 23, NULL, NULL, 'number:rue', 100, NULL, '\"10\"', '人民币与金币换算率', '充值人民币和金币的换算概率，默认：1元人民币=10系统虚拟金币', 0, 1),
+(177, 'gold_name', 'text', 'input', 23, NULL, NULL, NULL, 100, NULL, '\"\\u91d1\\u5e01\"', '虚拟货币名称', '虚拟货币名称（如，金币，水滴，鲜花等）', 0, 1),
+(178, 'gold_image', 'upload', 'input', 23, NULL, 1, NULL, NULL, NULL, '\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/61d9d202006181439471781.png\"', '虚拟货币图标', '虚拟货币图标', 0, 1),
+(179, 'single_gold_coin', 'text', 'input', 22, NULL, NULL, '', 100, NULL, '1', '单次签到虚拟币数', '每次签到用户可以获得的虚拟币数（默认为金币）', 0, 1),
+(180, 'sign_default_poster', 'upload', 'input', 22, NULL, 1, NULL, NULL, NULL, '\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/20362202002201412303972.jpg\"', '签到海报', '签到默认海报（没有签到海报时默认显示此图）', 0, 1),
+(181, 'balance_switch', 'radio', 'input', 22, '1=开启\n0=关闭', NULL, NULL, NULL, NULL, '\"1\"', '余额开关', '余额开关', 0, 1);
+
 
 -- --------------------------------------------------------
 
@@ -4174,7 +4180,9 @@ INSERT INTO `eb_system_config_tab` (`id`, `title`, `eng_title`, `status`, `info`
 (18, '阿里云key配置', 'aliyun_system', 1, 0, 'sun-o', 5),
 (19, 'OSS上传配置', 'oss_sytem', 1, 0, 'cloud-upload', 5),
 (21, '阿里云直播', 'aliyun_live', 1, 0, 'arrow-circle-o-left', 5),
-(22, '其他配置', 'shop_home', 1, 0, '', 6);
+(22, '其他配置', 'shop_home', 1, 0, '', 6),
+(23, '充值金币', 'recharge', 1, 0, 'jpy', 7);
+
 
 
 -- --------------------------------------------------------
@@ -4217,7 +4225,8 @@ INSERT INTO `eb_system_group` (`id`, `name`, `info`, `config_name`, `fields`) VA
 (54, '分享页面背景图', '分享页面背景图', 'share_background', '[{\"name\":\"\\u80cc\\u666f\\u56fe\",\"title\":\"pic\",\"type\":\"upload\",\"param\":\"\"}]'),
 (56, '首页活动区域图片', '首页活动区域图片', 'home_activity', '[{\"name\":\"\\u56fe\\u7247(260*260\\/416*214)\",\"title\":\"pic\",\"type\":\"upload\",\"param\":\"\"},{\"name\":\"\\u6807\\u9898\",\"title\":\"title\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u7b80\\u4ecb\",\"title\":\"info\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u516c\\u4f17\\u53f7\\u94fe\\u63a5\",\"title\":\"wap_link\",\"type\":\"select\",\"param\":\"\\/activity\\/goods_seckill=>\\u79d2\\u6740\\u5217\\u8868\\n\\/activity\\/bargain=>\\u780d\\u4ef7\\u5217\\u8868\\n\\/activity\\/group=>\\u62fc\\u56e2\\u5217\\u8868\"}]'),
 (57, '会员权益', '会员权益', 'membership_interests', '[{\"name\":\"\\u6743\\u76ca\\u540d\\u79f0\",\"title\":\"name\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u56fe\\u6807\",\"title\":\"pic\",\"type\":\"upload\",\"param\":\"\"},{\"name\":\"\\u8bf4\\u660e\",\"title\":\"explain\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u6392\\u5e8f\",\"title\":\"sort\",\"type\":\"input\",\"param\":\"\"}]'),
-(58, '会员说明', '会员说明', 'member_description', '[{\"name\":\"\\u5185\\u5bb9\",\"title\":\"text\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u6392\\u5e8f\",\"title\":\"sort\",\"type\":\"input\",\"param\":\"\"}]');
+(58, '会员说明', '会员说明', 'member_description', '[{\"name\":\"\\u5185\\u5bb9\",\"title\":\"text\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u6392\\u5e8f\",\"title\":\"sort\",\"type\":\"input\",\"param\":\"\"}]'),
+(59, '直播间礼物列表', '直播间礼物列表', 'live_gift', '[{\"name\":\"\\u793c\\u7269\\u540d\\u79f0\",\"title\":\"live_gift_name\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u793c\\u7269\\u4ef7\\u683c\\uff08\\u865a\\u62df\\u8d27\\u5e01\\uff09\",\"title\":\"live_gift_price\",\"type\":\"input\",\"param\":\"\"},{\"name\":\"\\u8d60\\u9001\\u6570\\u91cf\\u5217\\u8868\",\"title\":\"live_gift_num\",\"type\":\"checkbox\",\"param\":\"1=1\\n5=5\\n10=10\\n20=20\\n66=66\\n99=99\\n520=520\\n999=999\\n1314=1314\"},{\"name\":\"\\u793c\\u7269\\u56fe\\u6807\",\"title\":\"live_gift_show_img\",\"type\":\"upload\",\"param\":\"\"}]');
 
 
 
@@ -4261,7 +4270,15 @@ INSERT INTO `eb_system_group_data` (`id`, `gid`, `value`, `add_time`, `sort`, `s
 (163, 57, '{"name":{"type":"input","value":"\\u66f4\\u591a\\u6743\\u76ca"},"pic":{"type":"upload","value":"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/11009202004291128212348.png"},"explain":{"type":"input","value":"\\u66f4\\u591a\\u6743\\u76ca\\u589e\\u52a0\\u4e2d"},"sort":{"type":"input","value":"3"}}', '1588131020', '3', '1'),
 (164, 58, '{"text":{"type":"input","value":"\\u4f1a\\u5458\\u8d2d\\u4e70\\u90e8\\u5206\\u8bfe\\u7a0b\\u53ef\\u4eab\\u53d7\\u4f18\\u60e0\\u4ef7"},"sort":{"type":"input","value":"1"}}', '1588131048', '1', '1'),
 (165, 58, '{"text":{"type":"input","value":"\\u4f1a\\u5458\\u5230\\u671f\\u540e\\u6743\\u76ca\\u5373\\u5931\\u6548\\uff0c\\u9700\\u7ee7\\u7eed\\u4eab\\u53d7\\u6743\\u76ca\\u8bf7\\u53ca\\u65f6\\u7eed\\u8d39"},"sort":{"type":"input","value":"2"}}', '1588131059', '2', '1'),
-(166, 58, '{"text":{"type":"input","value":"\\u62fc\\u56e2\\u6d3b\\u52a8\\u4ef7\\u65e0\\u4f1a\\u5458\\u4f18\\u60e0"},"sort":{"type":"input","value":"3"}}', '1588131073', '3', '1');
+(166, 58, '{"text":{"type":"input","value":"\\u62fc\\u56e2\\u6d3b\\u52a8\\u4ef7\\u65e0\\u4f1a\\u5458\\u4f18\\u60e0"},"sort":{"type":"input","value":"3"}}', '1588131073', '3', '1'),
+(170, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u9c9c\\u82b1\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"2\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"66\",\"520\",\"999\",\"1314\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/da616202007011009436251.png\"}}', 1590739724, 9, 1),
+(171, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u7231\\u5fc3\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"1\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/5a2d520200701101025960.png\"}}', 1590740368, 10, 1),
+(172, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u6c14\\u7403\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"6\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\",\"999\",\"1314\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/0c648202007011012055342.png\"}}', 1593569535, 7, 1),
+(173, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u7687\\u51a0\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"20\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/82d4c202007011013025359.png\"}}', 1593569588, 5, 1),
+(174, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u5956\\u676f\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"15\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/1caae202007011013442033.png\"}}', 1593569629, 6, 1),
+(175, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u9526\\u9ca4\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"30\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/226e5202007011015051008.png\"}}', 1593569720, 4, 1),
+(176, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u5609\\u5e74\\u534e\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"50\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/22c8e202007011017537720.png\"}}', 1593569880, 3, 1),
+(177, 59, '{\"live_gift_name\":{\"type\":\"input\",\"value\":\"\\u7c89\\u7b14\"},\"live_gift_price\":{\"type\":\"input\",\"value\":\"5\"},\"live_gift_num\":{\"type\":\"checkbox\",\"value\":[\"1\",\"5\",\"10\",\"20\",\"66\",\"99\",\"520\"]},\"live_gift_show_img\":{\"type\":\"upload\",\"value\":\"http:\\/\\/cremb-zsff.oss-cn-beijing.aliyuncs.com\\/96ea420200701101917287.png\"}}', 1593569968, 8, 1);
 
 -- --------------------------------------------------------
 
@@ -4310,7 +4327,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1, 289, '', '系统设置', 'admin', 'setting.systemConfig', 'index', '[]', 265, 1, 1),
 (2, 153, '', '权限规则', 'admin', 'setting.systemMenus', 'index', '{\"cate\":\"12\"}', 7, 1, 1),
 (4, 153, '', '管理员列表', 'admin', 'setting.systemAdmin', 'index', '[]', 9, 1, 1),
-(6, 1, '', '基础配置', 'admin', 'setting.systemConfig', 'index', '{\"tab_id\":\"1\"}', 270, 1, 1),
+(6, 1, '', '基础配置', 'admin', 'setting.systemConfig', 'index', '{\"tab_id\":\"1\",\"type\":\"999\"}', 270, 1, 1),
 (7, 497, '', '配置分类', 'admin', 'setting.systemConfigTab', 'index', '[]', 277, 1, 1),
 (8, 153, '', '身份管理', 'admin', 'setting.systemRole', 'index', '[]', 10, 1, 1),
 (9, 497, '', '组合数据', 'admin', 'setting.systemGroup', 'index', '[]', 276, 1, 1),
@@ -4447,7 +4464,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (249, 248, '', '个人资料提交保存', 'admin', 'system.systemAdmin', 'setAdminInfo', '[]', 0, 0, 1),
 (250, 247, '', '个人资料展示页', 'admin', 'system.systemAdmin', 'admininfo', '[]', 0, 0, 1),
 (251, 293, '', '订单统计', 'admin', 'order.storeOrder', 'orderchart', '[]', 0, 1, 1),
-(252, 21, '', '在线更新', 'admin', 'system.system_upgradeclient', 'index', '[]', 0, 1, 1),
+/*(252, 21, '', '在线更新', 'admin', 'system.system_upgradeclient', 'index', '[]', 0, 1, 1),*/
 /*(267, 360, '', '公众号接口配置', 'admin', 'setting.systemConfig', 'index', '{\"type\":\"1\",\"tab_id\":\"2\"}', 100, 1, 1),*/
 (269, 0, 'cubes', '小程序', 'admin', 'setting.system', '', '[]', 92, 0, 1),
 (270, 269, '', '小程序配置', 'admin', 'setting.systemConfig', 'index_alone', '{\"type\":\"2\",\"tab_id\":\"7\"}', 0, 1, 1),
@@ -4459,8 +4476,8 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (289, 0, 'gear', '设置', 'admin', '', '', '[]', 90, 1, 1),
 (306, 287, '', '财务操作', 'admin', '', '', '[]', 100, 1, 1),
 (307, 287, '', '财务记录', 'admin', '', '', '[]', 50, 1, 1),
-(308, 287, '', '佣金记录', 'admin', '', '', '[]', 0, 1, 1),
-(312, 307, '', '资金监控', 'admin', 'finance.finance', 'bill', '[]', 0, 1, 1),
+(308, 287, '', '佣金记录', 'admin', '', '', '[]', 1, 1, 1),
+(312, 307, '', '资金监控', 'admin', 'finance.finance', 'bill', '{\"category\":\"now_money\"}', 0, 1, 1),
 (313, 308, '', '佣金记录', 'admin', 'finance.finance', 'commission_list', '[]', 0, 1, 1),
 (337, 0, 'users', '分销', 'admin', 'user', 'user', '[]', 106, 1, 1),
 (349, 286, '', '积分', 'admin', 'userPoint', 'index', '[]', 0, 0, 1),
@@ -4499,8 +4516,8 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (421, 337, '', '分销员列表', 'admin', 'user.user_spread', 'index', '[]', 287, 1, 1),
 (423, 482, '', '课程弹幕', 'admin', 'special.special_type', 'special_barrage', '{\"type\":\"3\"}', 291, 1, 1),
 (428, 0, 'leaf', '分类', 'admin', '', '', '[]', 300, 1, 1),
-(429, 428, '', '一级分类', 'admin', 'special.grade', 'index', '[]', 299, 1, 1),
-(430, 428, '', '二级分类', 'admin', 'special.subject', 'index', '[]', 298, 1, 1),
+(429, 428, '', '分类管理', 'admin', 'special.grade', 'index', '[]', 299, 1, 1),
+(430, 428, '', '二级分类', 'admin', 'special.subject', 'index', '[]', 298, 0, 1),
 (431, 507, '', '导航配置', 'admin', 'setting.system_group_data', 'navigation', '[]', 264, 1, 1),
 (432, 507, '', '活动区域', 'admin', 'setting.system_group_data', 'index_v1', '{\"gid\":\"56\"}', 262, 1, 1),
 (433, 337, '', '提现银行配置', 'admin', 'setting.system_group_data', 'index', '{\"gid\":\"52\"}', 281, 1, 1),
@@ -4535,7 +4552,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (483, 482, '', '图文专题', 'admin', 'special.special_type', 'index', '{\"special_type\":\"1\"}', 294, 1, 1),
 (484, 482, '', '音频专题', 'admin', 'special.special_type', 'index', '{\"special_type\":\"2\"}', 295, 1, 1),
 (485, 482, '', '视频专题', 'admin', 'special.special_type', 'index', '{\"special_type\":\"3\"}', 296, 1, 1),
-(487, 482, '', '直播列表', 'admin', 'live.aliyun_live', 'special_live', '{\"special_type\":\"4\"}', 292, 1, 1),
+(487, 513, '', '直播列表', 'admin', 'live.aliyun_live', 'special_live', '{\"special_type\":\"4\"}', 292, 1, 1),
 (488, 482, '', '专栏列表', 'admin', 'special.special_type', 'index', '{\"special_type\":\"5\"}', 293, 1, 1),
 (490, 493, '', '卡密会员', 'admin', 'user.member_card', 'batch_index', '[]', 252, 1, 1),
 (491, 493, '', '会员等级', 'admin', 'user.member_ship', 'index', '[]', 254, 1, 1),
@@ -4551,7 +4568,30 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (505, 493, '', '会员权益', 'admin', 'setting.system_group_data', 'index', '{\"gid\":\"57\"}', 249, 1, 1),
 (506, 493, '', '会员说明', 'admin', 'setting.system_group_data', 'index', '{\"gid\":\"58\"}', 248, 1, 1),
 (507, 502, '', '首页配置', 'admin', '', '', '[]', 261, 1, 1),
-(508, 502, '', '其他配置', 'admin', 'setting.systemConfig', 'index', '{\"tab_id\":\"22\"}', 260, 1, 1);
+(508, 502, '', '其他配置', 'admin', 'setting.systemConfig', 'index', '{\"tab_id\":\"22\",\"type\":\"6\"}', 260, 1, 1),
+(512, 287, '', '充值配置', 'admin', 'setting.system_config', 'index', '{\"tab_id\":\"23\",\"type\":\"7\"}', 0, 1, 1),
+(513, 0, 'video-camera', '直播', 'admin', '', '', '[]', 298, 1, 1),
+/*(514, 513, '', '推荐课程', 'admin', 'live.aliyun_live', 'live_goods', '[]', 0, 1, 1),*/
+(515, 513, '', '直播间管理', 'admin', 'live.aliyun_live', 'index', '{\"special_type\":\"4\",\"type\":\"2\"}', 290, 1, 1),
+(516, 513, '', '礼物管理', 'admin', 'setting.system_group_data', 'index', '{\"gid\":\"59\"}', 289, 1, 1),
+(517, 513, '', '直播贡献', 'admin', 'live.aliyun_live', 'live_reward', '[]', 288, 1, 1),
+(518, 307, '', '虚拟币监控', 'admin', 'finance.finance', 'bill', '{\"category\":\"gold_num\"}', 0, 1, 1),
+(519, 286, '', '活动管理', 'admin', 'ump.eventRegistration', 'index', '[]', 0, 1, 1),
+(520, 485, '', '专题列表', 'admin', 'special.SpecialType', 'index', '{\"special_type\":\"3\"}', 1, 1, 1),
+(521, 485, '', '素材列表', 'admin', 'special.SpecialType', 'source_index', '{\"special_type\":\"3\"}', 0, 1, 1),
+(522, 484, '', '专题列表', 'admin', 'special.special_type', 'index', '{\"special_type\":\"2\"}', 1, 1, 1),
+(523, 484, '', '素材列表', 'admin', 'special.special_type', 'source_index', '{\"special_type\":\"2\"}', 0, 1, 1),
+(524, 483, '', '专题列表', 'admin', 'special.special_type', 'index', '{\"special_type\":\"1\"}', 1, 1, 1),
+(525, 483, '', '素材列表', 'admin', 'special.special_type', 'source_index', '{\"special_type\":\"1\"}', 0, 1, 1),
+(526, 417, '', '新闻分类', 'admin', 'article.article_category', 'index', '[]', 0, 1, 1),
+(527, 286, '', '签到管理', 'admin', '', '', '[]', 0, 1, 1),
+(528, 527, '', '签到海报', 'admin', 'user.signPoster', 'index', '[]', 0, 1, 1),
+(529, 527, '', '签到记录', 'admin', 'user.userSign', 'index', '[]', 0, 1, 1);
+
+
+
+
+
 
 
 -- --------------------------------------------------------
@@ -4611,7 +4651,9 @@ CREATE TABLE `eb_system_role` (
 
 INSERT INTO `eb_system_role` (`id`, `role_name`, `sign`, `rules`, `level`, `status`) VALUES
 (1, '超级管理员','admin', '37,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,73,74,75,76,77,78,89,90,91,92,93,94,95,96,97,98,99,100,102,103,104,105,106,107,108,109,110,111,112,115,116,117,118,119,123,124,126,127,128,131,137,138,139,140,141,144,145,148,155,156,158,159,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,229,230,231,232,233,234,245,247,248,249,250,269,273,276,288,349,378,419,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,1,2,4,6,7,8,9,11,12,17,19,21,30,31,101,130,149,150,151,153,173,174,175,177,179,235,237,239,241,244,246,251,252,267,270,278,286,287,289,293,306,307,308,312,313,337,350,351,352,353,354,355,357,360,361,362,363,364,365,372,373,374,375,376,377,379,380,391,392,399,400,409,411,412,415,417,418,420,421,423,428,429,430,431,432,433,434,435,479,480,481', 0, 1),
-(2, '主播', 'anchor','', 1, 1);
+(2, '主播', 'anchor','', 1, 1),
+(3, '核销员', 'verification', '518,286', 1, 1);
+
 
 -- --------------------------------------------------------
 
@@ -4635,6 +4677,7 @@ CREATE TABLE `eb_user` (
   `last_time` int(11) UNSIGNED NOT NULL COMMENT '最后一次登录时间',
   `last_ip` varchar(16) NOT NULL COMMENT '最后一次登录ip',
   `now_money` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '用户余额',
+  `gold_num` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '虚拟币余额',
   `brokerage_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '可提现金额',
   `integral` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '用户剩余积分',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1为正常，0为禁止',
@@ -4812,6 +4855,7 @@ CREATE TABLE `eb_user_recharge` (
   `vip_id` int(11) NOT NULL DEFAULT '0' COMMENT '0为充值金额,',
   `order_id` varchar(32) DEFAULT NULL COMMENT '订单号',
   `price` decimal(8,2) DEFAULT NULL COMMENT '充值金额',
+  `gold_num` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '虚拟币余额',
   `recharge_type` varchar(32) DEFAULT NULL COMMENT '充值类型',
   `paid` tinyint(1) DEFAULT NULL COMMENT '是否充值',
   `pay_time` int(10) DEFAULT NULL COMMENT '充值支付时间',
@@ -4938,7 +4982,7 @@ INSERT INTO `eb_wechat_template` (`id`, `tempkey`, `name`, `content`, `tempid`, 
 (13, 'OPENTM207791277', '订单支付成功通知', '{{first.DATA}}\n订单编号：{{keyword1.DATA}}\n支付金额：{{keyword2.DATA}}\n{{remark.DATA}}', 'zQ0HVGaYM_zZoCiUG9E8IZiOD4X54G9e9ldUWkyuPvo', '1528966759', 1),
 (15, 'OPENTM406772650', '拼团成功通知', '{first.DATA}}\n订单编号：{{keyword1.DATA}}\n团购商品：{{keyword2.DATA}}\n{{remark.DATA}}', '0vOEi8iBqKXYsqvVep9Nn-CDaqPfqG8ajDpib2eY1S0', '1551749779', 1),
 (16, 'OPENTM411478702', '开团成功通知', '{{first.DATA}}\n商品名称：{{keyword1.DATA}}\n商品价格：{{keyword2.DATA}}\n组团人数：{{keyword3.DATA}}\n组团时间：{{keyword4.DATA}}\n{{remark.DATA}}', 'PDLbtKYeoWFjqwmvEb49s3zaqe1ufdXGEfZ5rt1XQLk', '1552034788', 1),
-(17, 'OPENTM415198906', '拼单进度提醒', '\n{{first.DATA}}\n商品名称：{{keyword1.DATA}}\n拼单进度：{{keyword2.DATA}}\n{{remark.DATA}}', 'USG9thsiUOjyT9UISNiThdBgkq2Tl29cE6J39_vWdTo', '1562752076', 1);
+(17, 'OPENTM415198906', '拼单进度提醒', '\n{{first.DATA}}\n商品名称：{{keyword1.DATA}}\n拼单进度：{{keyword2.DATA}}\n{{remark.DATA}}', 'USG9thsiUOjyT9UISNiThdBgkq2Tl29cE6J39_vWdTo', '1562752076', 1),
 (18, 'OPENTM405456204', '开播提醒', '{{first.DATA}}\r\n课程名称：{{keyword1.DATA}}\r\n开始时间：{{keyword2.DATA}}\r\n{{remark.DATA}}', 'MCfo_7rP8vFGssGE78JdgXycghSwCqmeFmFnYYIbPb8', '1585197241', '1');
 -- --------------------------------------------------------
 
@@ -4979,7 +5023,7 @@ CREATE TABLE `eb_wechat_user` (
 -- 表的结构 `eb_member_ship`
 --
 CREATE TABLE `eb_member_ship` (
-  `id` int(10) NOT NULL,
+  `id` int(11) NOT NULL,
   `type` int(2) NOT NULL DEFAULT '1' COMMENT '会员类别(1:普通会员)',
   `title` varchar(200) NOT NULL COMMENT '会员名称',
   `vip_day` int(10) NOT NULL COMMENT '会员时间(天)',
@@ -4990,7 +5034,8 @@ CREATE TABLE `eb_member_ship` (
   `is_free` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
   `sort` int(10) NOT NULL COMMENT '排序倒序',
   `is_del` int(2) NOT NULL COMMENT '删除',
-  `add_time` int(50) NOT NULL COMMENT '添加时间'
+  `add_time` int(50) NOT NULL COMMENT '添加时间',
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员管理表';
 -- --------------------------------------------------------
 
@@ -4998,11 +5043,11 @@ CREATE TABLE `eb_member_ship` (
 -- 表数据 `eb_member_ship`
 --
 INSERT INTO `eb_member_ship` (`id`, `type`, `title`, `vip_day`, `original_price`, `price`, `is_permanent`, `is_publish`, `is_free`, `sort`, `is_del`, `add_time`) VALUES
- (NULL, '1', '月卡', '30', '30.00', '20.00', '0', '1', '0', '4', '0', '1588129765'),
- (NULL, '1', '季卡', '90', '90.00', '80.00', '0', '1', '0', '3', '0', '1588129794'),
- (NULL, '1', '年卡', '365', '360.00', '300.00', '0', '1', '0', '2', '0', '1588129818'),
- (NULL, '1', '永久', '-1', '1200.00', '1000.00', '1', '1', '0', '1', '0', '1588129856'),
- (NULL, '1', '免费', '7', '0.00', '0.00', '0', '1', '1', '0', '0', '1588130680');
+ (1, '1', '月卡', '30', '30.00', '20.00', '0', '1', '0', '4', '0', '1588129765'),
+ (2, '1', '季卡', '90', '90.00', '80.00', '0', '1', '0', '3', '0', '1588129794'),
+ (3, '1', '年卡', '365', '360.00', '300.00', '0', '1', '0', '2', '0', '1588129818'),
+ (4, '1', '永久', '-1', '1200.00', '1000.00', '1', '1', '0', '1', '0', '1588129856'),
+ (5, '1', '免费', '7', '0.00', '0.00', '0', '1', '1', '0', '0', '1588130680');
 
 
 
@@ -5021,9 +5066,142 @@ CREATE TABLE `eb_member_record` (
   `is_permanent` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '是否永久',
   `overdue_time` int(50) unsigned NOT NULL COMMENT '会员过期时间',
   `validity` varchar(10) DEFAULT '0' COMMENT '有效期',
-  `add_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
-  PRIMARY KEY (`id`)
+  `add_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员购买记录表';
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `eb_live_reward`
+--
+
+CREATE TABLE `eb_live_reward` (
+  `id` int(11) NOT NULL,
+  `live_id` int(11) unsigned NOT NULL COMMENT '直播间id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户uid',
+  `nickname` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '昵称',
+  `gift_id` int(11) NOT NULL COMMENT '礼物id',
+  `gift_name` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '礼物名称',
+  `gift_price` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '虚拟货币价格',
+  `gift_num` int(11) NOT NULL DEFAULT '0' COMMENT '礼物数量',
+  `total_price` int(11) NOT NULL DEFAULT '0' COMMENT '总虚拟货币价格',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '打赏时间',
+  `is_show` int(11) NOT NULL DEFAULT '1' COMMENT '是否显示 1= 显示，0=隐藏'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='直播间礼物打赏表';
+
+--
+-- 表的结构 `eb_live_goods`
+--
+
+CREATE TABLE `eb_live_goods` (
+  `id` int(11) NOT NULL,
+  `special_id` int(11) NOT NULL DEFAULT '0' COMMENT '专题id',
+  `live_id` int(11) NOT NULL DEFAULT '0' COMMENT '直播间id',
+  `special_name` varchar(100) NOT NULL DEFAULT '' COMMENT '课程名称',
+  `is_show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
+  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+  `sales` int(10) NOT NULL DEFAULT '0' COMMENT '销量',
+  `fake_sales` int(10) NOT NULL DEFAULT '0' COMMENT '虚拟销量',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
+  `update_time` int(11) NOT NULL COMMENT '修改时间'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='直播间带货表';
+
+--
+-- 表的结构 `eb_event_registration`
+--
+CREATE TABLE `eb_event_registration` (
+  `id` int(10) NOT NULL,
+  `title` varchar(255) NOT NULL COMMENT '标题',
+  `phone` varchar(12) NOT NULL COMMENT '电话',
+  `image` varchar(255) NOT NULL COMMENT '封面图',
+  `signup_start_time` int(50) NOT NULL COMMENT '报名开始时间',
+  `signup_end_time` int(50) NOT NULL COMMENT '报名结束时间',
+  `start_time` int(50) NOT NULL COMMENT '活动开始时间',
+  `end_time` int(50) NOT NULL COMMENT '活动结束时间',
+  `province` varchar(255) NOT NULL COMMENT '省',
+  `city` varchar(255) NOT NULL COMMENT '市',
+  `district` varchar(255) NOT NULL COMMENT '区',
+  `detail` varchar(255) NOT NULL COMMENT '详细地址',
+  `latitude` varchar(255) NOT NULL COMMENT '纬度',
+  `longitude` varchar(255) NOT NULL COMMENT '经度',
+  `number` int(10) NOT NULL DEFAULT '0' COMMENT '人数',
+  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+  `activity_rules` varchar(3000) DEFAULT NULL COMMENT '活动规则',
+  `content` varchar(5000) DEFAULT NULL COMMENT '活动详情',
+  `pay_type` int(2) NOT NULL DEFAULT '0' COMMENT '是否免费',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  `member_pay_type` tinyint(2) NOT NULL COMMENT '会员支付状态（0:免费1:付费）',
+  `member_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '会员价格',
+  `write_off_code` varchar(255) NOT NULL COMMENT '核销码',
+  `restrictions` tinyint(2) NOT NULL DEFAULT '0' COMMENT '限购',
+  `is_fill` tinyint(2) NOT NULL DEFAULT '1' COMMENT '是否填写资料',
+  `qrcode_img` varchar(255) DEFAULT NULL COMMENT '群聊二维码',
+  `is_show` tinyint(2) NOT NULL COMMENT '是否显示',
+  `is_del` int(2) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `add_time` int(50) NOT NULL DEFAULT '1' COMMENT '添加时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动报名表';
+--
+-- 表的结构 `eb_event_sign_up`
+--
+CREATE TABLE `eb_event_sign_up` (
+  `id` int(10) NOT NULL,
+  `order_id` varchar(64) NOT NULL COMMENT '订单号',
+  `trade_no` varchar(64) NOT NULL COMMENT '支付宝支付,支付宝交易订单号',
+  `uid` int(10) NOT NULL,
+  `user_info` varchar(3072) NOT NULL COMMENT '报名信息',
+  `activity_id` int(10) NOT NULL DEFAULT '0' COMMENT '活动ID',
+  `pay_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付价格',
+  `paid` int(2) NOT NULL DEFAULT '0' COMMENT '支付状态',
+  `pay_time` int(50) DEFAULT '0' COMMENT '支付时间',
+  `pay_type` varchar(20) NOT NULL DEFAULT '0' COMMENT '支付方式',
+  `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态（0:未核销1:已核销）',
+  `write_off_code` varchar(255) DEFAULT NULL COMMENT '核销二维码',
+  `is_del` tinyint(2) NOT NULL,
+  `add_time` int(50) NOT NULL DEFAULT '0' COMMENT '添加时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户报名表';
+
+--
+-- 表的结构 `eb_user_sign`
+--
+CREATE TABLE `eb_user_sign` (
+  `id` int(11) NOT NULL,
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户uid',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '签到说明',
+  `number` int(11) NOT NULL DEFAULT '0' COMMENT '获得金币',
+  `balance` int(11) NOT NULL DEFAULT '0' COMMENT '剩余金币',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='签到记录表';
+--
+-- 表的结构 `eb_sign_poster`
+--
+CREATE TABLE `eb_sign_poster` (
+  `id` int(10) NOT NULL,
+  `sign_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '签到时间',
+  `poster` varchar(255) DEFAULT NULL COMMENT '分享海报',
+  `sort` int(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `add_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='签到海报';
+--
+-- 表的结构 `eb_search_history`
+--
+CREATE TABLE `eb_search_history` (
+  `id` int(11) NOT NULL,
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `search` varchar(255) NOT NULL COMMENT '搜索内容',
+  `add_time` int(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='历史搜索';
+--
+-- 表的结构 `eb_special_watch`
+--
+CREATE TABLE `eb_special_watch` (
+  `id` int(11) NOT NULL,
+  `uid` int(11) NOT NULL COMMENT 'uid',
+  `special_id` int(11) NOT NULL COMMENT '专题ID',
+  `task_id` int(11) NOT NULL COMMENT '素材ID',
+  `viewing_time` int(50) DEFAULT '0' COMMENT '观看时间',
+  `add_time` int(50) DEFAULT '0' COMMENT '时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户观看素材时间';
 --
 -- 转储表的索引
 --
@@ -5735,13 +5913,55 @@ ALTER TABLE `eb_member_card`
 --
 -- 表的索引 `eb_member_ship`
 --
-ALTER TABLE `eb_member_ship`
-MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
- ADD PRIMARY KEY (`id`);
+/*ALTER TABLE `eb_member_ship`
+ ADD PRIMARY KEY (`id`);*/
+
 --
 -- 表的索引 `eb_member_record`
 --
 ALTER TABLE `eb_member_record`
+ ADD PRIMARY KEY (`id`);
+ --
+-- 表的索引 `eb_live_reward`
+--
+ALTER TABLE `eb_live_reward`
+ ADD PRIMARY KEY (`id`),
+ ADD KEY `uid` (`uid`) USING BTREE;
+--
+-- 表的索引 `eb_live_goods`
+--
+ALTER TABLE `eb_live_goods`
+ ADD PRIMARY KEY (`id`);
+--
+-- 表的索引 `eb_event_registration`
+--
+ALTER TABLE `eb_event_registration`
+ ADD PRIMARY KEY (`id`);
+--
+-- 表的索引 `eb_event_sign_up`
+--
+ALTER TABLE `eb_event_sign_up`
+ ADD PRIMARY KEY (`id`);
+--
+-- 表的索引 `eb_user_sign`
+--
+ALTER TABLE `eb_user_sign`
+ ADD PRIMARY KEY (`id`),
+ ADD KEY `uid` (`uid`) USING BTREE;
+--
+-- 表的索引 `eb_sign_poster`
+--
+ALTER TABLE `eb_sign_poster`
+ ADD PRIMARY KEY (`id`);
+--
+-- 表的索引 `eb_search_history`
+--
+ALTER TABLE `eb_search_history`
+ ADD PRIMARY KEY (`id`);
+--
+-- 表的索引 `eb_special_watch`
+--
+ALTER TABLE `eb_special_watch`
  ADD PRIMARY KEY (`id`);
 --
 -- 在导出的表使用AUTO_INCREMENT
@@ -6213,11 +6433,52 @@ ALTER TABLE `eb_member_ship`
 ALTER TABLE `eb_member_record`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- 使用表AUTO_INCREMENT `eb_live_reward`
+--
+ALTER TABLE `eb_live_reward`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  --
+-- 使用表AUTO_INCREMENT `eb_live_goods`
+--
+ALTER TABLE `eb_live_goods`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_event_registration`
+--
+ALTER TABLE `eb_event_registration`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_event_sign_up`
+--
+ALTER TABLE `eb_event_sign_up`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_user_sign`
+--
+ALTER TABLE `eb_user_sign`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_sign_poster`
+--
+ALTER TABLE `eb_sign_poster`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- 使用表AUTO_INCREMENT `eb_wechat_user`
 --
 ALTER TABLE `eb_wechat_user`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_search_history`
+--
+ALTER TABLE `eb_search_history`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `eb_special_watch`
+--
+ALTER TABLE `eb_special_watch`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

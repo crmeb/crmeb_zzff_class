@@ -87,7 +87,7 @@ class UserBill extends ModelBasic
             $endtime = bcadd(strtotime($where['data']), bcmul($day, 86400, 0), 0);
             $model = $model->where('a.add_time', 'between', [$starttime, $endtime]);
         }
-        $list = $model->field(['a.get_uid', 'a.mark', 'a.title', 'a.number', 'FROM_UNIXTIME(a.add_time,"%Y-%c-%d %H:%i:%s") as add_time', 'a.pm', 'a.link_id'])
+        $list = $model->field(['a.get_uid', 'a.mark', 'a.title', 'a.number','FROM_UNIXTIME(a.add_time,"%Y-%c-%d %H:%i:%s") as add_time', 'a.pm', 'a.link_id'])
             ->page((int)$where['page'], (int)$where['limit'])->select();
         $list = count($list) ? $list->toArray() : [];
         foreach ($list as &$item) {
@@ -96,6 +96,7 @@ class UserBill extends ModelBasic
                 $item['nickname'] = User::where('uid', $item['get_uid'])->value('nickname');
                 $item['title'] = Special::PreWhere()->where('id', self::getDb('store_order')->where('id', $item['link_id'])->value('cart_id'))->value('title');
             }
+//            $item['add_time'] =date('Y-m-d H:i:s',$item['add_time']);
         }
         $page = $where['page'] + 1;
         return compact('list', 'page');
@@ -115,6 +116,21 @@ class UserBill extends ModelBasic
     {
         return self::getModelTime($where,self::where('uid','in',$uid)->where('category',$category)
             ->where('type',$type)->where('pm',1)->where('status',1))->sum('number');
+    }
+
+    public static function getUserGoldBill(array $where,$page = 0,$limit = 10)
+    {
+        $model = self::where('status',1);
+        if ($where){
+            $list = $model->where($where);
+        }
+        $list = $model->order('add_time desc')->page((int)$page,(int)$limit)->select();
+        $list = count($list) ? $list->toArray() : [];
+        foreach ($list as &$item){
+            $item['_add_time']  = date('Y-m-d H:i:s',$item['add_time']);
+        }
+        $page--;
+        return ['list'=>$list,'page'=> $page];
     }
 
 }

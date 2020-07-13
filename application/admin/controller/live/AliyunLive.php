@@ -3,6 +3,8 @@
 namespace app\admin\controller\live;
 
 use app\admin\controller\AuthController;
+use app\admin\model\live\LiveGoods;
+use app\admin\model\live\LiveReward;
 use app\admin\model\order\StoreOrder as StoreOrderModel;
 use app\admin\model\live\LiveBarrage;
 use app\admin\model\live\LiveHonouredGuest;
@@ -93,7 +95,7 @@ class AliyunLive extends AuthController
         if (!$liveInfo) return $this->failed('未查到直播间信息');
         $f[] = Form::input('stream_name', '直播间号', $liveInfo->getData('stream_name'))->disabled(true);
         $f[] = Form::input('live_title', '直播间标题', $liveInfo->getData('live_title'));
-        $f[] = Form::frameImageOne('live_image', '直播封面', Url::build('admin/widget.images/index', array('fodder' => 'live_image')), $liveInfo->getData('live_image'))->icon('image')->width('100%')->height('550px');
+        $f[] = Form::frameImageOne('live_image', '直播封面', Url::build('admin/widget.images/index', array('fodder' => 'live_image')), $liveInfo->getData('live_image'))->icon('image')->width('100%')->height('500px');
         $f[] = Form::input('studio_pwd', '直播间密码', $liveInfo->getData('studio_pwd'));
         $f[] = Form::textarea('live_introduction', '直播间简介', $liveInfo->getData('live_introduction'));
         $f[] = Form::number('online_num', '虚拟在线人数', $liveInfo->getData('online_num'));
@@ -333,10 +335,6 @@ class AliyunLive extends AuthController
         if (isset($where['special_type'])) {
             $where['type'] = $where['special_type'];
         }
-        if (isset($where['store_name']) && $where['store_name']) {
-            $where['title'] = $where['store_name'];
-            unset($where['store_name']);
-        }
         //根据账号身份获取各自的列表数据
         $role_sign = get_login_role();
         if (isset($role_sign['role_sign']) && $role_sign['role_sign'] == "anchor") {
@@ -370,12 +368,22 @@ class AliyunLive extends AuthController
         if ($liveInfo->is_del) return Json::fail('直播间已删除');
         $specialInfo->is_del = 1;
         $liveInfo->is_del = 1;
-        if ($specialInfo->save() && $liveInfo->save())
+        if ($specialInfo->save() && $liveInfo->save()) {
+            LiveStudio::where(['special_id' => $id])->update(['is_del' => 1]);
             return Json::successful('删除成功');
-        else
+        }else{
             return Json::fail('删除失败');
+        }
+
     }
 
+    public function recommend($id = 0){
+        if (!$id) return Json::fail('缺少参数');
+        $specialInfo = SpecialModel::get($id);
+        if (!$specialInfo) return Json::fail('专题不存在');
+        Session::set('live_one_id',$id,'wap');
+        return Json::successful('推荐成功');
+    }
     /**
      * 嘉宾列表
      * @param $live_id
@@ -738,11 +746,22 @@ class AliyunLive extends AuthController
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function get_special_list($subject_id = 0)
+    public function get_special_list($subject_id = false, $live_goods_list = false)
     {
-        if (!$subject_id) return JsonService::fail('缺少参数');
-        $specialList = Special::where(['subject_id' => $subject_id, 'is_show' => 1, 'is_del' => 0])->order('sort desc')->select();
-        return JsonService::successful($specialList);
+        $where['is_show'] = 1;
+        $where['is_del'] = 0;
+        if ($subject_id) $where['subject_id'] = $subject_id;
+        if (!$live_goods_list) {
+            $dataList = $specialList = Special::where($where)->order('sort desc')->select();
+        }else{
+            $dataList = array();
+            $specialList = Special::where($where)->whereIn('type',[1,2,3,5])->order('type desc')->select();
+            foreach($specialList as $k => $v) {
+                $dataList[$k]['value'] = $v['id'];
+                $dataList[$k]['title'] = SPECIAL_TYPE[$v['type']]."--".$v['title'];
+            }
+        }
+        return JsonService::successful($dataList);
     }
 
     public function move_live_admin() {
@@ -755,9 +774,9 @@ class AliyunLive extends AuthController
         }
         $special_info = Special::get(['id' => $parm['special_id']]);
         if (!$special_info) JsonService::fail('直播间不存在');
-        if ($special_info['admin_id'] == $parm['admin_id']) return Json::successful('转移成功1');
+        if ($special_info['admin_id'] == $parm['admin_id']) return Json::successful('转移成功');
         $special_info->save(['admin_id' => $parm['admin_id']]);
-        return Json::successful('转移成功2');
+        return Json::successful('转移成功');
     }
 
     /**
@@ -786,6 +805,88 @@ class AliyunLive extends AuthController
             return Json::successful('保存成功');
         else
             return Json::fail('保存失败');
+    }
+
+    /**直播推荐
+     * @return mixed
+     */
+    public function live_goods()
+    {
+        $live_id = $this->request->get('live_id',0);
+        $this->assign('live_id', $live_id);
+        return $this->fetch();
+    }
+    /**直播推荐列表数据
+     * @return mixed
+     */
+    public function live_goods_list($live_id = false)
+    {
+        $where = UtilService::getMore([
+            ['page', 1],
+            ['live_id', 0],
+            ['store_name', ""],
+            ['limit', 20],
+            ['order', ''],
+            ['is_show', ''],
+        ]);
+        if ($live_id) $where['live_id'] = $live_id;
+        return Json::successlayui(LiveGoods::getLiveGoodsList($where));
+    }
+    /**直播打赏
+     * @return mixed
+     */
+    public function live_reward()
+    {
+        $gold_info = SystemConfigService::more(['gold_name','gold_image']);
+        $role_sign = get_login_role();
+        $where['l.is_del'] = 0;
+        if (isset($role_sign['role_sign']) && $role_sign['role_sign'] == "anchor") {
+            $admin_id = get_login_id()['admin_id'];
+            $where['s.admin_id'] = $admin_id;
+        }
+        $live_studio = LiveStudio::alias('l')->where($where)->join('__SPECIAL__ s','l.special_id = s.id')->field('l.id,l.live_title')->select();
+        $live_studio = $live_studio ? $live_studio->toArray() : [];
+        $this->assign("year",getMonth('y'));
+        $this->assign("live_studio",json_encode($live_studio));
+        $this->assign("gold_info",$gold_info);
+        return $this->fetch();
+    }
+    /**直播推荐列表数据
+     * @return mixed
+     */
+    public function live_reward_list()
+    {
+        $where = UtilService::getMore([
+            ['page', 1],
+            ['user_info', ""],
+            ['limit', 20],
+            ['order', ''],
+            ['live_id', 0],
+            ['date', 0],
+        ]);
+        //根据账号身份获取各自的列表数据
+        $role_sign = get_login_role();
+        if (isset($role_sign['role_sign']) && $role_sign['role_sign'] == "anchor") {
+            $where['admin_id'] = get_login_id()['admin_id'];
+        }
+        return Json::successlayui(LiveReward::getLiveRewardList($where));
+    }
+    /**
+     * 获取头部订单金额等信息
+     * return json
+     *
+     */
+    public function getBadge()
+    {
+        $where = UtilService::postMore([
+            ['page', 1],
+            ['user_info', ""],
+            ['limit', 20],
+            ['order', ''],
+            ['live_id', 0],
+            ['date', 0],
+        ]);
+        return JsonService::successful(LiveReward::getBadge($where));
     }
 
 }

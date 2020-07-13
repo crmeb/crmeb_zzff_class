@@ -141,6 +141,7 @@
                         if(res.status == 200 && res.data.code == 200) {
                             $eb.$swal('success',res.data.msg);
                             obj.del();
+                            location.reload();
                         }else
                             return Promise.reject(res.data.msg || '删除失败')
                     }).catch(function(err){

@@ -33,6 +33,9 @@
         margin-top: -9px;
         color: #01AAED;
     }
+    .layui-tab-title li{
+        min-width: 119px;
+    }
 </style>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
@@ -79,11 +82,9 @@
                     <div class="layui-tab layui-tab-card" style="margin-top: 50px;">
 
                         <ul class="layui-tab-title" style="position: absolute;left: 25px;">
-                            <li class="layui-this">开通记录</li>
+                            <li class="layui-this">我的课程</li>
                             <li>消费能力</li>
-                            <li>积分明细</li>
                             <li>签到记录</li>
-                            <li>持有优惠劵</li>
                             <li>余额变动记录</li>
                             <li>推广下线明细</li>
                         </ul>
@@ -120,9 +121,8 @@
                                     <thead>
                                         <tr>
                                             <th>订单编号</th>
-                                            <th>收货人</th>
-                                            <th>商品数量</th>
-                                            <th>商品总价</th>
+                                            <th>课程数量</th>
+                                            <th>课程总价</th>
                                             <th>实付金额</th>
                                             <th>交易完成时间</th>
                                         </tr>
@@ -134,12 +134,9 @@
                                                     <span class="layui-badge" :class="{'layui-bg-green':item.paid==1}" v-text="item.paid==1 ? '已支付': '未支付' ">正在加载</span>
                                                     <span class="layui-badge" :class="{'layui-bg-cyan':item.pay_type=='yue','layui-bg-blue':item.pay_type=='weixin'}" v-text="item.pay_type=='weixin' ? '微信支付': '余额支付' ">正在加载</span>
                                                     <span class="layui-badge layui-bg-black" v-if="item.pink_id!=0 || item.pink_id!='0'">拼团</span>
-                                                    <span class="layui-badge layui-bg-blue" v-else-if="item.seckill_id!=0 || item.seckill_id!='0' ">秒杀</span>
-                                                    <span class="layui-badge layui-bg-gray" v-else-if="item.bargain_id!=0 || item.bargain_id!='0' ">砍价</span>
                                                     <span class="layui-badge layui-bg-gray" v-else>普通</span>
                                                 </p>
                                             </td>
-                                            <td>{{item.real_name}}</td>
                                             <td>{{item.total_num}}</td>
                                             <td>{{item.total_price}}</td>
                                             <td>{{item.pay_price}}</td>
@@ -151,32 +148,6 @@
                                     </tbody>
                                 </table>
                                 <div ref="page_order" v-show="count.order_count > limit" style="text-align: right;"></div>
-                            </div>
-                            <div class="layui-tab-item">
-                                <table class="layui-table" lay-skin="line" v-cloak="">
-                                    <thead>
-                                    <tr>
-                                        <th>来源/用途</th>
-                                        <th>积分变化</th>
-                                        <th>变化后积分</th>
-                                        <th>日期</th>
-                                        <th>备注</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="item in integralList">
-                                            <td>{{item.title}}</td>
-                                            <td>{{item.number}}</td>
-                                            <td>{{item.balance}}</td>
-                                            <td>{{item.add_time}}</td>
-                                            <td>{{item.mark}}</td>
-                                        </tr>
-                                        <tr v-show="integralList.length<=0" style="text-align: center">
-                                            <td colspan="5">暂无数据</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div ref="integral_page" v-show="count.integral_count > limit" style="text-align: right;"></div>
                             </div>
                             <div class="layui-tab-item">
                                 <table class="layui-table" lay-skin="line" v-cloak="">
@@ -206,36 +177,6 @@
                                 <table class="layui-table" v-cloak="">
                                     <thead>
                                     <tr>
-                                        <th>优惠券名称</th>
-                                        <th>面值</th>
-                                        <th>有效期</th>
-                                        <th>所需积分</th>
-                                        <th>兑换时间</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="item in CouponsList">
-                                            <td>{{item.coupon_title}}
-                                                <p>
-                                                    <span class="layui-badge" :class="{'layui-bg-green':item._type>=1}" v-text="item._type>=1 ? '可使用': '已过期' ">正在加载</span>
-                                                </p>
-                                            </td>
-                                            <td>{{item.coupon_price}}</td>
-                                            <td>{{item._add_time}}-{{item._end_time}}</td>
-                                            <td>{{item.integral}}</td>
-                                            <td>{{item._add_time}}</td>
-                                        </tr>
-                                        <tr v-show="CouponsList.length<=0" style="text-align: center">
-                                            <td colspan="5">暂无数据</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div ref="copons_page" v-show="count.coupon_count > limit" style="text-align: right;"></div>
-                            </div>
-                            <div class="layui-tab-item">
-                                <table class="layui-table" v-cloak="">
-                                    <thead>
-                                    <tr>
                                         <th>变动金额</th>
                                         <th>变动后</th>
                                         <th>类型</th>
@@ -253,7 +194,7 @@
                                                 </p>
                                             </td>
                                             <td>{{item.balance}}</td>
-                                            <td>{{item._type}}</td>
+                                            <td>{{item.title}}</td>
                                             <td>{{item.add_time}}</td>
                                             <td>{{item.mark}}</td>
                                         </tr>
@@ -314,17 +255,13 @@
                 uid:$uid,
                 orderList:[],
                 PayList:[],
-                integralList:[],
                 SignList:[],
-                CouponsList:[],
                 balanceChangList:[],
                 SpreadList:[],
                 count:count,
                 page:{
                     order_page:1,
-                    integral_page:1,
                     sign_page:1,
-                    copons_page:1,
                     balancechang_page:1,
                     spread_page:1,
                     pay_page:1,
@@ -337,14 +274,8 @@
                 'page.pay_page':function () {
                     this.getBuySpecilList();
                 },
-                'page.integral_page':function () {
-                    this.getOneIntegralList();
-                },
                 'page.sign_page':function () {
                     this.getOneSignList();
-                },
-                'page.copons_page':function () {
-                    this.getOneCouponsList();
                 },
                 'page.balancechang_page':function () {
                     this.getOneBalanceChangList();
@@ -377,14 +308,8 @@
                 getOneorderList:function () {
                     this.request('getOneorderList',this.page.order_page,'orderList');
                 },
-                getOneIntegralList:function () {
-                    this.request('getOneIntegralList',this.page.integral_page,'integralList');
-                },
                 getOneSignList:function () {
                     this.request('getOneSignList',this.page.sign_page,'SignList');
-                },
-                getOneCouponsList:function () {
-                    this.request('getOneCouponsList',this.page.copons_page,'CouponsList');
                 },
                 getOneBalanceChangList:function () {
                     this.request('getOneBalanceChangList',this.page.balancechang_page,'balanceChangList');
@@ -398,9 +323,7 @@
             },
             mounted:function () {
                 this.getOneorderList();
-                this.getOneIntegralList();
                 this.getOneSignList();
-                this.getOneCouponsList();
                 this.getOneBalanceChangList();
                 this.getSpreadList();
                 this.getBuySpecilList();
@@ -424,30 +347,12 @@
                     }
                 });
                 layList.laypage.render({
-                    elem: that.$refs.integral_page
-                    ,count:that.count.integral_count
-                    ,limit:that.limit
-                    ,theme: '#1E9FFF',
-                    jump:function(obj){
-                        that.page.integral_page=obj.curr;
-                    }
-                });
-                layList.laypage.render({
                     elem: that.$refs.Sign_page
                     ,count:that.count.sign_count
                     ,limit:that.limit
                     ,theme: '#1E9FFF',
                     jump:function(obj){
                         that.page.sign_page=obj.curr;
-                    }
-                });
-                layList.laypage.render({
-                    elem: that.$refs.copons_page
-                    ,count:that.count.coupon_count
-                    ,limit:that.limit
-                    ,theme: '#1E9FFF',
-                    jump:function(obj){
-                        that.page.copons_page=obj.curr;
                     }
                 });
                 layList.laypage.render({

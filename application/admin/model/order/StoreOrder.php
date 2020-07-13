@@ -59,31 +59,16 @@ class StoreOrder extends ModelBasic
         return $list;
     }
 
-    public static function orderCount($where = [])
+    public static function orderCount()
     {
-        if (isset($where['mer_id'])) {
-            $data['wz'] = self::statusByWhere(0, self::where('mer_id', $where['mer_id']))->count();
-            $data['wf'] = self::statusByWhere(1, self::where('mer_id', $where['mer_id']))->count();
-            $data['ds'] = self::statusByWhere(2, self::where('mer_id', $where['mer_id']))->count();
-            $data['dp'] = self::statusByWhere(3, self::where('mer_id', $where['mer_id']))->count();
-            $data['jy'] = self::statusByWhere(4, self::where('mer_id', $where['mer_id']))->count();
-            $data['tk'] = self::statusByWhere(-1, self::where('mer_id', $where['mer_id']))->count();
-            $data['yt'] = self::statusByWhere(-2, self::where('mer_id', $where['mer_id']))->count();
-            return $data;
-        } else {
             $data['wz'] = self::statusByWhere(0, new self())->count();
             $data['wf'] = self::statusByWhere(1, new self())->count();
-            $data['ds'] = self::statusByWhere(2, new self())->count();
-            $data['dp'] = self::statusByWhere(3, new self())->count();
-            $data['jy'] = self::statusByWhere(4, new self())->count();
             $data['tk'] = self::statusByWhere(-1, new self())->count();
             $data['yt'] = self::statusByWhere(-2, new self())->count();
             $data['pt'] = self::statusByWhere(5, new self())->count();
             $data['pu'] = self::statusByWhere(6, new self())->count();
             $data['lw'] = self::statusByWhere(7, new self())->count();
             return $data;
-        }
-
     }
 
     public static function OrderList($where)
@@ -235,27 +220,19 @@ HTML;
         if ('' === $status)
             return $model;
         else if ($status == 0)//未支付
-            return $model->where($alert . 'paid', 0)->where($alert . 'status', 0)->where($alert . 'refund_status', 0);
+            return $model->where($alert . 'paid', 0)->where($alert . 'status', 0)->where($alert . 'refund_status', 0)->where($alert . 'type', 0);
         else if ($status == 1)//已支付 未发货
-            return $model->where($alert . 'paid', 1)->where($alert . 'status', 0)->where($alert . 'refund_status', 0);
-        else if ($status == 2)//已支付  待收货
-            return $model->where($alert . 'paid', 1)->where($alert . 'status', 1)->where($alert . 'refund_status', 0);
-        else if ($status == 3)// 已支付  已收货  待评价
-            return $model->where($alert . 'paid', 1)->where($alert . 'status', 2)->where($alert . 'refund_status', 0);
-        else if ($status == 4)// 交易完成
-            return $model->where($alert . 'paid', 1)->where($alert . 'status', 3)->where($alert . 'refund_status', 0);
+            return $model->where($alert . 'paid', 1)->where($alert . 'status', 0)->where($alert . 'refund_status', 0)->where($alert . 'type', 0);
         else if ($status == 5)//普通订单
-            return $model->where($alert . 'paid', 1)->where($alert . 'combination_id', 0)->where($alert . 'is_gift', 0)->where($alert . 'refund_status', 0);
+            return $model->where($alert . 'combination_id', 0)->where($alert . 'is_gift', 0)->where($alert . 'type', 0);
         else if ($status == 6)// 拼团订单
-            return $model->where($alert . 'paid', 1)->where($alert . 'combination_id','>', 0)->where($alert . 'is_gift', 0)->where($alert . 'refund_status', 0);
+            return $model->where($alert . 'combination_id','>', 0)->where($alert . 'is_gift', 0)->where($alert . 'type', 0);
         else if ($status == 7)// 礼物订单
-            return $model->where($alert . 'paid', 1)->where($alert . 'combination_id', 0)->where($alert . 'is_gift','>', 0)->where($alert . 'refund_status', 0);
+            return $model->where($alert . 'combination_id', 0)->where($alert . 'is_gift','>', 0)->where($alert . 'type', 0);
         else if ($status == -1)//退款中
-            return $model->where($alert . 'paid', 1)->where($alert . 'refund_status', 1);
+            return $model->where($alert . 'paid', 1)->where($alert . 'refund_status', 1)->where($alert . 'type', 0);
         else if ($status == -2)//已退款
-            return $model->where($alert . 'paid', 1)->where($alert . 'refund_status', 2);
-        else if ($status == -3)//退款
-            return $model->where($alert . 'paid', 1)->where($alert . 'refund_status', 'in', '1,2');
+            return $model->where($alert . 'paid', 1)->where($alert . 'refund_status', 2)->where($alert . 'type', 0);
         else
             return $model;
     }
@@ -296,12 +273,12 @@ HTML;
     {
         $order = self::where('id', $oid)->find();
         WechatTemplateService::sendTemplate(WechatUser::uidToOpenid($order['uid']), WechatTemplateService::ORDER_REFUND_STATUS, [
-            'first' => '亲，您购买的商品已退款,本次退款' . $data['refund_price'] . '金额',
+            'first' => '亲，您购买的专题已退款,本次退款' . $data['refund_price'] . '金额',
             'keyword1' => $order['order_id'],
             'keyword2' => $order['pay_price'],
             'keyword3' => date('Y-m-d H:i:s', $order['add_time']),
-            'remark' => '点击查看订单详情'
-        ], Url::build('wap/My/order', ['uni' => $order['order_id']], true, true));
+            'remark' => '请查看账单'
+        ], '');
     }
 
     /**
@@ -642,9 +619,9 @@ HTML;
         return self::where(['uid' => $where['uid']])
             ->order('add_time desc')
             ->page((int)$where['page'], (int)$where['limit'])
-            ->field(['order_id', 'real_name', 'total_num', 'total_price', 'pay_price',
+            ->field(['order_id', 'total_num', 'total_price', 'pay_price',
                 'FROM_UNIXTIME(pay_time,"%Y-%m-%d") as pay_time', 'paid', 'pay_type',
-                'pink_id', 'seckill_id', 'bargain_id'
+                'pink_id'
             ])->select()
             ->toArray();
     }

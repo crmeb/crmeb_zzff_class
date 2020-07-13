@@ -3,7 +3,7 @@
 namespace app\admin\controller\special;
 
 use app\admin\controller\AuthController;
-//use app\admin\controller\setting\SystemConfig;
+use app\admin\model\live\LiveGoods;
 use app\admin\model\special\SpecialBarrage;
 use app\admin\model\system\SystemConfig;
 use app\admin\model\order\StoreOrder as StoreOrderModel;
@@ -73,7 +73,7 @@ class SpecialType extends AuthController
             ['subject_id', 0],
             ['page', 1],
             ['limit', 20],
-            ['title', ''],
+            ['store_name', ''],
             ['start_time', ''],
             ['end_time', ''],
             ['order', ''],
@@ -98,29 +98,30 @@ class SpecialType extends AuthController
             if ($special === false) {
                 return $this->failed(SpecialModel::getErrorInfo('您修改的专题不存在'));
             }
-            $specialSourceId = SpecialSource::getSpecialSource($id)->toArray();
-            $sourceCheckList = array();
-            if ($specialSourceId) {
-                foreach ($specialSourceId as $k => $v) {
-                    if ($special_type == SPECIAL_COLUMN) {
-                        $task_list = Special::where(['id' => $v['source_id']])->find();
-                    }else{
-                        $task_list = SpecialTask::where(['id' => $v['source_id']])->find();
-                    }
-                    if(count($task_list)>0){
-                        $task_list['is_check'] = 1;
-                        $task_list['pay_status'] = $v['pay_status'];
-                        $sourceCheckList[$k] = $task_list;
-                    }
+            if($special_type!=SPECIAL_LIVE){
+                $specialSourceId = SpecialSource::getSpecialSource($id)->toArray();
+                $sourceCheckList = array();
+                if ($specialSourceId) {
+                    foreach ($specialSourceId as $k => $v) {
+                        if ($special_type == SPECIAL_COLUMN) {
+                            $task_list = Special::where(['id' => $v['source_id']])->find();
+                        }else{
+                            $task_list = SpecialTask::where(['id' => $v['source_id']])->find();
+                        }
+                        if($task_list){
+                            $task_list['is_check'] = 1;
+                            $task_list['pay_status'] = $v['pay_status'];
+                            $sourceCheckList[$k] = $task_list;
+                        }
 
+                    }
                 }
+            }else{
+                $live_id=LiveStudio::where('special_id',$id)->value('id');
+                $sourceCheckList=LiveGoods::getLiveGoodsLists($live_id);
             }
-            /* if ($specialSourceId = array_column($specialSourceId, 'source_id')) {
-                 $where['id'] = $specialSourceId;
-                 $specialSourceList = SpecialTask::where($where)->field('id, title')->order('sort desc')->select();
-             }*/
-
             list($specialInfo, $liveInfo) = $special;
+
             $this->assign('liveInfo', json_encode($liveInfo));
             $this->assign('special', json_encode($specialInfo));
             $this->assign('sourceCheckList', json_encode($sourceCheckList));
@@ -167,17 +168,14 @@ class SpecialType extends AuthController
             ['check_source_sure', '']
         ]);
         $special_source = array();
-        if (isset($where['special_id']) && $where['special_id']) {
+        if (isset($where['special_id']) && $where['special_id'] && $where['special_type']!=SPECIAL_LIVE) {
             $special_source = SpecialSource::where(['special_id' => $where['special_id']])->select()->toArray();
             $special_source = array_column($special_source, 'pay_status', 'source_id');
+        }else if(isset($where['special_id']) && $where['special_id'] && $where['special_type']==SPECIAL_LIVE){
+            $live_id=Special::where('id',$where['special_id'])->value('id');
+            $special_source = LiveGoods::where(['live_id' => $live_id])->select()->toArray();
+            $special_source = array_column($special_source, 'pay_status', 'source_id');
         }
-        /* if ($where['special_type'] == SPECIAL_COLUMN) {//专栏
-             $sourceList = Special::where($where)->whereIn('type',[SPECIAL_IMAGE_TEXT, SPECIAL_AUDIO, SPECIAL_VIDEO])->field('id, title, type')->order('type desc, sort desc')->select();
-             if ($sourceList) {}
-         }else{
-
-         }*/
-
         $special_task = SpecialTask::getTaskList2($where);
         if (isset($special_task['data']) && $special_task['data']) {
             foreach ($special_task['data'] as $k => $v) {
@@ -215,14 +213,9 @@ class SpecialType extends AuthController
             $task->detail = htmlspecialchars_decode($task->detail);
             $task->content = htmlspecialchars_decode($task->content);
             $task->image = get_key_attr($task->image);
-            //$task->link = get_key_attr($task->link);
-            // $this->assign('special_id', $task->special_id);
-            //print_r($task->image);die;
             $this->assign('special', $task);
         }
         $this->assign('special_type', $special_type);
-        // $specialList = \app\admin\model\special\Special::PreWhere()->field(['id', 'title', 'is_live'])->select();
-        //$this->assign('specialList', $specialList);
         $template = $this->switch_template($special_type, request()->action());
         if (!$template) $template = "";
         return $this->fetch($template);
@@ -237,7 +230,6 @@ class SpecialType extends AuthController
     {
         $special_type = $this->request->param('special_type');
         if (!$special_type) return JsonService::fail('专题类型参数缺失');
-        //print_r($_POST);die;
         $data = UtilService::postMore([
             ['title', ''],
             ['image', ''],
@@ -245,14 +237,10 @@ class SpecialType extends AuthController
             ['detail', ''],
             ['image', ''],
              ['link', ''],
-            //['play_count', 0],
-            // ['special_id', 0],
             ['sort', 0],
-            // ['is_pay', 0],
             ['is_show', 1],
         ]);
         $data['type'] = $special_type;//图文素材
-        // if ($data['special_id'] === 0) return JsonService::fail('请选择课程再尝试添加');
         if (!$data['title']) return JsonService::fail('请输入课程标题');
         if (!$data['image']) return JsonService::fail('请上传封面图');
         // if (!$data['link']) return JsonService::fail('请上传或者添加视频');
@@ -278,9 +266,9 @@ class SpecialType extends AuthController
      */
     public function set_value($field = '', $id = '', $value = '', $model_type)
     {
-        $field == '' || $id == '' || $value == '' || $model_type == '' && JsonService::fail('缺少参数');
+        if(!$field || !$id || $value == '' || !$model_type) JsonService::fail('缺少参数3');
         $model_type = $this->switch_model($model_type);
-        if (!$model_type) JsonService::fail('缺少参数');
+        if (!$model_type) JsonService::fail('缺少参数2');
         $res = $model_type::where(['id' => $id])->update([$field => $value]);
         if ($res)
             return JsonService::successful('保存成功');
@@ -306,6 +294,10 @@ class SpecialType extends AuthController
                 break;
             case 'source':
                 return new SpecialSource();
+                break;
+            case 'live_goods':
+                return new LiveGoods();
+                break;
             default:
                 return false;
         }
@@ -373,6 +365,13 @@ class SpecialType extends AuthController
      * @throws \think\exception\DbException
      */
     public function get_subject_list($grade_id = 0)
+{
+    $subjectlist = Grade::with(['SpecialSubject'=>function($query){
+        $query->where('is_show',1);
+    }])->order('sort desc')->select();
+    return JsonService::successful($subjectlist);
+}
+    public function get_subject_list222($grade_id = 0)
     {
         if ($grade_id) {
             $where['grade_id'] = $grade_id;
@@ -381,7 +380,6 @@ class SpecialType extends AuthController
         $subjectlist = SpecialSubject::where($where)->order('sort desc')->select();
         return JsonService::successful($subjectlist);
     }
-
     /**获取素材列表
      * @param bool $type
      * @throws \think\db\exception\DataNotFoundException
@@ -549,14 +547,18 @@ class SpecialType extends AuthController
             if ($id) {
                 SpecialModel::update($data, ['id' => $id]);
                 SpecialContent::update(['content' => $content], ['special_id' => $id]);
-                SpecialModel::commitTrans();
-                if ($sourceCheckList) {
-                    $save_source = SpecialSource::saveSpecialSource($sourceCheckList, $id);
-                    if (!$save_source) return Json::fail('添加失败');
-                }
-                if ($special_type == 4) {
+                if ($special_type == SPECIAL_LIVE) {
                     LiveStudio::update($liveInfo, ['special_id' => $id]);
                 }
+                //if ($sourceCheckList) {
+                    if ($special_type == SPECIAL_LIVE) {
+                        $save_source = LiveGoods::saveLiveGoods($sourceCheckList, $id);
+                    }else{
+                        $save_source = SpecialSource::saveSpecialSource($sourceCheckList, $id);
+                    }
+                    if (!$save_source) return Json::fail('添加失败');
+              //  }
+                SpecialModel::commitTrans();
                 return Json::successful('修改成功');
             } else {
                 $data['add_time'] = time();
@@ -564,14 +566,18 @@ class SpecialType extends AuthController
                 $data['is_fake_pink'] = $data['is_pink'] ? $data['is_fake_pink'] : 0;
                 $res1 = SpecialModel::insertGetId($data);
                 $res2 = SpecialContent::set(['special_id' => $res1, 'content' => $content, 'add_time' => time()]);
-                if ($sourceCheckList) {
-                    $res3 = SpecialSource::saveSpecialSource($sourceCheckList, $res1);
-                }
                 if ($special_type == SPECIAL_LIVE) {
                     $liveInfo['special_id'] = $res1;
                     $liveInfo['stream_name'] = LiveStudio::getliveStreamName();
                     $liveInfo['live_image'] = $data['image'];
                     $res3 = LiveStudio::set($liveInfo);
+                }
+                if ($sourceCheckList) {
+                    if ($special_type == SPECIAL_LIVE) {
+                        $res3 = LiveGoods::saveLiveGoods($sourceCheckList, $res1);
+                    }else{
+                        $res3 = SpecialSource::saveSpecialSource($sourceCheckList, $res1);
+                    }
                 }
 
                 if ($res1 && $res2 && $res3) {
@@ -772,12 +778,23 @@ class SpecialType extends AuthController
         $this->assign('special_title', SPECIAL_TYPE[$special_type]);
         $this->assign('special_type', $special_type);//图文专题
         $this->assign('activity_type', $this->request->param('activity_type', 1));
-        //$this->assign('special_id', SpecialCourse::where('id', $coures_id)->value('special_id'));
         $this->assign('special_id', $special_id);
         $this->assign('specialList', \app\admin\model\special\Special::PreWhere()->field(['id', 'title'])->select());
         return $this->fetch('special/task/search_task');
     }
 
+    public function create($coures_id = 0){
+        $special_type = $this->request->param('special_type');
+        $special_id = $this->request->param('special_id');
+        $check_source = $this->request->param('check_source_sure');
+        $this->assign('coures_id', $coures_id);
+        $this->assign('special_title', SPECIAL_TYPE[$special_type]);
+        $this->assign('special_type', $special_type);//图文专题
+        $this->assign('activity_type', $this->request->param('activity_type', 1));
+        $this->assign('special_id', $special_id);
+        $this->assign('specialList', \app\admin\model\special\Special::PreWhere()->field(['id', 'title'])->select());
+        return $this->fetch('special/task/create');
+    }
     /**
      * 专题弹幕列表和添加
      * */
@@ -870,6 +887,38 @@ class SpecialType extends AuthController
         }
     }
 
+    /**设置是否直播带货
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    /*public function set_live_goods()
+    {
+        $special_id = $this->request->param('special_id');
+        $is_live_goods = $this->request->param('is_live_goods');
+        if (!$special_id) return JsonService::fail('专题id缺失');
+        if (!in_array($is_live_goods, [0,1])) return JsonService::fail('非法参数');
+        $specialInfo = Special::getOne($special_id);
+        if (!$specialInfo) return JsonService::fail('专题不存在');
+        $isGoods = LiveGoods::getOne(['special_id' => $special_id, 'is_delete' => 0]);
+        if ($is_live_goods == 1) {
+            if ($isGoods && $isGoods->is_show == 1) return JsonService::successful('无需重复设置');
+            if ($isGoods && $isGoods->is_show == 0) {
+                LiveGoods::where(['id' => $isGoods->id])->update(['is_show' => 1, 'update_time' => time()]);
+                return JsonService::successful('设置成功');
+            }
+            $inster_data['special_id'] =  $special_id;
+            $inster_data['special_name'] =  $specialInfo[0]['title'];
+            $inster_data['add_time'] =  time();
+            $inster = LiveGoods::insterLiveGoods($inster_data);
+            if ($inster) return JsonService::successful('设置成功');
+            return JsonService::fail('设置失败');
+        }else{
+            if (!$isGoods) return JsonService::successful('设置成功');
+            LiveGoods::where(['id' => $isGoods->special_id])->update(['is_show' => 0, 'update_time' => time()]);
+            return JsonService::successful('设置成功');
+        }
+    }*/
     /**渲染模板
      * @param $special_type
      * @param $template_type

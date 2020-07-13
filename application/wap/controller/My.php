@@ -9,7 +9,9 @@ namespace app\wap\controller;
 
 
 use Api\Express;
+use app\admin\model\system\SystemAdmin;
 use app\admin\model\system\SystemConfig;
+use app\wap\model\activity\EventSignUp;
 use app\wap\model\special\SpecialRecord;
 use app\wap\model\special\SpecialRelation;
 use app\wap\model\user\SmsCode;
@@ -79,6 +81,22 @@ class My extends AuthController
     public function my_gift()
     {
         return $this->fetch();
+    }
+    public function sign_list()
+    {
+
+        return $this->fetch();
+    }
+    public function sign_order($type=1,$order_id='')
+    {
+        $order=EventSignUp::where('order_id',$order_id)->where('paid',1)->find();
+        if(!$order) return $this->redirect(Url::build('sign_list'));
+        if($type==2){
+            $res=SystemAdmin::testUserLevel($this->userInfo);
+            if(!$res) return $this->redirect(Url::build('wap/my/index'));
+        }
+        $this->assign(['type'=>$type,'order_id'=>$order_id,'status'=>$order['status']]);
+        return $this->fetch('order_verify');
     }
 
     public function get_my_gift_list()
@@ -172,6 +190,7 @@ class My extends AuthController
     public function index()
     {
         $this->assign([
+            'gold_name'=>SystemConfigService::get('gold_name'),
             'collectionNumber' => SpecialRelation::where('uid', $this->uid)->count(),
             'recordNumber' => SpecialRecord::where('uid', $this->uid)->count(),
             'overdue_time'=>date('Y-m-d',$this->userInfo['overdue_time'])
@@ -179,18 +198,6 @@ class My extends AuthController
         return $this->fetch();
     }
 
-
-    public function sign_in()
-    {
-        $signed = UserSign::checkUserSigned($this->userInfo['uid']);
-        $signCount = UserSign::userSignedCount($this->userInfo['uid']);
-        $signList = UserSign::userSignBillWhere($this->userInfo['uid'])
-            ->field('number,add_time')->order('id DESC')
-            ->limit(30)->select()->toArray();
-        $goodsList = StoreProduct::getNewProduct('image,price,sales,store_name,id', '0,20')->toArray();
-        $this->assign(compact('signed', 'signCount', 'signList', 'goodsList'));
-        return $this->fetch();
-    }
 
     public function coupon()
     {
@@ -540,5 +547,26 @@ class My extends AuthController
             'title' => '关于我们'
         ]);
         return $this->fetch('index/agree');
+    }
+
+    public function getUserGoldBill()
+    {
+        $user_info = $this->userInfo;
+        list($page, $limit) = UtilService::getMore([
+            ['page', 1],
+            ['limit', 20],
+        ], $this->request, true);
+        $where['uid'] = $user_info['uid'];
+        $where['category'] = "gold_num";
+        return JsonService::successful(UserBill::getUserGoldBill($where, $page, $limit));
+    }
+
+
+    /**
+     * 余额明细
+     */
+    public function bill_detail(){
+
+        return $this->fetch();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace app\wap\model\special;
 
+use app\admin\model\special\SpecialSource;
 use app\wap\model\store\StoreOrder;
 use app\wap\model\store\StorePink;
 use app\wap\model\user\User;
@@ -146,16 +147,23 @@ class Special extends ModelBasic
         if ($type)
             $list = self::PreWhere('a')->where('s.uid', $uid)->order('a.sort desc')->join('__SPECIAL_RELATION__ s', 'a.id=s.link_id')->field('a.*')->page($page, $limit)->select();
         else {
-            $model = self::PreWhere('a', SpecialBuy::where('s.uid', $uid)->where('s.is_del', 0)->order('a.sort desc,s.add_time desc')->alias('s'), true)->join('__SPECIAL__ a', 'a.id=s.special_id');
+            $model = self::PreWhere('s', SpecialBuy::where('s.uid', $uid)->where('s.is_del', 0)->order('a.sort desc,s.add_time desc')->alias('s'), true)->join('__SPECIAL__ a', 'a.id=s.special_id');
             if ($search) {
                 $model = $model->where('a.title|a.abstract', 'like', "%$search%");
             }
-            $list = $model->page($page, $limit)->select();
+            $list = $model->field('a.*,a.type as types,s.*')->page($page, $limit)->select();
         }
+        $list=count($list)>0 ? $list->toArray() :[];
         foreach ($list as &$item) {
             $item['image'] = get_oss_process($item['image'], 4);
             if (is_string($item['label'])) $item['label'] = json_decode($item['label'], true);
             $item['subject_name'] = SpecialSubject::where('id', $item['subject_id'])->value('name');
+            if($type) $id=$item['id'];
+            else $id=$item['special_id'];
+            $item['s_id'] =$id;
+            $specialSourceId = SpecialSource::getSpecialSource($id);
+            if($specialSourceId) $item['count']=count($specialSourceId);
+            else $item['count']=0;
         }
         $page += 1;
         return compact('list', 'page');
@@ -225,7 +233,7 @@ class Special extends ModelBasic
             if ($where['search']) {
                 $model = $model->where('a.title|a.abstract', 'LIKE', "%$where[search]%");
             }
-            return $model->order('a.sort desc,a.id desc')
+            return $model->order('a.sort desc,a.id desc')->where('a.is_show', 1)
                 ->join('special_record r', 'r.special_id = a.id')
                 ->group('a.id')->where('uid', $where['uid']);
         } else {
@@ -236,7 +244,7 @@ class Special extends ModelBasic
             if ($where['search']) {
                 $model = $model->where('title|abstract', 'LIKE', "%$where[search]%");
             }
-            return $model->order('sort desc,id desc');
+            return $model->where('is_show', 1)->order('sort desc,id desc');
         }
     }
 
@@ -260,8 +268,12 @@ class Special extends ModelBasic
             ->select();
         $list = count($list) ? $list->toArray() : [];
         foreach ($list as &$item) {
+            $specialSourceId = SpecialSource::getSpecialSource($item['id']);
+            if($specialSourceId) $item['count']=count($specialSourceId);
+            else $item['count']=0;
             $item['subject_name'] = SpecialSubject::where('id', $item['subject_id'])->value('name');
         }
         return $list;
     }
+
 }

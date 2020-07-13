@@ -50,7 +50,7 @@
         </div>
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">资金监控日志</div>
+                <div class="layui-card-header">监控日志</div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="userList" lay-filter="userList"></table>
                     <script type="text/html" id="number">
@@ -70,12 +70,12 @@
     layList.form.render();
     layList.date({elem:'#start_time',theme:'#393D49',type:'datetime'});
     layList.date({elem:'#end_time',theme:'#393D49',type:'datetime'});
-    layList.tableList('userList',"{:Url('billlist')}",function () {
+    layList.tableList('userList',"{:Url('billlist')}?category={$category}",function () {
         return [
             {field: 'uid', title: '会员ID', sort: true,event:'uid',align: 'center'},
             {field: 'nickname', title: '昵称',align: 'center'},
             {field: 'name', title: '用户姓名',align: 'center' },
-            {field: 'number', title: '金额/积分',sort:true,templet:'#number',align: 'center'},
+            {field: 'number', title: '{$gold_name}',sort:true,templet:'#number',align: 'center'},
             {field: 'title', title: '类型',align: 'center'},
             {field: 'mark', title: '备注',align: 'center'},
             {field: 'add_time', title: '创建时间',align: 'center'},
@@ -93,7 +93,7 @@
         layList.reload(where);
     });
     layList.search('export',function(where){
-        location.href=layList.U({a:'save_bell_export',q:{type:where.type,start_time:where.start_time,end_time:where.end_time,nickname:where.nickname}});
+        location.href=layList.U({a:'save_bell_export',q:{type:where.type,start_time:where.start_time,end_time:where.end_time,nickname:where.nickname,category:'gold_num'}});
     });
 </script>
 {/block}

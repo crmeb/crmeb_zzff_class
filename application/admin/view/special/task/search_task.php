@@ -2,48 +2,27 @@
 {block name="content"}
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15"  id="app">
-       <!-- <div class="layui-col-md12">
+        <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">搜索条件</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">素材名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="title" class="layui-input" placeholder="请输入素材名称">
-                                    <input type="hidden" name="coures_id" value="{$coures_id}">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    素材名称：
+                    <div class="layui-inline">
+                        <input class="layui-input" name="title" id="demoReload" autocomplete="off">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
                 </div>
             </div>
-        </div>-->
+        </div>
         <!--产品列表-->
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">{$special_title}素材列表</div>
                 <div class="layui-card-body">
-                    <!--<div class="alert alert-info" role="alert">
-                        注:素材名称和排序可进行快速编辑;
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    </div>-->
                     <div class="layui-btn-container">
                         <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()"><i class="layui-icon layui-icon-refresh"></i>  刷新</button>
                     </div>
                     <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="toolbarDemo" >
-                        <div class="layui-btn-container">
-                            <button id="test" class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-                        </div>
-                    </script>
                     <script type="text/html" id="image">
                         <img style="cursor: pointer;width: 80px;" lay-event='open_image' src="{{d.image}}">
                     </script>
@@ -61,19 +40,12 @@
 {block name="script"}
 <script>
     var special_id = <?=isset($special_id) ? $special_id : ""?>;
+    var table_date=new Array();//用于保存当前页数据
+
+    var ids=new Array();    //用于保存选中的数据
     //实例化form
-    layui.table.render();
+    layList.form.render();
     var table = layui.table;
-    //加载列表
-   /* layList.tableList('List',"{:Url('source_list')}?coures_id={$coures_id}",function (){
-        return [
-            {type: 'checkbox'},
-            {field: 'id', title: '编号', sort: true,event:'id'},
-            {field: 'title', title: '素材标题',edit:'title'},
-            {field: 'image', title: '封面',templet:'#image'},
-            {field: 'is_show', title: '是否显示',templet:'#is_show',width:'10%'},
-        ];
-    });*/
     table.render({
         elem: '#List'
         ,url:"{:Url('source_list')}?special_id={$special_id}&special_type={$special_type}"
@@ -89,82 +61,100 @@
             {field: 'title', title: '素材标题'},
             {field: 'image', title: '封面',templet:'#image'},
         ]]
+        ,id: 'testReload'
         ,page: true
+        ,done:function (res,curr,count) {
+            table_date=res.data;
+            for(var i=0;i< res.data.length;i++){
+                for (var j = 0; j < ids.length; j++) {
+                    if(res.data[i].id == ids[j].id) {
+                        res.data[i]["LAY_CHECKED"]='true';/*设置勾选*/
+                        /*找到对应数据改变勾选样式*/
+                        var index= res.data[i]['LAY_TABLE_INDEX'];
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                    }
+                }
+                if(res.data[i]["LAY_CHECKED"]){
+                    ids.push(res.data[i]);
+                }
+            }
+            var checkStatus = table.checkStatus('List');/*获得选中的值 和判断是否是全选 isAll true全选 isAlL false 没有全选*/
+            if(checkStatus.isAll){
+                $('.layui-table-header th[data-field="0"] input[type="checkbox"]').prop('checked', true);
+                $('.layui-table-header th[data-field="0"] div[class="layui-unselect layui-form-checkbox"]').addClass('layui-form-checked');
+            }
+            removeArrayRepElement(ids);
+            $("#check_source_tmp",window.parent.document).val(JSON.stringify(ids));
+        }
     });
-
-    //头工具栏事件
-    table.on('toolbar(List)', function(obj){
-        var checkStatus = table.checkStatus(obj.config.id);
-        switch(obj.event){
-            case 'getCheckData':
-                var data = checkStatus.data;
-                $("#check_source_tmp",window.parent.document).val(JSON.stringify(data));
-                break;
-        };
+    var $ = layui.$, active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+            //执行重载
+            table.reload('testReload', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,where: {
+                    title: demoReload.val()
+                }
+            }, 'data');
+        }
+    };
+    $('.layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
     });
-
-   /* table.on('row(List)',function(obj){
-        var checkStatus = table.checkStatus('List');
-        var data = obj.data;
-        console.log(checkStatus);
-       // conId = data.id;
-        //标注选中样式
-        obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
-    });*/
-   /* table.on('checkbox(List)', function(obj){
-        console.log(obj)
-    });*/
-
-    //自定义方法
-  /*  var action= {
-        set_value: function (field, id, value) {
-            layList.baseGet(layList.Url({
-                a: 'set_value',
-                q: {field: field, id: id, value: value}
-            }), function (res) {
-                layList.msg(res.msg);
-            });
-        },
-    }*/
-    //查询
-/*    layList.search('search',function(where){
-        layList.reload(where,true);
-    });
-    layList.switch('is_show',function (odj,value) {
-        if(odj.elem.checked==true){
-            layList.baseGet(layList.Url({a:'set_show',p:{is_show:1,id:value}}),function (res) {
-                layList.msg(res.msg);
-            });
+    //删除重复
+    function removeArrayRepElement(arr) {
+        for (var i = 0; i < arr.length; i++) {
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[i].id == arr[j].id && i != j) {
+                    arr.splice(j, 1);
+                }
+            }
+        }
+        return arr;
+    }
+    table.on('checkbox(List)', function (obj) {
+        if(obj.checked==true){
+            if(obj.type=='one'){
+                ids.push(obj.data);
+            }else{
+                for(var i=0;i<table_date.length;i++){
+                    ids.push(table_date[i]);
+                }
+            }
+            ids=removeArrayRepElement(ids);
         }else{
-            layList.baseGet(layList.Url({a:'set_show',p:{is_show:0,id:value}}),function (res) {
-                layList.msg(res.msg);
-            });
+            if(obj.type=='one'){
+                for(var i=0;i<ids.length;i++){
+                    if(ids[i].id==obj.data.id){
+                        ids.remove(i);
+                    }
+                }
+            }else{
+                for(var i=0;i<ids.length;i++){
+                    for(var j=0;j<table_date.length;j++){
+                        if(ids[i].id==table_date[j].id){
+                            ids.remove(i);
+                        }
+                    }
+                }
+            }
         }
+        $("#check_source_tmp",window.parent.document).val(JSON.stringify(ids));
     });
-    //快速编辑
-    layList.edit(function (obj) {
-        var id=obj.data.id,value=obj.value;
-        switch (obj.field) {
-            case 'title':
-                action.set_value('title',id,value);
-                break;
-            case 'sort':
-                action.set_value('sort',id,value);
-                break;
-            case 'play_count':
-                action.set_value('play_count',id,value);
-                break;
+    Array.prototype.remove=function(dx){
+        if(isNaN(dx)||dx>this.length){return false;}
+        for(var i=0,n=0;i<this.length;i++)
+        {
+            if(this[i]!=this[dx]){
+                this[n++]=this[i];
+            }
         }
-    });
-    //监听并执行排序
-    layList.sort(['id','sort'],true);
-    //点击事件绑定
-    layList.tool(function (event,data,obj) {
-        switch (event) {
-            case 'open_image':
-                $eb.openImage(data.image);
-                break;
-        }
-    })*/
+        this.length-=1;
+    };
 </script>
 {/block}

@@ -1,0 +1,116 @@
+{extend name="public/container"}
+{block name="title"}活动列表{/block}
+{block name="head_top"}
+<style>
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        background: url("{__WAP_PATH}zsff/images/nothing.png") center/contain no-repeat;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="activity_list">
+        <div class="list">
+            <a v-for="(item, index) in activityList" :key="index" :href="activityDetails(item.id)" class="item">
+                <div class="image">
+                    <img :src="item.image" class="img">
+                </div>
+                <div class="text">
+                    <div class="name">{{ item.title }}</div>
+                    <div class="time">
+                        <span class="knowledge iconshijian2"></span>{{ item.time }}
+                    </div>
+                    <div class="group">
+                        <div class="money">
+                            ¥<span class="num">{{ item.price }}</span>
+                        </div>
+                        {{ item.count }}人已报名
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div v-show="loading" class="loading">
+            <span class="fa fa-spinner"></span>
+        </div>
+        <div v-if="loadend" class="loaded">{{loadTitle}}</div>
+        <div v-if="!activityList.length && !loading" class="nothing"></div>
+    </div>
+</div>
+<script>
+    require(['vue', 'store', 'helper'], function (Vue, store, $h) {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                activityList: [],
+                loadTitle: '',
+                loading: false,
+                loadend: true,
+                page: 1,
+                limit: 20
+            },
+            mounted: function () {
+                this.getActivityList();
+                this.$nextTick(function () {
+                    this.init();
+                });
+            },
+            methods: {
+                init: function () {
+                    var that = this;
+                    window.addEventListener('scroll', function () {
+                        var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+                            scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight,
+                            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                        if (clientHeight + scrollTop >= scrollHeight) {
+                            that.getActivityList();
+                        }
+                    });
+                },
+                activityDetails: function (id) {
+                    return $h.U({ c: 'special', a: 'activity_details', q: { id: id } });
+                },
+                // 获取活动列表
+                getActivityList: function () {
+                    var that = this;
+                    if (that.loading) return;
+                    if (that.loadend) return;
+                    that.loadTitle = '';
+                    that.loading = true;
+                    store.baseGet($h.U({ c: 'activity', a: 'activityList', p: { page: that.page, limit: that.limit } }), function (res) {
+                        var list = res.data.data;
+                        that.activityList.push.apply(that.activityList, list);
+                        that.loadend = list.length < that.limit;
+                        that.loadTitle = that.loadend ? '已全部加载' : '上拉加载更多';
+                        that.page = that.page + 1;
+                        that.loading = false;
+                        that.$set(this, 'activityList', that.activityList);
+                    }, function (res) {
+                        that.loadTitle = '上拉加载更多';
+                        that.loading = false;
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

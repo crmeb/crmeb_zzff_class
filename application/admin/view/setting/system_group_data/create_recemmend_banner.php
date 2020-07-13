@@ -43,7 +43,7 @@
                                     <img src="{$banner.pic}" alt="">
                                     <input type="hidden" name="pic" value="{$banner.pic}">
                                     <div class="mask">
-                                        <p><i class="fa fa-eye open_image" data-url="{$banner.pic}"></i><i class="fa fa-trash-o delete_image" data-url="{$banner.pic_key}"></i></p>
+                                        <p><i class="fa fa-eye open_image" data-url="{$banner.pic}"></i><i class="fa fa-trash-o delete_image" data-url="{$banner.pic_key.key}"></i></p>
                                     </div>
                                 </div>
                                 {/if}

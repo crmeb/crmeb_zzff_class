@@ -25,7 +25,7 @@
     .layui-input-block .time-w{
         width: 200px;
     }
-    .layui-table-body{overflow-x: hidden;}
+    /*.layui-table-body{overflow-x: hidden;}*/
     .layui-btn-group button i{
         line-height: 30px;
         margin-right: 3px;
@@ -298,11 +298,12 @@
                 {type:'checkbox'},
                 {field: 'uid', title: '编号', width:'6%',event:'uid',align: 'center'},
                 {field: 'avatar', title: '头像', event:'open_image', width: '10%',align: 'center', templet: '<p><img class="avatar" style="cursor: pointer" class="open_image" data-image="{{d.avatar}}" src="{{d.avatar}}" alt="{{d.nickname}}"></p>'},
-                {field: 'nickname', title: '姓名',templet:"#nickname",width:'18%',align: 'center'},
+                {field: 'nickname', title: '姓名',templet:"#nickname",width:'12%',align: 'center'},
                 {field: 'level', title: '会员身份',width:'8%',align: 'center'},
-                {field: 'phone', title: '手机号码',width:'14%',align: 'center'},
-                {field: 'spread', title: '推荐人',width:'17%',templet:'#spread',align: 'center'},
-                {field: 'member', title: '会员记录',width:'10%',templet:'#member',align: 'center'},
+                {field: 'phone', title: '手机号码',width:'13%',align: 'center'},
+                {field: 'spread', title: '推荐人',width:'14%',templet:'#spread',align: 'center'},
+                {field: 'gold_num', title: "{$gold_name}余额",width:'12%',align: 'center'},
+                {field: 'member', title: '会员记录',width:'8%',templet:'#member',align: 'center'},
                 {field: 'action', title: '操作', width: '14%', align: 'center', toolbar: '#barDemo'}
             ];
     });

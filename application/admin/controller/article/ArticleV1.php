@@ -3,6 +3,7 @@
 namespace app\admin\controller\article;
 
 use app\admin\controller\AuthController;
+use app\admin\model\article\ArticleCategory as ArticleCategoryModel;
 use app\admin\model\article\ArticleContent;
 use service\JsonService;
 use service\UtilService as Util;
@@ -23,8 +24,10 @@ use service\FormBuilder as Form;
  */
 class ArticleV1 extends AuthController
 {
-    public function index()
+    public function index($cid = 0)
     {
+        $this->assign('cid',$cid);
+        $this->assign('cate',ArticleCategoryModel::getTierList());
         $this->assign('type', $this->request->param('type', 1));
         return $this->fetch();
     }
@@ -35,11 +38,10 @@ class ArticleV1 extends AuthController
         $where = UtilService::getMore([
             ['limit', 20],
             ['page', 1],
-            ['title', ''],
+            ['cid', $this->request->param('cid')],
+            ['store_name', ''],
             ['order', ''],
             ['is_show', ''],
-            ['start_time', ''],
-            ['end_time', ''],
         ]);
         return Json::successlayui(Article::getArticleLayList($where));
     }
@@ -74,7 +76,7 @@ class ArticleV1 extends AuthController
             return Json::fail('保存失败');
     }
 
-    public function add_article($id = 0)
+    public function add_article($id=0)
     {
         $this->assign('id', $id);
         if ($id) {
@@ -82,6 +84,14 @@ class ArticleV1 extends AuthController
             $article->profile->content = htmlspecialchars_decode($article->profile->content);
             $this->assign('article', $article->toJson());
         }
+        if(empty($all)){
+            $list = ArticleCategoryModel::getTierList();
+            $all = [];
+            foreach ($list as $menu){
+                $all[$menu['id']] = $menu['html'].$menu['title'];
+            }
+        }
+        $this->assign('all', json_encode($all));
         $this->assign('type', $this->request->param('type', 2));
         return $this->fetch();
     }

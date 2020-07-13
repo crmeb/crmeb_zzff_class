@@ -128,9 +128,8 @@ class Index extends AuthController
             'is_plus' => $now_order_info_c - $pre_order_info_c > 0 ? 1 : ($now_order_info_c - $pre_order_info_c == 0 ? -1 : 0)
         ];
         $second_line['order_info'] = $order_info;
-
-
         $this->assign([
+            'ip'=>get_server_ip(),
             'first_line' => $first_line,
             'second_line' => $second_line,
             'topData' => $topData,
@@ -569,12 +568,8 @@ class Index extends AuthController
     {
         header('Content-type:text/json');
         $data = [];
-        $data['ordernum'] = StoreOrderModel::statusByWhere(1)->count();//待发货
-        $replenishment_num = SystemConfig::getValue('store_stock') > 0 ? SystemConfig::getValue('store_stock') : 2;//库存预警界限
-        $data['inventory'] = ProductModel::where('stock', '<=', $replenishment_num)->where('is_del', 0)->count();//库存
-        $data['commentnum'] = StoreProductReplyModel::where('is_reply', 0)->count();//评论
         $data['reflectnum'] = UserExtractModel::where('status', 0)->count();;//提现
-        $data['msgcount'] = intval($data['ordernum']) + intval($data['inventory']) + intval($data['commentnum']) + intval($data['reflectnum']);
+        $data['msgcount'] = intval(intval($data['reflectnum']));
         return Json::succ('ok', $data);
     }
 }

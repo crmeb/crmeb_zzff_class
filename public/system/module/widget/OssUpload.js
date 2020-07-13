@@ -108,7 +108,7 @@
             mime_types: [
                 {title: "Image files", extensions: "jpg,gif,png,bmp"},
                 {title: "Mp4 files", extensions: "mp4"},
-                {title: "Mp3 files", extensions: "mp3"}
+                {title: "Mp3 files", extensions: "mp3,wma"}
             ],
             max_file_size: '1000mb',
             prevent_duplicates: true,

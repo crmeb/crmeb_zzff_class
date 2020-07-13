@@ -10,7 +10,7 @@
 {block name="content"}
 <div class="goodsClass" id="app" v-cloak>
     <div class="header">
-        <div class="search acea-row row-center-wrapper">
+        <div class="search acea-row row-middle">
             <div class="pictrue">{if $homeLogo}<img src="{$homeLogo}">{else}<img
                     src="/wap/first/zsff/images/crmeb.png">{/if}
             </div>
@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="public_list goodList">
-        <a class="item acea-row row-between-wrapper" v-for="item in updateSpecialList" :href="getDetails(item.id)">
+        <a class="item acea-row" v-for="item in updateSpecialList" :href="getDetails(item.id)">
             <div class="pictrue">
                 <img :src="item.image">
                 <div class="label">{{ item.type }}</div>
@@ -54,20 +54,23 @@
                 <div class="title acea-row row-middle">
                     <div class="name line1" v-text="item.title"></div>
                 </div>
-                <div class="labelList" style="height:.4rem;line-height:.4rem;">
+                <div class="labelList">
                     <span class="labelItem" v-for="label in item.label">{{label}}</span>
                 </div>
                 <div class="acea-row row-middle row-between">
-                    <div class="money" v-if="item.money > 0"><span class="yen">￥</span>{{item.money}}</div>
-                    <div class="free" v-else>免费</div>
+                    <div>
+                        <div class="money" v-if="item.money > 0">¥<span>{{item.money}}</span></div>
+                        <div class="free" v-else>免费</div>
+                        <span v-if="item.special_type!=4" class="total">共{{item.count}}节</span>
+                    </div>
                     <div class="num">{{item.browse_count}}人已学习</div>
                 </div>
             </div>
         </a>
     </div>
-    <p class="loading-line" style="background-color: #ffffff" v-cloak>
+    <p class="loading-line" style="background-color: #ffffff">
         <span v-show="loading == true" class="fa fa-spinner loadingpic" style="font-size: 0.4rem"></span>
-        <span v-text="loadTitle">加载更多</span>
+        <!-- <span v-text="loadTitle">加载更多</span> -->
     </p>
     <div style="height: 1.0rem"></div>
     {include file="public/store_menu"}
@@ -95,6 +98,7 @@
             computed: {
                 updateSpecialList: function () {
                     return this.specialList.map(function (value) {
+                        value.special_type=value.type;
                         value.type = specialType[value.type];
                         return value;
                     });

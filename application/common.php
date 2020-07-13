@@ -141,7 +141,6 @@ function set_field_value(array $update, array $where , $value = '', $model_type)
         return \service\JsonService::fail('缺少参数');
     }
     $model_type = \service\ModeService::switch_model($model_type);
-    //print_r($model_type);die;
     if (!$model_type)  return \service\JsonService::fail('缺少参数');
 
     $res = $model_type::where($where)->update($update);
@@ -151,12 +150,13 @@ function set_field_value(array $update, array $where , $value = '', $model_type)
 }
 
 function money_rate_num($money, $type) {
-    if (!$money || is_numeric($money)) return \service\JsonService::fail('非法参数');
-    if (!$type) return \service\JsonService::fail('非法参数');
+    if (!$money) $money = 0;
+    if (!$type) return \service\JsonService::fail('非法参数2');
     switch ($type) {
         case "gold":
             $goldRate = \service\SystemConfigService::get("gold_rate");
-                $num = ($money * 10) * (int) $goldRate;
+                //$num = ($money * 10) * (int) $goldRate;
+                $num = $money * (int) $goldRate;
             return $num;
         default:
             return \service\JsonService::fail('汇率类型缺失');

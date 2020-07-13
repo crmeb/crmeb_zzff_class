@@ -4,6 +4,32 @@
 <script src="{__PLUG_PATH}echarts/echarts.common.min.js"></script>
 <script src="{__PLUG_PATH}echarts/theme/macarons.js"></script>
 <script src="{__PLUG_PATH}echarts/theme/westeros.js"></script>
+<style scoped>
+    .box{width:0px;}
+    .mask{  background-color: rgba(0,0,0,0.5);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 55;
+    }
+    .mask img{
+        position: fixed;
+        top: 20%;
+        left: 30%;
+    }
+    .mask span{
+        position: fixed;
+        top: 70%;
+        left: 35%;
+        color: #fff;
+        font-size: 36px;
+    }
+    [v-cloak] {
+        display: none !important;
+    }
+</style>
 {/block}
 {block name="content"}
     <div class="row">
@@ -190,13 +216,18 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-12" >
+        <div class="mask" v-show="masks" @click="masks = false" v-cloak="">
+            <img src="{__ADMIN_PATH}images/qrcode.jpeg"/>
+            <span>扫码进入前端页面</span>
+        </div>
+    </div>
 </div>
 {/block}
 {block name="script"}
-<style scoped>
-    .box{width:0px;}
-</style>
+
 <script>
+    var ip="{$ip}";
      require(['vue','axios','layer'],function(Vue,axios,layer){
         new Vue({
             el:"#app",
@@ -213,7 +244,9 @@
                 cyclecount_is_plus:0,
                 cycleprice_is_plus:0,
                 pre_cyclecount:0,
-                pre_cycleprice:0
+                pre_cycleprice:0,
+                ip:ip,
+                masks:false
             },
             methods:{
                 info:function () {
@@ -415,7 +448,9 @@
                 this.setChart(self.$refs.user_echart,'user_echart');//用户图表
                 this.info();
                 this.getlist();
-
+                if(this.ip=='172.31.152.14'){
+                    this.masks=true;
+                }
             }
         });
     });

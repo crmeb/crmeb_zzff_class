@@ -1,0 +1,112 @@
+{extend name="public/container"}
+{block name="title"}报名核销{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="activity-verify">
+        <div class="list">
+            <div class="item">
+                <div class="name">订单编号：{{order_id}}</div>
+            </div>
+            <div class="item">
+                <div class="image">
+                    <img class="img" :src="activity.image">
+                </div>
+                <div class="text">
+                    <div class="title" v-text="activity.title"></div>
+                    <div class="time"> <span class="iconfont2 icondidian"></span>{{activity.province}}{{activity.city}}{{activity.district}}{{activity.detail}}</div>
+                    <div class="group">
+                        <div class="money">¥<span class="num">{{activity.price}}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="name">活动时间：</div>
+                <div class="value time">{{activity.time }}</div>
+            </div>
+            <div class="item">
+                <div class="name">支付时间：</div>
+                <div class="value">{{order.pay_time}}</div>
+            </div>
+            <div class="item">
+                <div class="name">支付金额：</div>
+                <div class="value money">¥{{order.pay_price}}</div>
+            </div>
+            <div class="item">
+                <div class="name">活动状态：</div>
+                <div class="value" v-if="activity.status==1">报名开始</div>
+                <div class="value" v-else-if="activity.status==2">报名结束</div>
+                <div class="value" v-else-if="activity.status==3">活动中</div>
+                <div class="value" v-else-if="activity.status==4">活动已结束</div>
+            </div>
+            <div class="item">
+                <div class="name">订单状态：</div>
+                <div class="value" v-if="order.status==0">未核销</div>
+                <div class="value" v-else-if="order.status==1">已核销</div>
+            </div>
+        </div>
+        <div class="qrcode" v-if="type==1">
+            <div class="image">
+                <img class="img" :src="order.write_off_code">
+            </div>
+            <div class="text">工作人员扫描二维码进行核销</div>
+        </div>
+        <div class="button-group" v-if="type==2">
+            <button class="button" type="button" @click="verity">核销</button>
+        </div>
+    </div>
+</div>
+<script>
+    var type={$type},orderId="{$order_id}",status={$status};
+    if(status==0 && type==1){
+        setInterval(orderStatus,3000);
+    }
+    function orderStatus(){
+        $.ajax({
+            url:"{:url('wap/activity/orderStatus')}",
+            type:'GET',
+            data:{order_id:orderId},
+            dataType:'json',
+            success:function (res) {
+                if(res.code==200){
+                    window.location.href="{:url('wap/my/sign_list')}";
+                }
+            }
+        });
+    };
+    require(['vue', 'store', 'helper'], function (Vue, store, $h) {
+         new Vue({
+            el: '#app',
+            data: {
+                order:{},
+                activity:{},
+                order_id:orderId,
+                type:type
+            },
+            mounted: function () {
+                this.getActivitySign();
+            },
+            methods: {
+                getActivitySign: function () {
+                    var that = this;
+                    store.baseGet($h.U({ c: 'activity', a: 'activitySignIn',p:{order_id:that.order_id} }),function (res) {
+                        that.order=res.data.data;
+                        that.activity=res.data.data.activity;
+                    });
+                },
+                verity: function () {
+                    var that = this;
+                    store.baseGet($h.U({ c: 'activity', a: 'scanCodeSignIn',p:{type:that.type,order_id:that.order_id}}),function (res) {
+                           $h.showMsg({
+                               title:res.data.msg,
+                               icon:'success',
+                               success: function () {
+                                   location.reload();
+                               }
+                           });
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

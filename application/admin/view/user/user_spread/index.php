@@ -84,12 +84,12 @@
                         <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
                         <ul class="layui-nav-child layui-anim layui-anim-upbit">
                             <li>
-                                <a href="javascript:void(0);" class="" onclick="$eb.createModalFrame(this.innerText,'{:Url('stair')}?uid={{d.uid}}')">
+                                <a href="javascript:void(0);" class="" onclick="$eb.createModalFrame(this.innerText,'{:Url('stair')}?uid={{d.uid}}',{w:1200,h:800})">
                                     <i class="fa fa-list-alt"></i> 统计推广人列表
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" class="" onclick="$eb.createModalFrame(this.innerText,'{:Url('stair_order')}?uid={{d.uid}}')">
+                                <a href="javascript:void(0);" class="" onclick="$eb.createModalFrame(this.innerText,'{:Url('stair_order')}?uid={{d.uid}}',{w:1200,h:800})">
                                     <i class="fa fa-reorder"></i> 统计推广订单
                                 </a>
                             </li>

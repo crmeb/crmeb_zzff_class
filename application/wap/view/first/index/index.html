@@ -294,7 +294,7 @@
                             </div>
                             <div class="group acea-row row-middle" v-if="item.type==0">
                                 <div class="free" v-if="val.pay_type == 0 || val.pay_type == 2">免费</div>
-                                <div class="money" v-if="val.pay_type == 1 && val.is_pink == 0">
+                                <div class="money" v-if="val.pay_type == 1">
                                     ¥<span class="num">{{val.money}}</span>
                                 </div>
                                 <div class="total" v-if="val.special_type!=4">共{{ val.count }}节</div>

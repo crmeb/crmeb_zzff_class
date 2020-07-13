@@ -103,10 +103,6 @@
 <div class="userNew" id="app" v-cloak>
     <div class="header acea-row row-between-wrapper" @click="goUrl('{:Url('user_info')}')">
         <div class="picTxt acea-row row-middle">
-            <!-- <div class="pictrue">{if $userInfo['uid']}<img src="{$userInfo.avatar}">{else}<img
-                    src="/system/images/user_log.jpg">{/if}</div>
-            <div class="name line1">{if $userInfo['uid']}{$userInfo.nickname}{else}请登陆{/if}</div> -->
-
             <div class="pictrue">
                 {if $userInfo['uid']}
                 <img src="{$userInfo.avatar}">
@@ -117,29 +113,6 @@
             <div>
                 {if $userInfo['uid']}
                 <div class="name line1">{$userInfo.nickname}</div>
-                {if $userInfo['level'] eq 1}
-                <div class="vip-state">
-                    <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#iconhuiyuan"></use>
-                    </svg>
-                    {$overdue_time}到期
-                    <!-- 会员已过期 -->
-                </div>
-                {elseif $userInfo['level'] eq 0 && $userInfo['overdue_time'] neq 0}
-                <div class="vip-state">
-                    <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#iconhuiyuan"></use>
-                    </svg>
-                    会员已过期
-                </div>
-                {else /}
-                <div class="vip-state">
-                    <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#iconhuiyuan"></use>
-                    </svg>
-                    未开通会员
-                </div>
-                {/if}
                 {else}
                 <div class="name line1">请登陆</div>
                 {/if}

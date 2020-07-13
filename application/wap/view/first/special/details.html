@@ -102,9 +102,7 @@
                 </div>
                 <div class="acea-row row-middle">
                     <div class="pin-money" v-if="is_pay==false && is_partake==false">
-                        <span class="price">¥<b>{{ special.is_pink ? special.pink_money : special.money }}</b></span>
-                       <!-- <span class="vip-price">¥{{ special.member_money }}</span>-->
-                        <!--<img class="vip-price-icon" src="{__WAP_PATH}zsff/images/vip.png">-->
+                        <span class="price">¥<b>{{ special.money }}</b></span>
                         <span class="total">共{{count}}节</span>
                     </div>
                     <div class="pin-money" v-else v-show="is_pay==false">拼课价<span class="money">¥ {{special.pink_money}}</span></div>

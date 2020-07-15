@@ -148,7 +148,7 @@ function clearfile($path,$ext = '*.log')
 }
 function get_server_ip(){
     if(isset($_SERVER)){
-        if($_SERVER['SERVER_ADDR']){
+        if(array_key_exists("SERVER_ADDR",$_SERVER)){
             $server_ip=$_SERVER['SERVER_ADDR'];
         }else{
             $server_ip=$_SERVER['LOCAL_ADDR'];

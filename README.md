@@ -45,7 +45,7 @@ http://bbs.crmeb.net
 ### 后端演示:[ 查看 ]
 
 http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
-###  功能清单
+###  后台功能清单
     一，课程系统
     
         （一） 课程首页  全站搜索、课程分类、活动推荐、在线直播、专题课程、新闻广播在首页突出显示
@@ -108,8 +108,9 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
         （一） 微信模板消息  用户可收到各类订单通知、客服消息通知、拼团成功等通知；
                            平台客服可接收咨询消息、用户下单通知、退款通知等     
 
-        
-###  功能脑图
+![](/readme/images/admin1.png)        
+![](/readme/images/admin2.png)        
+###  前端功能导图
 ![](/readme/images/知识付费v1.2.png)
 
 ####  官方交流群

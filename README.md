@@ -60,6 +60,8 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ![](/readme/images/后台6.jpg)
 ![](/readme/images/后台7.jpg)
 ![](/readme/images/后台8.jpg)
+#### 商业版与 VS 开源版差异
+![](/readme/images/开源_付费对比.jpg)
 ####  官方交流群
 <img src="/readme/images/知识付费1.png"  height="200" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="200" width="200">
 

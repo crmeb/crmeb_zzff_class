@@ -41,16 +41,25 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 http://bbs.crmeb.net
 ###  前台演示
 ![前端演示](/readme/images/前端演示二维码.jpg)
-
 ### 后端演示:[ 查看 ]
-
 http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  后台功能清单
 ![](/readme/images/admin1.png)        
 ![](/readme/images/admin2.png)        
 ###  前端功能导图
 ![](/readme/images/知识付费v1.2.png)
-
+###  前后端界面展示
+![](/readme/images/界面1.jpg)
+![](/readme/images/界面2.jpg)
+![](/readme/images/界面3.jpg)
+![](/readme/images/后台1.jpg)
+![](/readme/images/后台2.jpg)
+![](/readme/images/后台3.jpg)
+![](/readme/images/后台4.jpg)
+![](/readme/images/后台5.jpg)
+![](/readme/images/后台6.jpg)
+![](/readme/images/后台7.jpg)
+![](/readme/images/后台8.jpg)
 ####  官方交流群
 <img src="/readme/images/知识付费1.png"  height="200" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="200" width="200">
 

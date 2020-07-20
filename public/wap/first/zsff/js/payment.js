@@ -4,7 +4,7 @@
     var u = navigator.userAgent;
     var phone_ios = false;
     if (u.indexOf('iPhone') > -1) {//苹果手机
-        phone_ios = true;
+        phone_ios = false;
     }
     Vue.component('payment', {
         props: {

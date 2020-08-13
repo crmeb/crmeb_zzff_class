@@ -70,7 +70,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 <img src="/readme/images/知识付费2.png"  height="220" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
-http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388
+[<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;
 
@@ -78,7 +78,12 @@ http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388
 
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
-#### CRMEB推荐阿里云服务器配置
+### CRMEB推荐阿里云服务器配置
+1.阿里云短信配置
+
+2.阿里云OSS存储配置
+
+3.阿里云视频直播配置
 
 阿里云领取2000元代金劵：[<a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z">https://www.aliyun.com</a>]
  <table><tr><td> 

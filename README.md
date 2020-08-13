@@ -49,7 +49,9 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  前端功能导图
 ![](/readme/images/前端导图1.png)<br>
 ![](/readme/images/前端导图2.png)<br>
-![](/readme/images/前端导图3.png)
+![](/readme/images/前端导图3.png)<br>
+![](/readme/images/前端导图4.png)<br>
+![](/readme/images/前端导图5.png)
 ###  前后端界面展示
 ![](/readme/images/界面1.jpg)
 ![](/readme/images/界面2.jpg)

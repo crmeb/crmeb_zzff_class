@@ -66,19 +66,23 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  前后端界面展示
 ![](/readme/images/界面1.jpg)
 ![](/readme/images/界面2.jpg)
+
 ![](/readme/images/界面3.jpg)
 ![](/readme/images/后台1.jpg)
+
 ![](/readme/images/后台2.jpg)
 ![](/readme/images/后台3.jpg)
+
 ![](/readme/images/后台4.jpg)
 ![](/readme/images/后台5.jpg)
+
 ![](/readme/images/后台6.jpg)
 ![](/readme/images/后台7.jpg)
 ![](/readme/images/后台8.jpg)
 #### 商业版与 VS 开源版差异
 ![](/readme/images/开源_付费对比.jpg)
 ####  官方交流群
-<img src="/readme/images/知识付费2.png"  height="220" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.jpg"  height="200" width="200">
+<img src="/readme/images/知识付费2.png"  height="220" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.png"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
 [<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]

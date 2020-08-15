@@ -37,6 +37,15 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
  | [TP5开发手册](https://www.kancloud.cn/manual/thinkphp5/118003)
  | [服务器](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z)
  | [授权价格](https://www.crmeb.com)
+
+### 推荐项目
+
+CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search
+
+CRMEB商城JAVA版：https://gitee.com/ZhongBangKeJi/crmeb_java
+
+CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatApplet
+
 ###  论坛地址
 http://bbs.crmeb.net
 ###  前台演示

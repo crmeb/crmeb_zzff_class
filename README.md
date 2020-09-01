@@ -40,7 +40,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ### 推荐项目
 
-CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search
+CRMEB商城PHP版：https://gitee.com/ZhongBangK eJi/CRMEB?_from=gitee_search
 
 CRMEB商城JAVA版：https://gitee.com/ZhongBangKeJi/crmeb_java
 
@@ -81,7 +81,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 #### 商业版与 VS 开源版差异
 ![](/readme/images/开源_付费对比.jpg)
 ####  官方交流群
-<img src="/readme/images/知识付费2.png"  height="220" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/st.png"  height="200" width="200">
+<img src="/readme/images/知识付费3.png"  height="220" width="200">   如果群已经加满或失效请加微信 <img src="/readme/images/lsq.png"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
 [<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]

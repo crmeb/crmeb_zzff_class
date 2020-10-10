@@ -38,7 +38,12 @@ class PublicApi
         $code = AliMessageService::getVerificationCode();
         SmsCode::set(['tel' => $phone, 'code' => $code, 'last_time' => time() + 300]);
         Session::set($name, time() + 60, 'routine');
-        return JsonService::successful('发送成功', AliMessageService::sendmsg($phone, $code));
+        $res = AliMessageService::sendmsg($phone, $code);
+        if($res){
+            return JsonService::successful('发送成功',$res);
+        } else {
+            return JsonService::fail('发送失败!');
+        }
     }
 
     public function get_cid_article($cid = 0, $first = 0, $limit = 8)

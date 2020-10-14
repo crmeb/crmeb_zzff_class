@@ -81,11 +81,11 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 #### 商业版与 VS 开源版差异
 ![](/readme/images/开源_付费对比.jpg)
 ####  官方交流群
-<img src="/readme/images/知识付费3.png"  height="220" width="200">
+<img src="/readme/images/123.png"  height="220" width="200">
 
 如果群已经加满或失效请加我的企业微信
 
-<img src="/readme/images/lsq.png"  height="200" width="200">
+<img src="/readme/images/456.png"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
 [<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]

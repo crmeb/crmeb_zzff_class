@@ -67,8 +67,8 @@
 <div v-cloak id="app">
     <div class="live">
         <div :style="{ height: playerHeight + 'px' }" class="header">
-            <div v-if="liveInfo.is_play || PullUrl" class="prism-player" id="J_prismPlayer"></div>
-            <div v-else class="text">
+            <div v-show="liveInfo.is_play || PullUrl" class="prism-player" id="J_prismPlayer"></div>
+            <div v-show="!liveInfo.is_play || !PullUrl" class="text">
                 <div>{{ liveText }}</div>
                 <count-down v-show="!live_status" :day-show="false" :sec-show="false" :time="datatime"></count-down>
             </div>

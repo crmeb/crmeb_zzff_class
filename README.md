@@ -49,7 +49,7 @@ CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatA
 ###  论坛地址
 http://bbs.crmeb.net
 ###  前台演示
-![前端演示](/readme/images/前端演示二维码.jpg)
+![前端演示](/readme/images/扫码关注.jpg)
 ### 后端演示:[ 查看 ]
 http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  后台功能清单

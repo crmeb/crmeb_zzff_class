@@ -199,21 +199,87 @@ class AliyunLive extends AuthController
     public function set_live_user_value($field = '', $id = '', $value = '')
     {
         if (!$field || !$id) return Json::fail('缺少参数');
-        if ($field == 'is_ban') {
+        if (LiveUser::where('id', $id)->update([$field => $value]))
+            return Json::successful('修改成功');
+        else
+            return Json::fail('修改失败');
+    }
+
+    /**
+     * 禁止发言
+     */
+    public function live_no_speaking($id)
+    {
+        if (!$id) return $this->failed('缺少参数');
+        $liveInfo = LiveUser::get($id);
+        if (!$liveInfo) return $this->failed('未查到直播间信息');
+        $f[] = Form::radio('is_ban', '是否禁言', $liveInfo->getData('is_ban'))->options([
+            ['value' => 1, 'label' => '是'],
+            ['value' => 0, 'label' => '否'],
+        ]);
+        $f[] = Form::number('ban_time', '禁言时间:分');
+        $form = Form::make_post_form('禁止发言', $f, Url::build('save_no_speaking', array('id' => $id)), 3);
+        $this->assign(compact('form'));
+        return $this->fetch('public/form-builder');
+    }
+    public function save_no_speaking($id = 0)
+    {
+        if (!$id) return Json::fail('缺少参数');
+        $data = UtilService::postMore([
+            ['is_ban', 0],
+            ['ban_time', 0]
+        ]);
+        if ($data['is_ban']) {
             $workerman = \think\Config::get('workerman.channel', []);
             Gateway::$registerAddress = $workerman['ip'] . ':' . $workerman['port'];
             $uid = LiveUser::where('id', $id)->value('uid');
             if (Gateway::isUidOnline($uid)) {
                 Gateway::sendToUid($uid, json_encode([
                     'type' => 'ban',
-                    'value' => $value
+                    'value' => 1
                 ]));
             }
         }
-        if (LiveUser::where('id', $id)->update([$field => $value]))
+        if ($data['is_ban'] && $data['ban_time']<=0) return Json::fail('请输入禁言时间');
+        $data['ban_time']=bcadd(time(),bcmul($data['ban_time'],60,0),0);
+        if (LiveUser::edit($data, $id)){
             return Json::successful('修改成功');
-        else
+        }else{
             return Json::fail('修改失败');
+        }
+    }
+
+    /**
+     * 禁止进入
+     */
+    public function live_no_entry($id)
+    {
+        if (!$id) return $this->failed('缺少参数');
+        $liveInfo = LiveUser::get($id);
+        if (!$liveInfo) return $this->failed('未查到直播间信息');
+        $f[] = Form::radio('is_open_ben', '是否禁止进入直播间', $liveInfo->getData('is_open_ben'))->options([
+            ['value' => 1, 'label' => '是'],
+            ['value' => 0, 'label' => '否'],
+        ]);
+        $f[] = Form::number('open_ben_time', '禁止时间:分');
+        $form = Form::make_post_form('禁止进入', $f, Url::build('save_no_entry', array('id' => $id)), 3);
+        $this->assign(compact('form'));
+        return $this->fetch('public/form-builder');
+    }
+    public function save_no_entry($id = 0)
+    {
+        if (!$id) return Json::fail('缺少参数');
+        $data = UtilService::postMore([
+            ['is_open_ben', 0],
+            ['open_ben_time', 0]
+        ]);
+        if ($data['is_open_ben'] && $data['open_ben_time']<=0) return Json::fail('请输入禁止时间');
+        $data['open_ben_time']=bcadd(time(),bcmul($data['open_ben_time'],60,0),0);
+        if (LiveUser::edit($data, $id)){
+            return Json::successful('修改成功');
+        }else{
+            return Json::fail('修改失败');
+        }
     }
 
     /**

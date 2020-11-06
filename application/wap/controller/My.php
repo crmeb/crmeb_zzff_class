@@ -21,14 +21,10 @@ use app\wap\model\special\SpecialRecord;
 use app\wap\model\special\SpecialRelation;
 use app\wap\model\user\SmsCode;
 use app\wap\model\special\Grade;
-use app\wap\model\store\StoreBargainUser;
-use app\wap\model\store\StoreBargainUserHelp;
-use app\wap\model\store\StoreCombination;
 use app\wap\model\store\StoreOrderCartInfo;
 use app\wap\model\store\StorePink;
 use app\wap\model\store\StoreProduct;
 use app\wap\model\store\StoreProductRelation;
-use app\wap\model\store\StoreCouponUser;
 use app\wap\model\store\StoreOrder;
 use app\wap\model\user\PhoneUser;
 use app\wap\model\user\User;
@@ -58,20 +54,6 @@ class My extends AuthController
             'about_us'
         ];
     }
-
-    public function user_cut()
-    {
-        $list = StoreBargainUser::getBargainUserAll($this->userInfo['uid']);
-        if ($list) {
-            foreach ($list as $k => $v) {
-                $list[$k]['con_price'] = bcsub($v['bargain_price'], $v['price'], 2);
-                $list[$k]['helpCount'] = StoreBargainUserHelp::getBargainUserHelpPeopleCount($v['bargain_id'], $this->userInfo['uid']);
-            }
-            $this->assign('list', $list);
-        } else return $this->failed('暂无参与砍价', Url::build('My/index'));
-        return $this->fetch();
-    }
-
     /**
      * 退出手机号码登录
      */
@@ -199,22 +181,6 @@ class My extends AuthController
             'collectionNumber' => SpecialRelation::where('uid', $this->uid)->count(),
             'recordNumber' => SpecialRecord::where('uid', $this->uid)->count(),
             'overdue_time'=>date('Y-m-d',$this->userInfo['overdue_time'])
-        ]);
-        return $this->fetch();
-    }
-
-
-    public function coupon()
-    {
-        $uid = $this->userInfo['uid'];
-        $couponList = StoreCouponUser::all(function ($query) use ($uid) {
-            $query->where('status', '0')->where('uid', $uid)->order('is_fail ASC,status ASC,add_time DESC')->whereOr(function ($query) use ($uid) {
-                $query->where('uid', $uid)->where('status', '<>', 0)->where('end_time', '>', time() - (7 * 86400));
-            });
-        })->toArray();
-        $couponList = StoreCouponUser::tidyCouponList($couponList);
-        $this->assign([
-            'couponList' => $couponList
         ]);
         return $this->fetch();
     }
@@ -387,148 +353,6 @@ class My extends AuthController
             'alipay_code' => ''
         ];
         $this->assign(compact('minExtractPrice', 'extractInfo'));
-        return $this->fetch();
-    }
-
-    /**
-     * 参团详情页
-     */
-    public function order_pink($id = 0)
-    {
-        if (!$id) return $this->failed('参数错误', Url::build('my/index'));
-        $pink = StorePink::getPinkUserOne($id);
-        if (isset($pink['is_refund']) && $pink['is_refund']) {
-            if ($pink['is_refund'] != $pink['id']) {
-                $id = $pink['is_refund'];
-                return $this->order_pink($id);
-            } else {
-                return $this->failed('订单已退款', Url::build('store/combination_detail', ['id' => $pink['cid']]));
-            }
-        }
-        if (!$pink) return $this->failed('参数错误', Url::build('my/index'));
-        $pinkAll = array();//参团人  不包括团长
-        $pinkT = array();//团长
-        if ($pink['k_id']) {
-            $pinkAll = StorePink::getPinkMember($pink['k_id']);
-            $pinkT = StorePink::getPinkUserOne($pink['k_id']);
-        } else {
-            $pinkAll = StorePink::getPinkMember($pink['id']);
-            $pinkT = $pink;
-        }
-        $store_combination = StoreCombination::getCombinationOne($pink['cid']);//拼团产品
-        $count = count($pinkAll) + 1;
-        $count = (int)$pinkT['people'] - $count;//剩余多少人
-        $is_ok = 0;//判断拼团是否完成
-        $idAll = array();
-        $uidAll = array();
-        if (!empty($pinkAll)) {
-            foreach ($pinkAll as $k => $v) {
-                $idAll[$k] = $v['id'];
-                $uidAll[$k] = $v['uid'];
-            }
-        }
-
-        $userBool = 0;//判断当前用户是否在团内  0未在 1在
-        $pinkBool = 0;//判断当前用户是否在团内  0未在 1在
-        $idAll[] = $pinkT['id'];
-        $uidAll[] = $pinkT['uid'];
-        if ($pinkT['status'] == 2) {
-            $pinkBool = 1;
-        } else {
-            if (!$count) {//组团完成
-                $idAll = implode(',', $idAll);
-                $orderPinkStatus = StorePink::setPinkStatus($idAll);
-                if ($orderPinkStatus) {
-                    if (in_array($this->uid, $uidAll)) {
-                        StorePink::setPinkStopTime($idAll);
-                        if (StorePink::isTpl($uidAll, $pinkT['id'])) StorePink::orderPinkAfter($uidAll, $pinkT['id']);
-                        $pinkBool = 1;
-                    } else  $pinkBool = 3;
-                } else $pinkBool = 6;
-            } else {
-                if ($pinkT['stop_time'] < time()) {//拼团时间超时  退款
-                    if ($pinkAll) {
-                        foreach ($pinkAll as $v) {
-                            if ($v['uid'] == $this->uid) {
-                                $res = StoreOrder::orderApplyRefund(StoreOrder::where('id', $v['order_id_key'])->value('order_id'), $this->uid, '拼团时间超时');
-                                if ($res) {
-                                    if (StorePink::isTpl($v['uid'], $pinkT['id'])) StorePink::orderPinkAfterNo($v['uid'], $v['k_id']);
-                                    $pinkBool = 2;
-                                } else return $this->failed(StoreOrder::getErrorInfo(), Url::build('index'));
-                            }
-                        }
-                    }
-                    if ($pinkT['uid'] == $this->uid) {
-                        $res = StoreOrder::orderApplyRefund(StoreOrder::where('id', $pinkT['order_id_key'])->value('order_id'), $this->uid, '拼团时间超时');
-                        if ($res) {
-                            if (StorePink::isTpl($pinkT['uid'], $pinkT['id'])) StorePink::orderPinkAfterNo($pinkT['uid'], $pinkT['id']);
-                            $pinkBool = 2;
-                        } else return $this->failed(StoreOrder::getErrorInfo(), Url::build('index'));
-                    }
-                    if (!$pinkBool) $pinkBool = 3;
-                }
-            }
-        }
-        $store_combination_host = StoreCombination::getCombinationHost();//获取推荐的拼团产品
-        if (!empty($pinkAll)) {
-            foreach ($pinkAll as $v) {
-                if ($v['uid'] == $this->uid) $userBool = 1;
-            }
-        }
-        if ($pinkT['uid'] == $this->uid) $userBool = 1;
-        $combinationOne = StoreCombination::getCombinationOne($pink['cid']);
-        if (!$combinationOne) return $this->failed('拼团不存在或已下架');
-        $combinationOne['images'] = json_decode($combinationOne['images'], true);
-        $combinationOne['userLike'] = StoreProductRelation::isProductRelation($combinationOne['product_id'], $this->userInfo['uid'], 'like');
-        $combinationOne['like_num'] = StoreProductRelation::productRelationNum($combinationOne['product_id'], 'like');
-        $combinationOne['userCollect'] = StoreProductRelation::isProductRelation($combinationOne['product_id'], $this->userInfo['uid'], 'collect');
-        $this->assign('storeInfo', $combinationOne);
-        $this->assign('current_pink_order', StorePink::getCurrentPink($id));
-        $this->assign(compact('pinkBool', 'is_ok', 'userBool', 'store_combination', 'pinkT', 'pinkAll', 'count', 'store_combination_host'));
-        return $this->fetch();
-    }
-
-    /**
-     * 参团详情页  失败或者成功展示页
-     */
-    public function order_pink_after($id = 0)
-    {
-        if (!$id) return $this->failed('参数错误', Url::build('my/index'));
-        $pink = StorePink::getPinkUserOne($id);
-        if (!$pink) return $this->failed('参数错误', Url::build('my/index'));
-        $pinkAll = array();//参团人  不包括团长
-        $pinkT = array();//团长
-        if ($pink['k_id']) {
-            $pinkAll = StorePink::getPinkMember($pink['k_id']);
-            $pinkT = StorePink::getPinkUserOne($pink['k_id']);
-        } else {
-            $pinkAll = StorePink::getPinkMember($pink['id']);
-            $pinkT = $pink;
-        }
-        $store_combination = StoreCombination::getCombinationOne($pink['cid']);//拼团产品
-        $count = count($pinkAll) + 1;
-        $count = (int)$pinkT['people'] - $count;//剩余多少人
-        $idAll = array();
-        $uidAll = array();
-        if (!empty($pinkAll)) {
-            foreach ($pinkAll as $k => $v) {
-                $idAll[$k] = $v['id'];
-                $uidAll[$k] = $v['uid'];
-            }
-        }
-        $idAll[] = $pinkT['id'];
-        $uidAll[] = $pinkT['uid'];
-        $userBool = 0;//判断当前用户是否在团内是否完成拼团
-        if (!$count) $userBool = 1;//组团完成
-        $store_combination_host = StoreCombination::getCombinationHost();//获取推荐的拼团产品
-        $combinationOne = StoreCombination::getCombinationOne($pink['cid']);
-        if (!$combinationOne) return $this->failed('拼团不存在或已下架');
-        $combinationOne['images'] = json_decode($combinationOne['images'], true);
-        $combinationOne['userLike'] = StoreProductRelation::isProductRelation($combinationOne['product_id'], $this->userInfo['uid'], 'like');
-        $combinationOne['like_num'] = StoreProductRelation::productRelationNum($combinationOne['product_id'], 'like');
-        $combinationOne['userCollect'] = StoreProductRelation::isProductRelation($combinationOne['product_id'], $this->userInfo['uid'], 'collect');
-        $this->assign('storeInfo', $combinationOne);
-        $this->assign(compact('userBool', 'store_combination', 'pinkT', 'pinkAll', 'count', 'store_combination_host'));
         return $this->fetch();
     }
 

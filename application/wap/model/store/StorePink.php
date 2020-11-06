@@ -13,7 +13,6 @@ namespace app\wap\model\store;
 
 use app\wap\model\special\Special;
 use app\wap\model\special\SpecialBuy;
-use app\wap\model\store\StoreCombination;
 use app\wap\model\user\User;
 use app\wap\model\user\WechatUser;
 use basic\ModelBasic;

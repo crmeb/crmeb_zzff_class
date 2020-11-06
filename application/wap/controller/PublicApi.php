@@ -14,11 +14,9 @@ namespace app\wap\controller;
 
 
 use app\wap\model\user\SmsCode;
-use app\wap\model\store\StoreCombination;
 use app\admin\model\system\SystemGroup;
 use app\admin\model\system\SystemGroupData;
 use app\wap\model\store\StoreCategory;
-use app\wap\model\store\StoreCouponIssue;
 use app\wap\model\store\StoreProduct;
 use app\wap\model\wap\ArticleCategory;
 use service\AliMessageService;
@@ -71,13 +69,6 @@ class PublicApi
             $list = SystemGroupData::tidyList($video);
         }
         return JsonService::successful('ok', $list);
-    }
-
-    public function get_issue_coupon_list($limit = 2)
-    {
-        $list = StoreCouponIssue::validWhere('A')->join('__STORE_COUPON__ B', 'A.cid = B.id')
-            ->field('A.*,B.coupon_price,B.use_min_price')->order('id DESC')->limit($limit)->select()->toArray();
-        return JsonService::successful($list);
     }
 
     public function get_category_product_list($limit = 4)
@@ -136,11 +127,4 @@ class PublicApi
         }
     }
 
-
-    public function get_pink_host($limit = 0)
-    {
-        $list = StoreCombination::getCombinationHost($limit);
-        if ($list) return JsonService::successful($list);
-        else return JsonService::successful([]);
-    }
 }

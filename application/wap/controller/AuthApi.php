@@ -14,12 +14,6 @@ namespace app\wap\controller;
 
 
 use app\wap\model\user\SmsCode;
-use app\wap\model\user\SystemVip;
-use app\wap\model\store\StoreBargain;
-use app\wap\model\store\StoreBargainUser;
-use app\wap\model\store\StoreBargainUserHelp;
-use app\wap\model\store\StoreCouponIssue;
-use app\wap\model\store\StoreCouponIssueUser;
 use app\wap\model\store\StoreOrderCartInfo;
 use app\wap\model\store\StorePink;
 use app\wap\model\store\StoreProductReply;
@@ -27,7 +21,6 @@ use app\wap\model\store\StoreService;
 use app\wap\model\store\StoreServiceLog;
 use app\wap\model\store\StoreCart;
 use app\wap\model\store\StoreCategory;
-use app\wap\model\store\StoreCouponUser;
 use app\wap\model\store\StoreOrder;
 use app\wap\model\store\StoreProduct;
 use app\wap\model\store\StoreProductAttr;
@@ -224,34 +217,6 @@ class AuthApi extends AuthController
             return JsonService::fail(StoreOrder::getErrorInfo('领取失败!'));
         }
     }
-    /**
-     * 购买会员
-     * @param string $vip_id
-     * @throws \think\exception\DbException
-     */
-    public function become_vip($vip_id = '')
-    {
-        if (!$vip_id) return JsonService::fail('参数错误!');
-        $systemvip = SystemVip::get($vip_id);
-        if (!$systemvip) return JsonService::fail('您购买的会员不存在');
-        $ordervip['order_id'] = UserRecharge::getNewOrderId($this->uid);
-        $ordervip['uid'] = $this->uid;
-        $ordervip['price'] = $systemvip->money;
-        //记录会员购买
-        $recharge['order_id'] = $ordervip['order_id'];
-        $recharge['uid'] = $ordervip['uid'];
-        $recharge['price'] = $ordervip['price'];
-        $recharge['recharge_type'] = 'buy_vip';
-        $recharge['paid'] = 0;
-        $recharge['vip_id'] = $vip_id;
-        $recharge['add_time'] = time();
-        $recharge['refund_price'] = 0;
-        UserRecharge::set($recharge);
-        if ($jspay = UserRecharge::jsPay($ordervip, 'buy_vip', $systemvip->title))
-            return JsonService::successful($jspay);
-        else
-            return JsonService::fail('订单生成失败');
-    }
 
     public function set_cart($productId = '', $cartNum = 1, $uniqueId = '')
     {
@@ -265,17 +230,6 @@ class AuthApi extends AuthController
         }
     }
 
-    public function now_buy($productId = '', $cartNum = 1, $uniqueId = '', $combinationId = 0, $secKillId = 0, $bargainId = 0)
-    {
-        if ($productId == '') return $this->failed('参数错误!');
-        if ($bargainId && StoreBargainUserHelp::getSurplusPrice($bargainId, $this->userInfo['uid'])) return JsonService::fail('请先砍价');
-        $res = StoreCart::setCart($this->userInfo['uid'], $productId, $cartNum, $uniqueId, 'product', 1, $combinationId, $secKillId, $bargainId);
-        if (!$res)
-            return $this->failed(StoreCart::getErrorInfo('订单生成失败!'));
-        else {
-            return $this->successful('ok', ['cartId' => $res->id]);
-        }
-    }
 
     public function like_product($productId = '', $category = 'product')
     {
@@ -340,12 +294,6 @@ class AuthApi extends AuthController
         if (!$ids) return JsonService::fail('参数错误!');
         StoreCart::removeUserCart($this->userInfo['uid'], $ids);
         return JsonService::successful();
-    }
-
-
-    public function get_use_coupon()
-    {
-        return JsonService::successful('', StoreCouponUser::getUserValidCoupon($this->userInfo['uid']));
     }
 
     public function get_user_collect_product($first = 0, $limit = 8)
@@ -445,62 +393,9 @@ class AuthApi extends AuthController
             return JsonService::fail('删除地址失败!');
     }
 
-    /**
-     * 创建订单
-     * @param string $key
-     * @return \think\response\Json
-     */
-    public function create_order($key = '')
-    {
-        if (!$key) return JsonService::fail('参数错误!');
-        if (StoreOrder::be(['order_id|unique' => $key, 'uid' => $this->userInfo['uid'], 'is_del' => 0]))
-            return JsonService::status('extend_order', '订单已生成', ['orderId' => $key, 'key' => $key]);
-        list($addressId, $couponId, $payType, $useIntegral, $mark, $combinationId, $pinkId, $seckill_id, $bargainId, $integral_id) = UtilService::postMore([
-            'addressId', 'couponId', 'payType', 'useIntegral', 'mark', ['combinationId', 0], ['pinkId', 0], ['seckill_id', 0], ['bargainId', 0], ['integral_id', 0]
-        ], Request::instance(), true);
-        $payType = strtolower($payType);
-        if ($bargainId) StoreBargainUser::setBargainUserStatus($bargainId, $this->userInfo['uid']);//修改砍价状态
-        if ($pinkId) if (StorePink::getIsPinkUid($pinkId)) return JsonService::status('ORDER_EXIST', '订单生成失败，你已经在该团内不能再参加了', ['orderId' => StoreOrder::getStoreIdPink($pinkId)]);
-        if ($pinkId) if (StoreOrder::getIsOrderPink($pinkId)) return JsonService::status('ORDER_EXIST', '订单生成失败，你已经参加该团了，请先支付订单', ['orderId' => StoreOrder::getStoreIdPink($pinkId)]);
-        $order = StoreOrder::cacheKeyCreateOrder($this->userInfo['uid'], $key, $addressId, $payType, $useIntegral, $couponId, $mark, $combinationId, $pinkId, $seckill_id, $bargainId, $integral_id);
-        $orderId = $order['order_id'];
-        $info = compact('orderId', 'key');
-        if ($orderId) {
-            if ($payType == 'weixin') {
-                $orderInfo = StoreOrder::where('order_id', $orderId)->find();
-                if (!$orderInfo || !isset($orderInfo['paid'])) exception('支付订单不存在!');
-                if ($orderInfo['paid']) exception('支付已支付!');
-                if (bcsub((float)$orderInfo['pay_price'], 0, 2) <= 0) {
-                    if (StoreOrder::jsPayPrice($orderId, $this->userInfo['uid']))
-                        return JsonService::status('success', '微信支付成功', $info);
-                    else
-                        return JsonService::status('pay_error', StoreOrder::getErrorInfo());
-                } else {
-                    try {
-                        $jsConfig = StoreOrder::jsPay($orderId);
-                    } catch (\Exception $e) {
-                        return JsonService::status('pay_error', $e->getMessage(), $info);
-                    }
-                    $info['jsConfig'] = $jsConfig;
-                    return JsonService::status('wechat_pay', '订单创建成功', $info);
-                }
-            } else if ($payType == 'yue') {
-                if (StoreOrder::yuePay($orderId, $this->userInfo['uid']))
-                    return JsonService::status('success', '余额支付成功', $info);
-                else
-                    return JsonService::status('pay_error', StoreOrder::getErrorInfo());
-            } else if ($payType == 'offline') {
-                StoreOrder::createOrderTemplate($order);
-                return JsonService::status('success', '订单创建成功', $info);
-            }
-        } else {
-            return JsonService::fail(StoreOrder::getErrorInfo('订单生成失败!'));
-        }
-    }
 
     public function get_user_order_list($type = '', $first = 0, $limit = 8, $search = '')
     {
-//        StoreOrder::delCombination();//删除拼团未支付订单
         $type == 'null' && $type = '';
         if ($search) {
             $order = StoreOrder::searchUserOrder($this->userInfo['uid'], $search) ?: [];
@@ -771,16 +666,6 @@ class AuthApi extends AuthController
         return JsonService::successful($list);
     }
 
-    public function user_get_coupon($couponId = '')
-    {
-        if (!$couponId || !is_numeric($couponId)) return JsonService::fail('参数错误!');
-        if (StoreCouponIssue::issueUserCoupon($couponId, $this->userInfo['uid'])) {
-            return JsonService::successful('领取成功');
-        } else {
-            return JsonService::fail(StoreCouponIssue::getErrorInfo('领取失败!'));
-        }
-    }
-
     public function product_reply_list($productId = '', $first = 0, $limit = 8, $filter = 'all')
     {
         if (!$productId || !is_numeric($productId)) return JsonService::fail('参数错误!');
@@ -944,19 +829,6 @@ class AuthApi extends AuthController
             return JsonService::fail(Extract::getErrorInfo());
     }
 
-    public function get_issue_coupon_list($limit = 2)
-    {
-        $list = StoreCouponIssue::validWhere('A')->join('__STORE_COUPON__ B', 'A.cid = B.id')
-            ->field('A.*,B.coupon_price,B.use_min_price')->order('B.sort DESC,A.id DESC')->limit($limit)->select()->toArray() ?: [];
-        $list_coupon = [];
-        foreach ($list as $k => &$v) {
-            if (!($v['is_use'] = StoreCouponIssueUser::be(['uid' => $this->userInfo['uid'], 'issue_coupon_id' => $v['id']])) && $v['total_count'] > 0 && $v['remain_count'] > 0) {
-                array_push($list_coupon, $v);
-            }
-        }
-        return JsonService::successful($list_coupon);
-    }
-
     public function clear_cache($uni = '')
     {
         if ($uni) CacheService::clear();
@@ -992,40 +864,6 @@ class AuthApi extends AuthController
         }
         return JsonService::successful('ok', implode(',', $cateId));
 
-    }
-
-
-    /**
-     * 帮好友砍价
-     * @param int $bargainId
-     * @param int $bargainUserId
-     * @return \think\response\Json
-     */
-    public function set_bargain_help()
-    {
-        list($bargainId, $bargainUserId) = UtilService::postMore([
-            'bargainId', 'bargainUserId'], Request::instance(), true);
-        if (!$bargainId || !$bargainUserId) return JsonService::fail('参数错误');
-        $res = StoreBargainUserHelp::setBargainUserHelp($bargainId, $bargainUserId, $this->userInfo['uid']);
-        if ($res) {
-            if (!StoreBargainUserHelp::getSurplusPrice($bargainId, $bargainUserId)) {//砍价成功，发模板消息
-                $bargainUserTableId = StoreBargainUser::getBargainUserTableId($bargainId, $bargainUserId);
-                $bargain = StoreBargain::where('id', $bargainId)->find()->toArray();
-                $bargainUser = StoreBargainUser::where('id', $bargainUserTableId)->find()->toArray();
-            }
-            return JsonService::status('SUCCESS', '砍价成功');
-        } else return JsonService::status('ERROR', '砍价失败，请稍后再帮助朋友砍价');
-    }
-
-    /**
-     * 砍价分享添加次数
-     * @param int $bargainId
-     */
-    public function add_bargain_share($bargainId = 0)
-    {
-        if (!$bargainId) return JsonService::successful();
-        StoreBargain::addBargainShare($bargainId);
-        return JsonService::successful();
     }
 
 }

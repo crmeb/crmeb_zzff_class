@@ -762,8 +762,6 @@ CREATE TABLE `eb_recommend` (
 --
 
 INSERT INTO `eb_recommend` (`id`, `typesetting`, `title`, `link`, `type`, `number`, `relation_ids`, `add_time`, `icon`, `image`, `sort`, `is_fixed`, `is_show`, `grade_id`, `show_count`) VALUES
-(16, 2, '语文', '', 0, 0, '', 1581401726, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/dff8b202002111344407490.png', '', 0, 1, 0, 1, 0),
-(17, 1, '测试推荐', '', 0, 0, '', 1581402048, '', '', 0, 0, 1, 1, 10),
 (18, 0, '小学', '', 0, 0, '', 1581415908, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/a3248202002111757415453.png', '', 10, 1, 1, 4, 0),
 (19, 1, '初中', '', 0, 0, '', 1581415944, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/12017202002111757416996.png', '', 9, 1, 1, 3, 0),
 (20, 4, '高中', '', 0, 0, '', 1581416083, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/55bd0202002111757421468.png', '', 8, 1, 1, 2, 0),
@@ -771,12 +769,7 @@ INSERT INTO `eb_recommend` (`id`, `typesetting`, `title`, `link`, `type`, `numbe
 (22, 3, '绘画', '', 0, 0, '', 1581416164, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/09bd3202002111757426798.png', '', 6, 1, 1, 5, 0),
 (23, 1, '公考', '', 0, 0, '', 1581416198, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/fb05a202002111757415258.png', '', 5, 1, 1, 6, 0),
 (24, 3, '小语种', '', 0, 0, '', 1581416219, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/e20b0202002111757424191.png', '', 4, 1, 1, 7, 0),
-(25, 3, '考研', '', 0, 0, '', 1581416246, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/8cf7c202002111757418051.png', '', 3, 1, 1, 8, 0),
-(26, 2, '精品课程排行', '', 0, 0, '', 1581417034, '', '', 0, 0, 1, 4, 100),
-(27, 0, '我的课程', 'http://zhishifufei.crmeb.net/wap/special/grade_list.html', 3, 0, '', 1581502207, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/abbe8202002111757429842.png', '', 2, 1, 1, 0, 0),
-(28, 0, '我的收藏', 'http://zhishifufei.crmeb.net/wap/special/grade_list/type/1.html', 3, 0, '', 1581502283, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/37e3a202002111757417776.png', '', 1, 1, 1, 0, 0),
-(30, 2, '测试', '', 1, 0, '', 1581921700, '', '', 0, 0, 1, 4, 10),
-(31, 3, '在线直播', '', 0, 0, '', 1582180461, '', '', 0, 0, 1, 4, 10);
+(25, 3, '考研', '', 0, 0, '', 1581416246, 'http://testcrmeb.oss-cn-beijing.aliyuncs.com/8cf7c202002111757418051.png', '', 3, 1, 1, 8, 0);
 
 -- --------------------------------------------------------
 

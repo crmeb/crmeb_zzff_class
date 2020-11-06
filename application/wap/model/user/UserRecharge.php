@@ -46,11 +46,6 @@ class UserRecharge extends ModelBasic
         $count = (int) self::where('add_time',['>=',strtotime(date("Y-m-d"))],['<',strtotime(date("Y-m-d",strtotime('+1 day')))])->count();
         return 'wx1'.date('YmdHis',time()).(10000+$count+1);
     }
-
-   /* public static function jsPay($orderInfo,$file='user_recharge',$title='用户充值')
-    {
-        return WechatService::jsPay(WechatUser::uidToOpenid($orderInfo['uid']),$orderInfo['order_id'],$orderInfo['price'],$file,$title);
-    }*/
     public static function jsRechargePay($orderId, $field = 'order_id')
     {
         if (is_string($orderId))
@@ -76,8 +71,6 @@ class UserRecharge extends ModelBasic
             return self::setErrorInfo('余额不足' . floatval($orderInfo['price']));
         self::beginTrans();
         $res1 = self::where('order_id',$order_id)->update(['paid'=>1,'pay_time'=>time()]);
-       // $res1 = false !== User::bcDec($uid, 'now_money', $orderInfo['price'], 'uid');
-       // $res2 = UserBill::expend('购买专题', $uid, 'now_money', 'pay_product', $orderInfo['pay_price'], $orderInfo['id'], $userInfo['now_money'], '余额支付' . floatval($orderInfo['pay_price']) . '元购买专题');
         $goldNum = money_rate_num((int)$orderInfo['price'], 'gold');
         $goldName = SystemConfigService::get("gold_name");
         $res2 = false !== UserBill::income('用户充值'.$goldName,$orderInfo['uid'],'gold_num','recharge',$goldNum,0,$user_info['gold_num'],'用户充值'.$orderInfo['price'].'元人民币获得'.$goldNum.'个'.$goldName);
@@ -85,7 +78,6 @@ class UserRecharge extends ModelBasic
         $res4 = User::bcDec($orderInfo['uid'],'now_money',$orderInfo['price'],'uid');
         $res5 = UserBill::expend('充值金币', $uid, 'now_money', 'recharge', $orderInfo['price'], $orderInfo['id'], $userInfo['now_money'], '余额支付' . floatval($orderInfo['price']) . '元充值'.$goldName);
         try {
-           // HookService::listen('yue_pay_product', $userInfo, $orderInfo, false, PaymentBehavior::class);
             $res = $res1 && $res2 && $res3 && $res4 && ($res5 ? true : false);
             self::checkTrans($res);
             return $res;

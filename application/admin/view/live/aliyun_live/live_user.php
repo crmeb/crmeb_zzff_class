@@ -41,7 +41,7 @@
                 <div class="layui-card-header">直播间用户列表</div>
                 <div class="layui-card-body">
                     <div class="alert alert-info" role="alert">
-                        用户禁言填写时间为有效时间内禁止发言，不填写时间将永久禁止发言，禁言时间单位为：分钟
+                        用户禁言填写时间为有效时间内禁止发言，不填写时间将永久禁止发言，禁言时间单位为：分钟；最终显示的是到期时间
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="layui-btn-container">
@@ -49,14 +49,18 @@
                     </div>
                     <table class="layui-hide" id="List" lay-filter="List"></table>
                     <script type="text/html" id="is_ban">
-                        <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_ban' lay-text='是|否'  {{ d.is_ban == 1 ? 'checked' : '' }}>
+                        {{# if(d.is_ban){ }}
+                        <span class="layui-badge layui-bg-green">禁言</span>
+                        {{# }else{ }}
+                        <span class="layui-badge layui-bg-gray">未禁言</span>
+                        {{# } }}
                     </script>
                     <script type="text/html" id="is_open_ben">
-                        <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_open_ben' lay-text='是|否'  {{ d.is_open_ben == 1 ? 'checked' : '' }}>
-                    </script>
-                    <script type="text/html" id="time">
-                       <p>首次：{{d._add_time}}</p>
-                       <p>历史：{{d._last_time}}</p>
+                        {{# if(d.is_open_ben){ }}
+                        <span class="layui-badge layui-bg-green">禁止</span>
+                        {{# }else{ }}
+                        <span class="layui-badge layui-bg-gray">未禁止</span>
+                        {{# } }}
                     </script>
                     <script type="text/html" id="is_online">
                         {{# if(d.is_online){ }}
@@ -66,7 +70,15 @@
                         {{# } }}
                     </script>
                     <script type="text/html" id="avatar">
-                        <img style="cursor: pointer" lay-event='open_image' src="{{d.avatar}}">
+                        <img style="cursor: pointer;width: 60px;" lay-event='open_image' src="{{d.avatar}}">
+                    </script>
+                    <script type="text/html" id="act">
+                        <button class="layui-btn layui-btn-xs" lay-event='no_speaking'>
+                            禁言
+                        </button>
+                        <button class="layui-btn layui-btn-xs" lay-event='no_entry'>
+                            禁止进入
+                        </button>
                     </script>
                 </div>
             </div>
@@ -85,14 +97,15 @@
     //加载列表
     layList.tableList('List',"{:Url('get_live_user_list')}?live_id={$live_id}",function (){
         return [
-            {field: 'avatar', title: '头像',align:"center",templet:'#avatar'},
-            {field: 'nickname', title: '昵称',align:"center"},
-            {field: 'last_ip', title: '访问IP',align:'center'},
-            {field: 'visit_num', title: '访问次数',align:'center'},
-            {field: 'is_online', title: '是否在线',align:'center',templet:'#is_online'},
-            {field: 'is_ban', title: '是否禁言',align:'center',templet:'#is_ban'},
-            {field: 'ban_time', title: '禁言时间',align:'center',edit:'ban_time'},
-            {field: 'is_open_ben', title: '是否禁止进入',align:'center',templet:'#is_open_ben'},
+            {field: 'avatar', title: '头像',align:"center",templet:'#avatar',width:'8%'},
+            {field: 'nickname', title: '昵称',align:"center",width:'10%'},
+            {field: 'visit_num', title: '访问次数',align:'center',width:'6%'},
+            {field: 'is_online', title: '是否在线',align:'center',templet:'#is_online',width:'6%'},
+            {field: 'is_ban', title: '是否禁言',align:'center',templet:'#is_ban',width:'8%'},
+            {field: 'ban_time', title: '禁言到期时间',align:'center'},
+            {field: 'is_open_ben', title: '是否禁止进入',align:'center',templet:'#is_open_ben',width:'8%'},
+            {field: 'open_ben_time', title: '禁止进入直播间到期时间',align:'center'},
+            {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'14%'},
         ];
     });
     //自定义方法
@@ -122,9 +135,6 @@
     layList.edit(function (obj) {
         var id=obj.data.id,value=obj.value;
         switch (obj.field) {
-            case 'ban_time':
-                action.set_value('ban_time',id,value);
-                break;
             case 'sort':
                 action.set_value('sort',id,value);
                 break;
@@ -135,51 +145,11 @@
     //点击事件绑定
     layList.tool(function (event,data,obj) {
         switch (event) {
-            case 'delete':
-                var url=layList.U({a:'del_guest',q:{id:data.id}});
-                $eb.$swal('delete',function(){
-                    $eb.axios.get(url).then(function(res){
-                        if(res.status == 200 && res.data.code == 200) {
-                            $eb.$swal('success',res.data.msg);
-                            obj.del();
-                        }else
-                            return Promise.reject(res.data.msg || '删除失败')
-                    }).catch(function(err){
-                        $eb.$swal('error',err);
-                    });
-                });
+            case 'no_speaking':
+                $eb.createModalFrame('禁止发言',layList.U({a:'live_no_speaking',q:{id:data.id}}),{w:890,h:450});
                 break;
-            case 'look':
-                $eb.createModalFrame('直播间号【'+stream_name+'】的直播回放,回放时间：'+data.StartTime+' - '+data.EndTime,layList.U({a:'live_record_look',q:{record_url:data.RecordUrl}}),{w:890,h:450});
-                break;
-            case 'download':
-                $eb.createModalFrame('直播间号【'+stream_name+'】的直播下载',layList.U({a:'download',q:{record_url:data.RecordUrl}}),{w:900});
-                break;
-            case 'set_record':
-                var url = layList.U({a:'set_value',q:{stream_name:stream_name,field:'playback_record_id',value:data.RecordId}});
-                $eb.$swal('delete',function(){
-                    $eb.axios.get(url).then(function(res){
-                        if(res.status == 200 && res.data.code == 200) {
-                            $eb.$swal('success',res.data.msg);
-                        }else
-                            return Promise.reject(res.data.msg || '删除失败')
-                    }).catch(function(err){
-                        $eb.$swal('error',err);
-                    });
-                },{title:'设置为直播间回放',text:'设置成功后，没有开启直播将自动播放此回放',confirm:'是的，我要设置'});
-                break;
-            case 'del_record':
-                var url = layList.U({a:'set_value',q:{stream_name:stream_name,field:'playback_record_id',value:''}});
-                $eb.$swal('delete',function(){
-                    $eb.axios.get(url).then(function(res){
-                        if(res.status == 200 && res.data.code == 200) {
-                            $eb.$swal('success',res.data.msg);
-                        }else
-                            return Promise.reject(res.data.msg || '删除失败')
-                    }).catch(function(err){
-                        $eb.$swal('error',err);
-                    });
-                },{title:'取消直播间回放',text:'设置成功后，没有开启直播将不会回放',confirm:'是的，我要取消'});
+            case 'no_entry':
+                $eb.createModalFrame('禁止进入',layList.U({a:'live_no_entry',q:{id:data.id}}),{w:890,h:450});
                 break;
         }
     })

@@ -69,20 +69,7 @@ class WechatUser extends ModelBasic
         }
 
         self::commitTrans();
-        self::userFirstSubGiveCoupon($openid);
         return $wechatUser;
-    }
-
-    public static function userFirstSubGiveCoupon($openid)
-    {
-        $couponId = SystemConfigService::get('wechat_first_sub_give_coupon');
-        if($couponId) StoreCouponUser::addUserCoupon(self::openidToUid($openid),$couponId);
-    }
-
-    public static function userTakeOrderGiveCoupon($uid)
-    {
-        $couponId = SystemConfigService::get('store_order_give_coupon');
-        if($couponId) StoreCouponUser::addUserCoupon($uid,$couponId);
     }
 
     /**

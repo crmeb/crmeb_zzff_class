@@ -49,6 +49,8 @@ class LiveUser extends ModelBasic
         foreach ($data as &$item){
             $item['_add_time']  = date('Y-m-d H:i:s',$item['add_time']);
             $item['_last_time'] = $item['last_time'] ? date('Y-m-d H:i:s',$item['last_time']) : '暂无';
+            $item['ban_time']=$item['ban_time'] ? date('Y-m-d H:i:s',$item['ban_time']) : '0';
+            $item['open_ben_time']=$item['open_ben_time'] ? date('Y-m-d H:i:s',$item['open_ben_time']) : '0';
         }
         $count = self::setUserWhere($where)->join('user u','a.uid=u.uid')->count();
         return compact('data','count');

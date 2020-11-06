@@ -51,7 +51,7 @@ class EvevtRun
                 if($item['is_online']){
                     Gateway::sendToUid($uid,json_encode([
                         'type'=>'ban',
-                        'value'=>1
+                        'value'=>0
                     ]));
                 }
             }

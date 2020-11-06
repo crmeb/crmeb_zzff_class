@@ -103,13 +103,13 @@ class UserExtract extends ModelBasic
                         WechatUser::uidToOpenid($userInfo['uid']),
                         WechatTemplateService::USER_BALANCE_CHANGE,
                         [
-                            'first' => '你好,申请余额提现成功!',
+                            'first' => '你好,申请佣金提现成功!',
                             'keyword1' => '余额提现',
                             'keyword2' => date('Y-m-d'),
                             'keyword3' => $data['extract_price'],
-                            'remark' => '点击查看我的余额明细'
+                            'remark' => '点击查看我的提现明细'
                         ],
-                        Url::build('wap/My/balance', [], true, true)
+                        Url::build('wap/spread/spread_detail', ['type'=>2],true, true)
                     );
                 } catch (\Throwable $e) {
                 }

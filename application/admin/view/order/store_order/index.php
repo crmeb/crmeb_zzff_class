@@ -110,7 +110,7 @@
                     <script type="text/html" id="info">
                         {{#  if(d.type==0 && d._info){ }}
                         <p>
-                            <span><img style="width: 30px;height: 30px;cursor: pointer;" src="{{d._info.image}}"></span>
+                            <span><img style="width: 40px;height: 15px;cursor: pointer;" src="{{d._info.image}}"></span>
                             <span>{{d._info.title}}</span><span></span>
                         </p>
                         {{# }else if(d.type==1 && d._info){ }}

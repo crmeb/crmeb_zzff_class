@@ -34,7 +34,6 @@ use app\admin\model\system\RecommendRelation;
 use app\admin\model\user\User;
 use app\wap\model\user\WechatUser;
 use service\JsonService as Json;
-use service\JsonService;
 use service\SystemConfigService;
 use service\UtilService;
 use service\WechatTemplateService;
@@ -205,7 +204,7 @@ class SpecialType extends AuthController
         }
 
         $special_task['source'] = $special_source;
-        return JsonService::successlayui($special_task);
+        return Json::successlayui($special_task);
 
     }
 
@@ -239,7 +238,7 @@ class SpecialType extends AuthController
     public function save_source($id = 0)
     {
         $special_type = $this->request->param('special_type');
-        if (!$special_type) return JsonService::fail('专题类型参数缺失');
+        if (!$special_type) return Json::fail('专题类型参数缺失');
         $data = UtilService::postMore([
             ['title', ''],
             ['image', ''],
@@ -251,19 +250,18 @@ class SpecialType extends AuthController
             ['is_show', 1],
         ]);
         $data['type'] = $special_type;//图文素材
-        if (!$data['title']) return JsonService::fail('请输入课程标题');
-        if (!$data['image']) return JsonService::fail('请上传封面图');
-        // if (!$data['link']) return JsonService::fail('请上传或者添加视频');
+        if (!$data['title']) return Json::fail('请输入课程标题');
+        if (!$data['image']) return Json::fail('请上传封面图');
         if ($id) {
             unset($data['is_show']);
             SpecialTask::update($data, ['id' => $id]);
-            return JsonService::successful('修改成功');
+            return Json::successful('修改成功');
         } else {
             $data['add_time'] = time();
             if (SpecialTask::set($data))
-                return JsonService::successful('添加成功');
+                return Json::successful('添加成功');
             else
-                return JsonService::fail('添加失败');
+                return Json::fail('添加失败');
         }
     }
 
@@ -276,14 +274,14 @@ class SpecialType extends AuthController
      */
     public function set_value($field = '', $id = '', $value = '', $model_type)
     {
-        if(!$field || !$id || $value == '' || !$model_type) JsonService::fail('缺少参数3');
+        if(!$field || !$id || $value == '' || !$model_type) Json::fail('缺少参数3');
         $model_type = $this->switch_model($model_type);
-        if (!$model_type) JsonService::fail('缺少参数2');
+        if (!$model_type) Json::fail('缺少参数2');
         $res = $model_type::where(['id' => $id])->update([$field => $value]);
         if ($res)
-            return JsonService::successful('保存成功');
+            return Json::successful('保存成功');
         else
-            return JsonService::fail('保存失败');
+            return Json::fail('保存失败');
     }
 
     /**根据标识选着模型对象
@@ -353,17 +351,17 @@ class SpecialType extends AuthController
     {
         $content = $this->request->post($field, '');
         $task = SpecialTask::get($id);
-        if (!$field) return JsonService::fail('修改项缺失');
+        if (!$field) return Json::fail('修改项缺失');
         if (!$task) {
-            return JsonService::fail('修改得素材不存在');
+            return Json::fail('修改得素材不存在');
         }
         $task->$field = htmlspecialchars($content);
 
         if ($task->save()) {
-            return JsonService::successful('保存成功');
+            return Json::successful('保存成功');
         } else {
 
-            return JsonService::fail('保存失败或者您没有修改什么');
+            return Json::fail('保存失败或者您没有修改什么');
         }
     }
 
@@ -379,7 +377,7 @@ class SpecialType extends AuthController
     $subjectlist = Grade::with(['SpecialSubject'=>function($query){
         $query->where('is_show',1);
     }])->order('sort desc')->select();
-    return JsonService::successful($subjectlist);
+    return Json::successful($subjectlist);
 }
     public function get_subject_list222($grade_id = 0)
     {
@@ -388,7 +386,7 @@ class SpecialType extends AuthController
         }
         $where['is_show'] = 1;
         $subjectlist = SpecialSubject::where($where)->order('sort desc')->select();
-        return JsonService::successful($subjectlist);
+        return Json::successful($subjectlist);
     }
     /**获取素材列表
      * @param bool $type
@@ -415,7 +413,7 @@ class SpecialType extends AuthController
             $sourceList = SpecialTask::where($where)->field('id, title')->order('sort desc')->select();
         }
 
-        return JsonService::successful($sourceList->toArray());
+        return Json::successful($sourceList->toArray());
     }
 
     /**
@@ -426,7 +424,7 @@ class SpecialType extends AuthController
     public function save_special($id = 0)
     {
         $special_type = $this->request->param('special_type');
-        if (!$special_type || !is_numeric($special_type)) return JsonService::fail('专题类型参数缺失');
+        if (!$special_type || !is_numeric($special_type)) return Json::fail('专题类型参数缺失');
         $data = UtilService::postMore([
             ['title', ''],
             ['abstract', ''],
@@ -560,14 +558,12 @@ class SpecialType extends AuthController
                 if ($special_type == SPECIAL_LIVE) {
                     LiveStudio::update($liveInfo, ['special_id' => $id]);
                 }
-                //if ($sourceCheckList) {
-                    if ($special_type == SPECIAL_LIVE) {
-                        $save_source = LiveGoods::saveLiveGoods($sourceCheckList, $id);
-                    }else{
-                        $save_source = SpecialSource::saveSpecialSource($sourceCheckList, $id);
-                    }
-                    if (!$save_source) return Json::fail('添加失败');
-              //  }
+                if ($special_type == SPECIAL_LIVE) {
+                    $save_source = LiveGoods::saveLiveGoods($sourceCheckList, $id);
+                }else{
+                    $save_source = SpecialSource::saveSpecialSource($sourceCheckList, $id);
+                }
+                if (!$save_source) return Json::fail('添加失败');
                 SpecialModel::commitTrans();
                 return Json::successful('修改成功');
             } else {
@@ -670,13 +666,13 @@ class SpecialType extends AuthController
 
     public function delete($id = 0, $model_type = false)
     {
-        if (!$id || !isset($model_type) || !$model_type) return JsonService::fail('缺少参数');
+        if (!$id || !isset($model_type) || !$model_type) return Json::fail('缺少参数');
         $model_table = $this->switch_model($model_type);
-        if (!$model_table) return JsonService::fail('缺少参数');
+        if (!$model_table) return Json::fail('缺少参数');
         try {
             $res_get = $model_table::get($id);
             $model_table::startTrans();
-            if (!$res_get) return JsonService::fail('删除的数据不存在');
+            if (!$res_get) return Json::fail('删除的数据不存在');
             $res_del = $res_get->delete();
             if ($model_type == 'special' && $res_del) {
                 $model_source = $this->switch_model('source');
@@ -686,10 +682,10 @@ class SpecialType extends AuthController
                 }
             }
             $model_table::commit();
-            return JsonService::successful('删除成功');
+            return Json::successful('删除成功');
         } catch (\Exception $e) {
             $model_table::rollback();
-            return JsonService::fail(SpecialTask::getErrorInfo('删除失败' . $e->getMessage()));
+            return Json::fail(SpecialTask::getErrorInfo('删除失败' . $e->getMessage()));
         }
 
     }
@@ -701,19 +697,19 @@ class SpecialType extends AuthController
 
     public function turnTo($id = 0, $model_type = false,$type=1)
     {
-        if (!$id || !isset($model_type) || !$model_type) return JsonService::fail('缺少参数');
+        if (!$id || !isset($model_type) || !$model_type) return Json::fail('缺少参数');
         $model_table = $this->switch_model($model_type);
-        if (!$model_table) return JsonService::fail('缺少参数');
+        if (!$model_table) return Json::fail('缺少参数');
         try {
             $res_get = $model_table::get($id);
             $model_table::startTrans();
-            if (!$res_get) return JsonService::fail('转换的数据不存在');
+            if (!$res_get) return Json::fail('转换的数据不存在');
             $res= $model_table::where('id',$id)->update(['type'=>$type]);
             $model_table::commit();
-            return JsonService::successful('转换成功');
+            return Json::successful('转换成功');
         } catch (\Exception $e) {
             $model_table::rollback();
-            return JsonService::fail(SpecialTask::getErrorInfo('转换失败' . $e->getMessage()));
+            return Json::fail(SpecialTask::getErrorInfo('转换失败' . $e->getMessage()));
         }
 
     }
@@ -825,7 +821,7 @@ class SpecialType extends AuthController
         $list = SpecialBarrage::where('is_show', 1)->order('sort desc,id desc')->page((int)$page, (int)$limit)->select();
         $list = count($list) ? $list->toArray() : [];
         $count = SpecialBarrage::where('is_show', 1)->count();
-        return JsonService::successful(compact('list', 'count'));
+        return Json::successful(compact('list', 'count'));
     }
 
     /**
@@ -835,9 +831,9 @@ class SpecialType extends AuthController
     public function del_barrage($id = 0)
     {
         if (SpecialBarrage::del($id))
-            return JsonService::successful('删除成功');
+            return Json::successful('删除成功');
         else
-            return JsonService::fail('删除失败');
+            return Json::fail('删除失败');
     }
 
     /**
@@ -850,18 +846,18 @@ class SpecialType extends AuthController
             ['avatar', ''],
             ['action', 0],
         ]);
-        if (!$data['nickname']) return JsonService::fail('请填写用户昵称');
-        if (!$data['avatar']) return JsonService::fail('请上传用户图像');
-        if (!$data['action']) return JsonService::fail('请勾选动作类型');
+        if (!$data['nickname']) return Json::fail('请填写用户昵称');
+        if (!$data['avatar']) return Json::fail('请上传用户图像');
+        if (!$data['action']) return Json::fail('请勾选动作类型');
         if ($id) {
             SpecialBarrage::edit($data, $id);
-            return JsonService::successful('修改成功');
+            return Json::successful('修改成功');
         } else {
             $data['add_time'] = time();
             if (SpecialBarrage::set($data))
-                return JsonService::successful('添加成功');
+                return Json::successful('添加成功');
             else
-                return JsonService::fail('添加失败');
+                return Json::fail('添加失败');
         }
 
     }
@@ -871,11 +867,11 @@ class SpecialType extends AuthController
      * */
     public function set_barrage_show($value = 0, $key_nime = '')
     {
-        if (!$key_nime) return JsonService::fail('缺少参数');
+        if (!$key_nime) return Json::fail('缺少参数');
         $confing = SystemConfig::where(['menu_name' => $key_nime])->find();
         if ($confing) {
             SystemConfig::edit(['value' => json_encode($value)], $confing->id);
-            return JsonService::successful('操作成功');
+            return Json::successful('操作成功');
         } else {
             $res = SystemConfig::set([
                 'menu_name' => $key_nime,
@@ -891,9 +887,9 @@ class SpecialType extends AuthController
                 'status' => 1
             ]);
             if ($res)
-                return JsonService::successful('操作成功');
+                return Json::successful('操作成功');
             else
-                return JsonService::fail('操作失败');
+                return Json::fail('操作失败');
         }
     }
 
@@ -906,27 +902,27 @@ class SpecialType extends AuthController
     {
         $special_id = $this->request->param('special_id');
         $is_live_goods = $this->request->param('is_live_goods');
-        if (!$special_id) return JsonService::fail('专题id缺失');
-        if (!in_array($is_live_goods, [0,1])) return JsonService::fail('非法参数');
+        if (!$special_id) return Json::fail('专题id缺失');
+        if (!in_array($is_live_goods, [0,1])) return Json::fail('非法参数');
         $specialInfo = Special::getOne($special_id);
-        if (!$specialInfo) return JsonService::fail('专题不存在');
+        if (!$specialInfo) return Json::fail('专题不存在');
         $isGoods = LiveGoods::getOne(['special_id' => $special_id, 'is_delete' => 0]);
         if ($is_live_goods == 1) {
-            if ($isGoods && $isGoods->is_show == 1) return JsonService::successful('无需重复设置');
+            if ($isGoods && $isGoods->is_show == 1) return Json::successful('无需重复设置');
             if ($isGoods && $isGoods->is_show == 0) {
                 LiveGoods::where(['id' => $isGoods->id])->update(['is_show' => 1, 'update_time' => time()]);
-                return JsonService::successful('设置成功');
+                return Json::successful('设置成功');
             }
             $inster_data['special_id'] =  $special_id;
             $inster_data['special_name'] =  $specialInfo[0]['title'];
             $inster_data['add_time'] =  time();
             $inster = LiveGoods::insterLiveGoods($inster_data);
-            if ($inster) return JsonService::successful('设置成功');
-            return JsonService::fail('设置失败');
+            if ($inster) return Json::successful('设置成功');
+            return Json::fail('设置失败');
         }else{
-            if (!$isGoods) return JsonService::successful('设置成功');
+            if (!$isGoods) return Json::successful('设置成功');
             LiveGoods::where(['id' => $isGoods->special_id])->update(['is_show' => 0, 'update_time' => time()]);
-            return JsonService::successful('设置成功');
+            return Json::successful('设置成功');
         }
     }*/
     /**渲染模板

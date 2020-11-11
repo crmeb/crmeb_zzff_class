@@ -17,6 +17,7 @@ use traits\ModelTrait;
 use basic\ModelBasic;
 use app\wap\model\user\User;
 use app\wap\model\user\MemberCardBatch;//会员卡批次
+
 class MemberCard extends ModelBasic
 {
     use ModelTrait;

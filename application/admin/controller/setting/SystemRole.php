@@ -97,7 +97,6 @@ class SystemRole extends AuthController
      */
     public function read($id)
     {
-        //
     }
 
     /**
@@ -108,7 +107,6 @@ class SystemRole extends AuthController
      */
     public function edit($id)
     {
-        //
         $role = RoleModel::get($id);
         $menus = $this->adminInfo['level'] == 0 ? SystemMenus::ruleList() : SystemMenus::rolesByRuleList($this->adminInfo['roles']);
         $this->assign(['role' => $role->toJson(), 'menus' => json($menus)->getContent(), 'updateUrl' => Url::build('update', array('id' => $id))]);

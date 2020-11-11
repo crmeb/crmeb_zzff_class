@@ -18,7 +18,6 @@ use app\admin\model\finance\FinanceModel;
 use service\SystemConfigService;
 use service\UtilService as Util;
 use service\FormBuilder as Form;
-//use FormBuilder\Form;
 use service\HookService;
 use think\Url;
 use app\admin\model\user\User;
@@ -107,22 +106,6 @@ class Finance extends AuthController
             ['order', '']
         ]);
         return Json::successlayui(User::getCommissionList($get));
-    }
-
-    /**
-     * 保存excel表格
-     */
-    public function save_export()
-    {
-        $get = Util::getMore([
-            ['page', 1],
-            ['limit', 20],
-            ['nickname', ''],
-            ['price_max', ''],
-            ['price_min', ''],
-            ['order', '']
-        ]);
-        User::setUserWhere($get, true);
     }
 
     /**

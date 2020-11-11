@@ -92,17 +92,6 @@ class FinanceModel extends ModelBasic
         if($where['start_time']!='' && $where['end_time']!=''){
             $time['data']=$where['start_time'].' - '.$where['end_time'];
         }
-        /*if (isset($where['category']) && $where['category'] == "now_money") {
-            $category_where['op'] = 'not in';
-            $category_where['condition'] = 'integral,gold_num';
-            $type_where['op'] = 'not in';
-            $type_where['type'] = 'gain,system_sub,deduction,sign,recharge';
-        }else{
-            $category_where['op'] = 'in';
-            $category_where['condition'] = 'gold_num';
-            $type_where['op'] = 'in';
-            $type_where['type'] = 'sign,recharge';
-        }*/
         $bill_where_op = self::bill_where_op($where['category']);
         if (!$bill_where_op) return false;
         $model=self::getModelTime($time,self::alias('A')
@@ -113,8 +102,6 @@ class FinanceModel extends ModelBasic
             $model=$model->where('A.type',$where['type']);
         }else{
             $model=$model->where('A.type', $bill_where_op['type']['op'],$bill_where_op['type']['condition']);
-
-
         }
         if($where['nickname']!=''){
             $model=$model->where('B.nickname|B.uid','like',"%$where[nickname]%");
@@ -253,8 +240,8 @@ class FinanceModel extends ModelBasic
      */
     public static function getRecharge($where)
     {
-            $Recharge = self::getTime($where,new UserBill)->where('type', 'system_add')->where('category','now_money')->sum('number');
-            return $Recharge;
+        $Recharge = self::getTime($where,new UserBill)->where('type', 'system_add')->where('category','now_money')->sum('number');
+        return $Recharge;
     }
     /**
      * 获取推广金
@@ -299,8 +286,6 @@ class FinanceModel extends ModelBasic
                 $cost=$info['cost'];//成本
                 $export[] = [$time,$price,$zhichu,$cost,$coupon,$deduction,$profit];
             }
-//            ExportService::exportCsv($export,'统计'.time(),['时间','营业额(元)','支出(元)','成本','优惠','积分抵扣','盈利(元)']);
-            dump($export);
             PHPExcelService::setExcelHeader(['时间','营业额(元)','支出(元)','成本','优惠','积分抵扣','盈利(元)'])->setExcelTile('财务统计', '财务统计',date('Y-m-d H:i:s',time()))->setExcelContent($export)->ExcelSave();
         }
     }

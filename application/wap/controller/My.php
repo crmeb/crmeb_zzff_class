@@ -149,20 +149,30 @@ class My extends AuthController
             if (!$code) return JsonService::fail('请输入验证码');
             if (!SmsCode::CheckCode($phone, $code)) return JsonService::fail('验证码验证失败');
             SmsCode::setCodeInvalid($phone, $code);
-            if ($type && User::be(['phone' => $phone, 'is_h5user' => 0])) return JsonService::fail('当前手机号码已绑定微信用户');
+            $user=User::where(['phone' => $phone, 'is_h5user' => 0])->find();
+            if($type && $user){
+                if($user['uid']==$this->uid){
+                    return JsonService::fail('不能绑定相同手机号');
+                }else if($user['uid']!=$this->uid){
+                    return JsonService::fail('当前手机号码已绑定微信用户');
+                }
+            }else if($type==0 && $user){
+                if($user) return JsonService::fail('当前手机号码已绑定微信用户');
+            }
             //查找H5手机号码账户
             $phoneUser = PhoneUser::where(['phone' => $phone])->find();
             //H5页面有注册过
-            if ($phoneUser) {
+            if ($phoneUser && $phoneUser['uid']!=$this->uid) {
                 //检测当前用户是否是H5用户
                 if (User::where('uid', $phoneUser['uid'])->value('is_h5user')) {
                     $res = User::setUserRelationInfos($phone, $phoneUser['uid'], $this->uid);
                     if ($res === false) return JsonService::fail(User::getErrorInfo());
                 }
+            }else if($phoneUser && $phoneUser['uid']==$this->uid){
+                return JsonService::fail('不能绑定相同手机号');
             }
             if (!isset($res)) User::update(['phone' => $phone], ['uid' => $this->uid]);
             return JsonService::successful('绑定成功');
-
         } else {
             $this->assign('user_phone', $this->userInfo['phone']);
             return $this->fetch();

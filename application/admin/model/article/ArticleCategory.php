@@ -75,7 +75,7 @@ class ArticleCategory extends ModelBasic
      * return array
      * */
     public static function getArticle($id,$field){
-        $res = ArticleModel::where('status',1)->where('hide',0)->column($field,'id');
+        $res = ArticleModel::where('hide',0)->column($field,'id');
         $new_res = array();
         foreach ($res as $k=>$v){
             $cid_arr = explode(',',$v['cid']);

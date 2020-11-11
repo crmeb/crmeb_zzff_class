@@ -16,7 +16,6 @@ use Api\AliyunOss;
 use app\admin\model\system\SystemAttachment as SystemAttachmentModel;
 use app\admin\model\system\SystemAttachmentCategory as Category;
 use app\admin\controller\AuthController;
-use service\JsonService;
 use service\SystemConfigService;
 use service\JsonService as Json;
 use service\UtilService as Util;
@@ -95,12 +94,12 @@ class Images extends AuthController
             $res = $aliyunOss->upload('file');
             if ($res) {
                 SystemAttachmentModel::attachmentAdd($res['key'], 0, 'image/jpg', $res['url'], $res['url'], $pid, 1, time());
-                return JsonService::successful(['url' => $res]);
+                return Json::successful(['url' => $res]);
             } else {
-                return JsonService::fail($aliyunOss->getErrorInfo()['msg']);
+                return Json::fail($aliyunOss->getErrorInfo()['msg']);
             }
         } catch (\Exception $e) {
-            return JsonService::fail('上传失败:' . $e->getMessage());
+            return Json::fail('上传失败:' . $e->getMessage());
         }
     }
 
@@ -278,7 +277,7 @@ SCRIPT;
      */
     public function get_signature()
     {
-        return JsonService::successful($this->init()->getSignature());
+        return Json::successful($this->init()->getSignature());
     }
 
     /**
@@ -288,16 +287,16 @@ SCRIPT;
     public function del_oss_key($key = '', $url = '')
     {
         if (!$key && !$url) {
-            return JsonService::fail('删除失败');
+            return Json::fail('删除失败');
         }
         if ($url) {
             $key = SystemAttachmentModel::where(['att_dir' => $url])->value('name');
         }
         $res = $this->init()->delOssFile($key);
         if ($res) {
-            return JsonService::successful('删除成功');
+            return Json::successful('删除成功');
         } else {
-            return JsonService::fail('删除失败');
+            return Json::fail('删除失败');
         }
     }
 

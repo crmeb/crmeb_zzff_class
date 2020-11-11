@@ -16,7 +16,6 @@ namespace app\admin\model\store;
 use traits\ModelTrait;
 use basic\ModelBasic;
 use service\UtilService;
-use app\admin\model\system\Merchant;
 
 /**
  * Class StoreCategory

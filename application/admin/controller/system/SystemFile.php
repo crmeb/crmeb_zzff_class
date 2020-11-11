@@ -100,8 +100,6 @@ class SystemFile extends AuthController
             }
 
         }
-//   dump($file);
-//   dump($fileAll);
         $this->assign('cha', $cha);
         return $this->fetch();
     }
@@ -129,8 +127,6 @@ class SystemFile extends AuthController
             $fileAll[$k]['mtime'] = $update_time['mtime'];
             $fileAll[$k]['ctime'] = $update_time['ctime'];
         }
-
-//   dump($file);
         dump($fileAll);
     }
 

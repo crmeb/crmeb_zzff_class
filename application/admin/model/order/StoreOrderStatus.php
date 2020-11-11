@@ -54,7 +54,6 @@ class StoreOrderStatus extends ModelBasic
     public static function systemPageMer($oid){
         $model = new self;
         $model = $model->where('oid',$oid);
-//        $model = $model->where('change_type','LIKE','mer_%');
         $model = $model->order('change_time asc');
         return self::page($model);
     }

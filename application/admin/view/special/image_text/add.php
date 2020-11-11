@@ -59,6 +59,7 @@
     .layui-tab-title .layui-this:after {
         border-bottom-color: #fff!important;
     }
+    .upload-image-box .mask p{width: 50px;}
 </style>
 <script type="text/javascript" charset="utf-8"
         src="{__ADMIN_PATH}plug/ueditor/third-party/zeroclipboard/ZeroClipboard.js"></script>
@@ -86,15 +87,13 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题名称</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="title" v-model="formData.title" autocomplete="off"
-                                        placeholder="请输入专题名称" class="layui-input">
+                                    <input type="text" name="title" v-model="formData.title" autocomplete="off" placeholder="请输入专题名称" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">分类选择</label>
                                 <div class="layui-input-block">
-                                    <select name="subject_id" v-model="formData.subject_id" lay-search=""
-                                            lay-filter="subject_id">
+                                    <select name="subject_id" v-model="formData.subject_id" lay-search="" lay-filter="subject_id">
                                         <option value="0">请选分类</option>
                                         <optgroup v-if ="item.special_subject" v-for="item in subject_list" :label="item.name">
                                             <option  v-if ="item.special_subject" :value="chaild_item.id"  v-for="chaild_item in item.special_subject">|----{{chaild_item.name}}</option>
@@ -106,32 +105,28 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题简介</label>
                                 <div class="layui-input-block">
-                                <textarea placeholder="请输入专题简介" v-model="formData.abstract"
-                                        class="layui-textarea"></textarea>
+                                <textarea placeholder="请输入专题简介" v-model="formData.abstract" class="layui-textarea"></textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题短语</label>
                                 <div class="layui-input-block">
-                                <textarea placeholder="请输入专题短语" v-model="formData.phrase"
-                                        class="layui-textarea"></textarea>
+                                <textarea placeholder="请输入专题短语" v-model="formData.phrase" class="layui-textarea"></textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题排序</label>
                                 <div class="layui-input-block">
-                                    <input type="number" style="width: 20%" name="sort" v-model="formData.sort"
-                                        autocomplete="off" class="layui-input">
+                                    <input type="number" style="width: 20%" name="sort" v-model="formData.sort" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item m-t-5">
                                 <div class="layui-inline">
                                     <label class="layui-form-label" style="margin-right: 28px">专题标签</label>
                                     <div class="layui-input-inline" style="width: 300px;">
-                                        <input type="text" v-model="label" name="price_min" placeholder="最多4个字"
-                                            autocomplete="off" class="layui-input" style="float: left;width: 200px">
-                                        <p class="special-label" @click="addLabrl"><i class="fa fa-plus"
-                                                                                    aria-hidden="true"></i></p>
+                                        <input type="text" v-model="label" name="price_min" placeholder="最多4个字" autocomplete="off" class="layui-input" style="float: left;width: 200px">
+                                        <p class="special-label" @click="addLabrl">
+                                            <i class="fa fa-plus" aria-hidden="true"></i></p>
                                     </div>
                                 </div>
                                 <div class="layui-input-block">
@@ -144,12 +139,13 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题封面</label>
                                 <div class="layui-input-block">
-                                    <div class="upload-image-box" v-if="formData.image" @mouseenter="mask.image = true"
-                                        @mouseleave="mask.image = false">
+                                    <div class="upload-image-box" v-if="formData.image" @mouseenter="mask.image = true" @mouseleave="mask.image = false">
                                         <img :src="formData.image" alt="">
                                         <div class="mask" v-show="mask.image" style="display: block">
-                                            <p><i class="fa fa-eye" @click="look(formData.image)"></i><i
-                                                        class="fa fa-trash-o" @click="delect('image')"></i></p>
+                                            <p>
+                                                <i class="fa fa-eye" @click="look(formData.image)"></i>
+                                                <i class="fa fa-trash-o" @click="delect('image')"></i>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="upload-image" v-show="!formData.image" @click="upload('image')">
@@ -161,18 +157,15 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题banner</label>
                                 <div class="layui-input-block">
-                                    <div class="upload-image-box" v-if="formData.banner.length"
-                                        v-for="(item,index) in formData.banner" @mouseenter="enter(item)"
-                                        @mouseleave="leave(item)">
+                                    <div class="upload-image-box" v-if="formData.banner.length" v-for="(item,index) in formData.banner" @mouseenter="enter(item)" @mouseleave="leave(item)">
                                         <img :src="item.pic" alt="">
                                         <div class="mask" v-show="item.is_show" style="display: block">
-                                            <p><i class="fa fa-eye" @click="look(item)"></i><i class="fa fa-trash-o"
-                                                                                            @click="delect('banner',index)"></i>
+                                            <p><i class="fa fa-eye" @click="look(item)"></i>
+                                                <i class="fa fa-trash-o" @click="delect('banner',index)"></i>
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="upload-image" v-show="formData.banner.length <= 3"
-                                        @click="upload('banner',5)">
+                                    <div class="upload-image" v-show="formData.banner.length <= 3" @click="upload('banner',5)">
                                         <div class="fiexd"><i class="fa fa-plus"></i></div>
                                         <p>选择图片</p>
                                     </div>
@@ -181,16 +174,15 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">推广海报</label>
                                 <div class="layui-input-block">
-                                    <div class="upload-image-box" v-if="formData.poster_image"
-                                        @mouseenter="mask.poster_image = true" @mouseleave="mask.poster_image = false">
+                                    <div class="upload-image-box" v-if="formData.poster_image" @mouseenter="mask.poster_image = true" @mouseleave="mask.poster_image = false">
                                         <img :src="formData.poster_image" alt="">
                                         <div class="mask" v-show="mask.poster_image" style="display: block">
-                                            <p><i class="fa fa-eye" @click="look(formData.poster_image)"></i><i
-                                                        class="fa fa-trash-o" @click="delect('poster_image')"></i></p>
+                                            <p><i class="fa fa-eye" @click="look(formData.poster_image)"></i>
+                                                <i class="fa fa-trash-o" @click="delect('poster_image')"></i>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="upload-image" v-show="!formData.poster_image"
-                                        @click="upload('poster_image')">
+                                    <div class="upload-image" v-show="!formData.poster_image" @click="upload('poster_image')">
                                         <div class="fiexd"><i class="fa fa-plus"></i></div>
                                         <p>选择图片</p>
                                     </div>
@@ -199,16 +191,15 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">客服二维码</label>
                                 <div class="layui-input-block">
-                                    <div class="upload-image-box" v-if="formData.service_code"
-                                        @mouseenter="mask.service_code = true" @mouseleave="mask.service_code = false">
+                                    <div class="upload-image-box" v-if="formData.service_code" @mouseenter="mask.service_code = true" @mouseleave="mask.service_code = false">
                                         <img :src="formData.service_code" alt="">
                                         <div class="mask" v-show="mask.service_code" style="display: block">
-                                            <p><i class="fa fa-eye" @click="look(formData.service_code)"></i><i
-                                                        class="fa fa-trash-o" @click="delect('service_code')"></i></p>
+                                            <p><i class="fa fa-eye" @click="look(formData.service_code)"></i>
+                                                <i class="fa fa-trash-o" @click="delect('service_code')"></i>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="upload-image" v-show="!formData.service_code"
-                                        @click="upload('service_code')">
+                                    <div class="upload-image" v-show="!formData.service_code" @click="upload('service_code')">
                                         <div class="fiexd"><i class="fa fa-plus"></i></div>
                                         <p>选择图片</p>
                                     </div>
@@ -218,33 +209,23 @@
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">插入视频</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="title" v-model="link"
-                                        style="width:50%;display:inline-block;margin-right: 10px;" autocomplete="off"
-                                        placeholder="请输入视频链接" class="layui-input">
-                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
-                                            @click="uploadVideo()">确认添加
-                                    </button>
-                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
-                                            id="ossupload">上传视频
-                                    </button>
+                                    <input type="text" name="title" v-model="link" style="width:50%;display:inline-block;margin-right: 10px;" autocomplete="off" placeholder="请输入视频链接" class="layui-input">
+                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" @click="uploadVideo()">确认添加</button>
+                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="ossupload">上传视频</button>
                                 </div>
                                 <input type="file" name="video" v-show="" ref="video">
                                 <div class="layui-input-block" style="width: 50%;margin-top: 20px" v-show="is_video">
                                     <div class="layui-progress" style="margin-bottom: 10px">
-                                        <div class="layui-progress-bar layui-bg-blue"
-                                            :style="'width:'+videoWidth+'%'"></div>
+                                        <div class="layui-progress-bar layui-bg-blue" :style="'width:'+videoWidth+'%'"></div>
                                     </div>
-                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger"
-                                            @click="cancelUpload">取消
-                                    </button>
+                                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" @click="cancelUpload">取消</button>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">输入链接将视为添加视频直接添加,请确保视频链接的正确性</div>
                             </div>
                             <div class="layui-form-item m-t-5">
                                 <label class="layui-form-label">专题内容</label>
                                 <div class="layui-input-block">
-                                <textarea id="myEditor"
-                                        style="width:100%;height: 500px">{{formData.content}}</textarea>
+                                <textarea id="myEditor" style="width:100%;height: 500px">{{formData.content}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -273,33 +254,27 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">付费方式</label>
                                 <div class="layui-input-block">
-                                    <input type="radio" name="pay_type" lay-filter="pay_type"
-                                        v-model="formData.pay_type" value="1" title="付费">
-                                    <input type="radio" name="pay_type" lay-filter="pay_type"
-                                        v-model="formData.pay_type" value="0" title="免费">
+                                    <input type="radio" name="pay_type" lay-filter="pay_type" v-model="formData.pay_type" value="1" title="付费">
+                                    <input type="radio" name="pay_type" lay-filter="pay_type" v-model="formData.pay_type" value="0" title="免费">
                                     <!--<input type="radio" name="pay_type" lay-filter="pay_type" v-model="formData.pay_type" value="2" title="加密" >-->
                                 </div>
                             </div>
                             <div class="layui-form-item" v-show="formData.pay_type == 1">
                                 <label class="layui-form-label">购买金额</label>
                                 <div class="layui-input-block">
-                                    <input style="width: 20%" type="number" name="money" lay-verify="number"
-                                        v-model="formData.money" autocomplete="off" class="layui-input" min="0">
+                                    <input style="width: 20%" type="number" name="money" lay-verify="number" v-model="formData.money" autocomplete="off" class="layui-input" min="0">
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">会员付费方式</label>
                                     <div class="layui-input-block">
-                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type"
-                                            v-model="formData.member_pay_type" value="1" title="付费">
-                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type"
-                                            v-model="formData.member_pay_type" value="0" title="免费">
+                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type" v-model="formData.member_pay_type" value="1" title="付费">
+                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type" v-model="formData.member_pay_type" value="0" title="免费">
                                     </div>
                                 </div>
                                 <div class="layui-form-item" v-show="formData.member_pay_type == 1">
                                     <label class="layui-form-label">会员购买金额</label>
                                     <div class="layui-input-block">
-                                        <input style="width: 20%" type="number" name="member_money" lay-verify="number"
-                                            v-model="formData.member_money" autocomplete="off" class="layui-input" min="0">
+                                        <input style="width: 20%" type="number" name="member_money" lay-verify="number" v-model="formData.member_money" autocomplete="off" class="layui-input" min="0">
                                     </div>
                                 </div>
                             </div>
@@ -307,10 +282,8 @@
                             <div class="layui-form-item" v-show="formData.pay_type == 1">
                                 <label class="layui-form-label">拼团是否开启</label>
                                 <div class="layui-input-block">
-                                    <input type="radio" name="is_pink" lay-filter="is_pink" v-model="formData.is_pink"
-                                        value="0" title="关闭" checked="">
-                                    <input type="radio" name="is_pink" lay-filter="is_pink" v-model="formData.is_pink"
-                                        value="1" title="开启">
+                                    <input type="radio" name="is_pink" lay-filter="is_pink" v-model="formData.is_pink" value="0" title="关闭" checked="">
+                                    <input type="radio" name="is_pink" lay-filter="is_pink" v-model="formData.is_pink" value="1" title="开启">
                                 </div>
                             </div>
 
@@ -318,15 +291,13 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label" style="margin-right: 28px">拼团金额</label>
                                     <div class="layui-input-inline">
-                                        <input type="number" name="pink_money" v-model="formData.pink_money"
-                                            autocomplete="off" class="layui-input" min="0">
+                                        <input type="number" name="pink_money" v-model="formData.pink_money" autocomplete="off" class="layui-input" min="0">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">拼团人数</label>
                                     <div class="layui-input-inline">
-                                        <input type="number" name="pink_number" v-model="formData.pink_number"
-                                            autocomplete="off" class="layui-input" min="0">
+                                        <input type="number" name="pink_number" v-model="formData.pink_number" autocomplete="off" class="layui-input" min="0">
                                     </div>
                                 </div>
                             </div>
@@ -334,39 +305,33 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label" style="margin-right: 28px">开始时间</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="pink_strar_time" v-model="formData.pink_strar_time"
-                                            id="start_time" autocomplete="off" class="layui-input">
+                                        <input type="text" name="pink_strar_time" v-model="formData.pink_strar_time" id="start_time" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">结束时间</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="pink_end_time" v-model="formData.pink_end_time"
-                                            id="end_time" autocomplete="off" class="layui-input">
+                                        <input type="text" name="pink_end_time" v-model="formData.pink_end_time" id="end_time" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-form-item" v-show="formData.is_pink">
                                 <label class="layui-form-label">拼团时间(小时)</label>
                                 <div class="layui-input-block">
-                                    <input style="width: 20%" type="number" v-model="formData.pink_time"
-                                        autocomplete="off" class="layui-input">
+                                    <input style="width: 20%" type="number" v-model="formData.pink_time" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item" v-show="formData.is_pink">
                                 <label class="layui-form-label">模拟成团</label>
                                 <div class="layui-input-block">
-                                    <input type="radio" name="is_fake_pink" lay-filter="is_fake_pink"
-                                        v-model="formData.is_fake_pink" value="1" title="开启" checked="">
-                                    <input type="radio" name="is_fake_pink" lay-filter="is_fake_pink"
-                                        v-model="formData.is_fake_pink" value="0" title="关闭">
+                                    <input type="radio" name="is_fake_pink" lay-filter="is_fake_pink" v-model="formData.is_fake_pink" value="1" title="开启" checked="">
+                                    <input type="radio" name="is_fake_pink" lay-filter="is_fake_pink" v-model="formData.is_fake_pink" value="0" title="关闭">
                                 </div>
                             </div>
                             <div class="layui-form-item" v-show="formData.is_fake_pink && formData.is_pink">
                                 <label class="layui-form-label">补齐比例</label>
                                 <div class="layui-input-block">
-                                    <input style="width: 20%" type="number" v-model="formData.fake_pink_number"
-                                        autocomplete="off" class="layui-input" min="0">
+                                    <input style="width: 20%" type="number" v-model="formData.fake_pink_number" autocomplete="off" class="layui-input" min="0">
                                 </div>
                             </div>
                         </div>
@@ -644,7 +609,7 @@
                             , cols: [[
                                 {field: 'id', title: '编号', sort: true, event: 'id',align: 'center'},
                                 {field: 'title', title: '素材标题', edit: 'title',align: 'center'},
-                                {field: 'image', title: '封面', templet: '<div><img src="{{ d.image }}"></div>',align: 'center'},
+                                {field: 'image', title: '封面', templet: '<div><img style="width: 80px;height: 40px;" src="{{ d.image }}"></div>',align: 'center'},
                                 {
                                     field: 'pay_status', title: '是否免费',align: 'center',templet: function (d) {
                                         var is_checked = d.pay_status == 0 ? "checked" : "";

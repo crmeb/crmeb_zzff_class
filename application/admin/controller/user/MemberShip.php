@@ -18,8 +18,6 @@ use service\JsonService as Json;
 use service\FormBuilder as Form;
 use think\Url;
 use app\admin\model\user\MemberShip as MembershipModel;
-use app\admin\model\user\SystemVipGift;
-use app\admin\model\user\UserVip;
 
 /**
  * 会员设置控制器

@@ -38,13 +38,13 @@ CREATE TABLE `eb_article` (
 CREATE TABLE `eb_article_category` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '文章分类id',
   `pid` int(11) NOT NULL DEFAULT '0' COMMENT '父级ID',
-  `title` varchar(255) NOT NULL COMMENT '文章分类标题',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '文章分类标题',
   `intr` varchar(255) DEFAULT NULL COMMENT '文章分类简介',
-  `image` varchar(255) NOT NULL COMMENT '文章分类图片',
-  `status` tinyint(1) UNSIGNED NOT NULL COMMENT '状态',
+  `image` varchar(255) NOT NULL DEFAULT '' COMMENT '文章分类图片',
+  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '状态',
   `sort` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '1删除0未删除',
-  `add_time` varchar(255) NOT NULL COMMENT '添加时间',
+  `add_time` varchar(255) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `hidden` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否隐藏'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章分类表';
 
@@ -56,7 +56,7 @@ CREATE TABLE `eb_article_category` (
 
 CREATE TABLE `eb_article_content` (
   `nid` int(10) UNSIGNED NOT NULL COMMENT '文章id',
-  `content` text NOT NULL COMMENT '文章内容'
+  `content` text  COMMENT '文章内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章内容表';
 
 
@@ -69,7 +69,7 @@ CREATE TABLE `eb_article_content` (
 CREATE TABLE `eb_cache` (
   `key` varchar(32) NOT NULL,
   `result` text COMMENT '缓存数据',
-  `add_time` int(10) DEFAULT NULL COMMENT '缓存时间'
+  `add_time` int(10) DEFAULT '0' COMMENT '缓存时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='记录缓存';
 
 -- --------------------------------------------------------
@@ -80,10 +80,10 @@ CREATE TABLE `eb_cache` (
 
 CREATE TABLE `eb_express` (
   `id` mediumint(11) UNSIGNED NOT NULL COMMENT '快递公司id',
-  `code` varchar(50) NOT NULL COMMENT '快递公司简称',
-  `name` varchar(50) NOT NULL COMMENT '快递公司全称',
-  `sort` int(11) NOT NULL COMMENT '排序',
-  `is_show` tinyint(1) NOT NULL COMMENT '是否显示'
+  `code` varchar(50) NOT NULL DEFAULT '' COMMENT '快递公司简称',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '快递公司全称',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+  `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否显示'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快递公司表';
 
 --
@@ -520,7 +520,7 @@ INSERT INTO `eb_express` (`id`, `code`, `name`, `sort`, `is_show`) VALUES
 
 CREATE TABLE `eb_grade` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL COMMENT '年级名称',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '年级名称',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='年级列表';
@@ -548,7 +548,7 @@ INSERT INTO `eb_grade` (`id`, `name`, `sort`, `add_time`) VALUES
 CREATE TABLE `eb_live_barrage` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户uid',
-  `to_uid` int(11) NOT NULL COMMENT '给谁发送',
+  `to_uid` int(11) NOT NULL DEFAULT '0' COMMENT '给谁发送',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '消息类型，1=文本，2=图片，3=语音',
   `barrage` varchar(3000) NOT NULL DEFAULT '' COMMENT '评论内容',
   `live_id` int(11) NOT NULL DEFAULT '0' COMMENT '直播间id',
@@ -803,7 +803,7 @@ INSERT INTO `eb_recommend_banner` (`id`, `recommend_id`, `pic`, `url`, `sort`, `
 CREATE TABLE `eb_recommend_relation` (
   `id` int(11) NOT NULL,
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型,0=专题,1=新闻，2=直播，3=活动',
-  `recommend_id` int(11) NOT NULL COMMENT '推荐id',
+  `recommend_id` int(11) NOT NULL DEFAULT '0' COMMENT '推荐id',
   `link_id` int(11) NOT NULL DEFAULT '0' COMMENT '关联id',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'
@@ -830,8 +830,8 @@ INSERT INTO `eb_recommend_relation` (`id`, `type`, `recommend_id`, `link_id`, `s
 
 CREATE TABLE `eb_routine_access_token` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '小程序access_token表ID',
-  `access_token` varchar(256) NOT NULL COMMENT 'openid',
-  `stop_time` int(11) UNSIGNED NOT NULL COMMENT '添加时间'
+  `access_token` varchar(256) NOT NULL DEFAULT '' COMMENT 'openid',
+  `stop_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='小程序access_token表';
 
 -- --------------------------------------------------------
@@ -843,7 +843,7 @@ CREATE TABLE `eb_routine_access_token` (
 CREATE TABLE `eb_routine_form_id` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '表单ID表ID',
   `uid` int(11) DEFAULT '0' COMMENT '用户uid',
-  `form_id` varchar(32) NOT NULL COMMENT '表单ID',
+  `form_id` varchar(32) NOT NULL DEFAULT '' COMMENT '表单ID',
   `stop_time` int(11) UNSIGNED DEFAULT NULL COMMENT '表单ID失效时间',
   `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '状态1 未使用 2不能使用'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单id表记录表';
@@ -856,11 +856,11 @@ CREATE TABLE `eb_routine_form_id` (
 
 CREATE TABLE `eb_routine_template` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '模板id',
-  `tempkey` char(50) NOT NULL COMMENT '模板编号',
-  `name` char(100) NOT NULL COMMENT '模板名',
-  `content` varchar(1000) NOT NULL COMMENT '回复内容',
+  `tempkey` char(50) NOT NULL DEFAULT '' COMMENT '模板编号',
+  `name` char(100) NOT NULL DEFAULT '' COMMENT '模板名',
+  `content` varchar(1000) NOT NULL DEFAULT '' COMMENT '回复内容',
   `tempid` char(100) DEFAULT NULL COMMENT '模板ID',
-  `add_time` varchar(15) NOT NULL COMMENT '添加时间',
+  `add_time` varchar(15) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信模板';
 
@@ -907,10 +907,10 @@ INSERT INTO `eb_search` (`id`, `name`, `add_time`) VALUES
 
 CREATE TABLE `eb_sms_code` (
   `id` int(5) NOT NULL COMMENT 'id',
-  `tel` varchar(20) NOT NULL COMMENT '电话号码',
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '谁发送的',
-  `code` int(8) UNSIGNED NOT NULL COMMENT '验证码',
-  `last_time` int(11) UNSIGNED NOT NULL COMMENT '过期时间',
+  `tel` varchar(20) NOT NULL DEFAULT '0' COMMENT '电话号码',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '谁发送的',
+  `code` int(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT '验证码',
+  `last_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '过期时间',
   `is_use` int(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否已使用'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1001,7 +1001,7 @@ INSERT INTO `eb_special_barrage` (`id`, `special_id`, `nickname`, `avatar`, `act
 CREATE TABLE `eb_special_buy` (
   `id` int(11) NOT NULL,
   `order_id` varchar(32) NOT NULL DEFAULT '' COMMENT '订单id',
-  `special_id` int(11) NOT NULL COMMENT '专题id',
+  `special_id` int(11) NOT NULL DEFAULT '0' COMMENT '专题id',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_del` tinyint(1) DEFAULT '0' COMMENT '是否删除',
@@ -1018,7 +1018,7 @@ CREATE TABLE `eb_special_content` (
   `id` int(11) NOT NULL,
   `special_id` int(11) NOT NULL DEFAULT '0' COMMENT '专栏id',
   `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  `content` text NOT NULL COMMENT '内容'
+  `content` text NOT NULL DEFAULT '' COMMENT '内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专栏内容关联表';
 
 --
@@ -1082,15 +1082,15 @@ CREATE TABLE `eb_special_record` (
 --
 CREATE TABLE `eb_member_card_batch` (
   `id` int(10) NOT NULL,
-  `title` varchar(100) NOT NULL COMMENT '批次名称',
+  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '批次名称',
   `total_num` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '生成卡数量',
   `use_day` int(11) unsigned NOT NULL DEFAULT '7' COMMENT '体验天数',
   `use_num` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '使用',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否生效,控制此批次所有卡0：不生效；1：生效',
-  `qrcode` varchar(255) NOT NULL COMMENT '二维码图路径',
-  `remark` varchar(502) CHARACTER SET utf8mb4 NOT NULL COMMENT '备注',
-  `create_time` int(11) NOT NULL,
-  `update_time` int(11) DEFAULT NULL
+  `qrcode` varchar(255) NOT NULL DEFAULT '' COMMENT '二维码图路径',
+  `remark` varchar(502) NOT NULL DEFAULT '' COMMENT '备注',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员卡批次表';
 -- --------------------------------------------------------
 --
@@ -1098,14 +1098,14 @@ CREATE TABLE `eb_member_card_batch` (
 --
 CREATE TABLE `eb_member_card` (
   `id` int(11) NOT NULL,
-  `card_batch_id` int(11) unsigned NOT NULL COMMENT '卡批次id',
-  `card_number` varchar(200) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '卡号',
-  `card_password` char(12) CHARACTER SET utf8mb4 NOT NULL COMMENT '密码',
-  `use_uid` int(11) NOT NULL COMMENT '使用用户',
-  `use_time` int(11) NOT NULL COMMENT '使用时间',
+  `card_batch_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '卡批次id',
+  `card_number` varchar(200) NOT NULL DEFAULT '' COMMENT '卡号',
+  `card_password` char(12) NOT NULL DEFAULT '' COMMENT '密码',
+  `use_uid` int(11) NOT NULL DEFAULT '0' COMMENT '使用用户',
+  `use_time` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '卡状态：0：冻结；1：激活',
-  `create_time` int(11) NOT NULL,
-  `update_time` int(11) DEFAULT NULL
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员卡表';
 
 -- --------------------------------------------------------
@@ -1165,8 +1165,8 @@ CREATE TABLE `eb_special_task` (
   `coures_id` int(11) NOT NULL DEFAULT '0' COMMENT '课程id（1.1版本后废弃）',
   `special_id` int(11) NOT NULL DEFAULT '0' COMMENT '专题id',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '素材标题',
-  `content` text NOT NULL COMMENT '内容',
-  `detail` text NOT NULL COMMENT '简介',
+  `content` text NOT NULL DEFAULT '' COMMENT '内容',
+  `detail` text NOT NULL DEFAULT '' COMMENT '简介',
   `type` tinyint(1) NOT NULL DEFAULT '6' COMMENT '素材类型',
   `is_pay` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否付费,0=免费,1=付费',
   `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
@@ -1213,15 +1213,15 @@ INSERT INTO `eb_special_source` (`id`, `special_id`, `source_id`, `pay_status`, 
 
 CREATE TABLE `eb_store_bargain` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '砍价产品ID',
-  `product_id` int(11) UNSIGNED NOT NULL COMMENT '关联产品ID',
-  `title` varchar(255) NOT NULL COMMENT '砍价活动名称',
-  `image` varchar(150) NOT NULL COMMENT '砍价活动图片',
+  `product_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '关联产品ID',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '砍价活动名称',
+  `image` varchar(150) NOT NULL DEFAULT '' COMMENT '砍价活动图片',
   `unit_name` varchar(16) DEFAULT NULL COMMENT '单位名称',
   `stock` int(11) UNSIGNED DEFAULT NULL COMMENT '库存',
   `sales` int(11) UNSIGNED DEFAULT NULL COMMENT '销量',
-  `images` varchar(1000) NOT NULL COMMENT '砍价产品轮播图',
-  `start_time` int(11) UNSIGNED NOT NULL COMMENT '砍价开启时间',
-  `stop_time` int(11) UNSIGNED NOT NULL COMMENT '砍价结束时间',
+  `images` varchar(1000) NOT NULL DEFAULT '' COMMENT '砍价产品轮播图',
+  `start_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '砍价开启时间',
+  `stop_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '砍价结束时间',
   `store_name` varchar(255) DEFAULT NULL COMMENT '砍价产品名称',
   `price` decimal(8,2) UNSIGNED DEFAULT NULL COMMENT '砍价金额',
   `min_price` decimal(8,2) UNSIGNED DEFAULT NULL COMMENT '砍价商品最低价',
@@ -1237,7 +1237,7 @@ CREATE TABLE `eb_store_bargain` (
   `sort` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
   `is_hot` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否推荐0不推荐1推荐',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除 0未删除 1删除',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '添加时间',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_postage` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否包邮 0不包邮 1包邮',
   `postage` decimal(10,2) UNSIGNED DEFAULT NULL COMMENT '邮费',
   `rule` text COMMENT '砍价规则',
@@ -1285,16 +1285,16 @@ CREATE TABLE `eb_store_bargain_user_help` (
 
 CREATE TABLE `eb_store_cart` (
   `id` bigint(8) UNSIGNED NOT NULL COMMENT '购物车表ID',
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
-  `type` varchar(32) NOT NULL COMMENT '类型',
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '类型',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
   `product_attr_unique` varchar(16) NOT NULL DEFAULT '' COMMENT '商品属性',
   `cart_num` smallint(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品数量',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_pay` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = 未购买 1 = 已购买',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
   `is_new` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为立即购买',
-  `combination_id` int(11) UNSIGNED NOT NULL COMMENT '拼团id',
+  `combination_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼团id',
   `seckill_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '秒杀产品ID',
   `bargain_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '砍价id',
   `integral_id` int(11) DEFAULT '0' COMMENT '积分id'
@@ -1309,12 +1309,12 @@ CREATE TABLE `eb_store_cart` (
 CREATE TABLE `eb_store_category` (
   `id` mediumint(11) NOT NULL COMMENT '商品分类表ID',
   `mer_id` int(11) NOT NULL DEFAULT '0' COMMENT '商户id',
-  `pid` mediumint(11) NOT NULL COMMENT '父id',
-  `cate_name` varchar(100) NOT NULL COMMENT '分类名称',
-  `sort` mediumint(11) NOT NULL COMMENT '排序',
+  `pid` mediumint(11) NOT NULL DEFAULT '0' COMMENT '父id',
+  `cate_name` varchar(100) NOT NULL DEFAULT '' COMMENT '分类名称',
+  `sort` mediumint(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `pic` varchar(128) NOT NULL DEFAULT '' COMMENT '图标',
   `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否推荐',
-  `add_time` int(11) NOT NULL COMMENT '添加时间'
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类表';
 
 -- --------------------------------------------------------
@@ -1325,29 +1325,29 @@ CREATE TABLE `eb_store_category` (
 
 CREATE TABLE `eb_store_combination` (
   `id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品id',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品id',
   `mer_id` int(10) UNSIGNED DEFAULT '0' COMMENT '商户id',
-  `image` varchar(255) NOT NULL COMMENT '推荐图',
-  `images` varchar(1000) NOT NULL COMMENT '轮播图',
-  `title` varchar(255) NOT NULL COMMENT '活动标题',
-  `attr` varchar(255) NOT NULL COMMENT '活动属性',
-  `people` int(2) UNSIGNED NOT NULL COMMENT '参团人数',
-  `info` varchar(255) NOT NULL COMMENT '简介',
-  `price` decimal(10,2) UNSIGNED NOT NULL COMMENT '价格',
-  `sort` int(10) UNSIGNED NOT NULL COMMENT '排序',
+  `image` varchar(255) NOT NULL DEFAULT '' COMMENT '推荐图',
+  `images` varchar(1000) NOT NULL DEFAULT '' COMMENT '轮播图',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '活动标题',
+  `attr` varchar(255) NOT NULL DEFAULT '' COMMENT '活动属性',
+  `people` int(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '参团人数',
+  `info` varchar(255) NOT NULL DEFAULT '' COMMENT '简介',
+  `price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '价格',
+  `sort` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
   `sales` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
-  `stock` int(10) UNSIGNED NOT NULL COMMENT '库存',
-  `add_time` varchar(128) NOT NULL COMMENT '添加时间',
+  `stock` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '库存',
+  `add_time` varchar(128) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_host` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '推荐',
-  `is_show` tinyint(1) UNSIGNED NOT NULL COMMENT '产品状态',
+  `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '产品状态',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `combination` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-  `mer_use` tinyint(1) UNSIGNED NOT NULL COMMENT '商户是否可用1可用0不可用',
-  `is_postage` tinyint(1) UNSIGNED NOT NULL COMMENT '是否包邮1是0否',
-  `postage` decimal(10,2) UNSIGNED NOT NULL COMMENT '邮费',
-  `description` text NOT NULL COMMENT '拼团内容',
-  `start_time` int(11) UNSIGNED NOT NULL COMMENT '拼团开始时间',
-  `stop_time` int(11) UNSIGNED NOT NULL COMMENT '拼团结束时间',
+  `mer_use` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商户是否可用1可用0不可用',
+  `is_postage` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否包邮1是0否',
+  `postage` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '邮费',
+  `description` text NOT NULL DEFAULT '' COMMENT '拼团内容',
+  `start_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼团开始时间',
+  `stop_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼团结束时间',
   `cost` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼图产品成本',
   `browse` int(11) DEFAULT '0' COMMENT '浏览量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='拼团产品表' ROW_FORMAT=DYNAMIC;
@@ -1360,8 +1360,8 @@ CREATE TABLE `eb_store_combination` (
 
 CREATE TABLE `eb_store_combination_attr` (
   `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `attr_name` varchar(32) NOT NULL COMMENT '属性名',
-  `attr_values` varchar(256) NOT NULL COMMENT '属性值'
+  `attr_name` varchar(32) NOT NULL DEFAULT '' COMMENT '属性名',
+  `attr_values` varchar(256) NOT NULL DEFAULT '' COMMENT '属性值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性表';
 
 -- --------------------------------------------------------
@@ -1371,9 +1371,9 @@ CREATE TABLE `eb_store_combination_attr` (
 --
 
 CREATE TABLE `eb_store_combination_attr_result` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `result` text NOT NULL COMMENT '商品属性参数',
-  `change_time` int(10) UNSIGNED NOT NULL COMMENT '上次修改时间'
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `result` text NOT NULL DEFAULT '' COMMENT '商品属性参数',
+  `change_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上次修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性详情表';
 
 -- --------------------------------------------------------
@@ -1383,14 +1383,14 @@ CREATE TABLE `eb_store_combination_attr_result` (
 --
 
 CREATE TABLE `eb_store_combination_attr_value` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `suk` varchar(128) NOT NULL COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
-  `stock` int(10) UNSIGNED NOT NULL COMMENT '属性对应的库存',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `suk` varchar(128) NOT NULL DEFAULT '' COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
+  `stock` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '属性对应的库存',
   `sales` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
-  `price` decimal(8,2) UNSIGNED NOT NULL COMMENT '属性金额',
+  `price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '属性金额',
   `image` varchar(128) DEFAULT NULL COMMENT '图片',
   `unique` char(8) NOT NULL DEFAULT '' COMMENT '唯一值',
-  `cost` decimal(8,2) UNSIGNED NOT NULL COMMENT '成本价'
+  `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本价'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性值表';
 
 -- --------------------------------------------------------
@@ -1401,14 +1401,14 @@ CREATE TABLE `eb_store_combination_attr_value` (
 
 CREATE TABLE `eb_store_coupon` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '优惠券表ID',
-  `title` varchar(64) NOT NULL COMMENT '优惠券名称',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '优惠券名称',
   `integral` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '兑换消耗积分值',
   `coupon_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '兑换的优惠券面值',
   `use_min_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '最低消费多少金额可用优惠券',
   `coupon_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优惠券有效期限（单位：天）',
   `sort` int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT '排序',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '状态（0：关闭，1：开启）',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '兑换项目添加时间',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '兑换项目添加时间',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='优惠券表';
 
@@ -1453,11 +1453,11 @@ CREATE TABLE `eb_store_coupon_user` (
   `id` int(11) NOT NULL COMMENT '优惠券发放记录id',
   `cid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '兑换的项目id',
   `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优惠券所属用户',
-  `coupon_title` varchar(32) NOT NULL COMMENT '优惠券名称',
+  `coupon_title` varchar(32) NOT NULL DEFAULT '' COMMENT '优惠券名称',
   `coupon_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '优惠券的面值',
   `use_min_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '最低消费多少金额可用优惠券',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '优惠券创建时间',
-  `end_time` int(11) UNSIGNED NOT NULL COMMENT '优惠券结束时间',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优惠券创建时间',
+  `end_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优惠券结束时间',
   `use_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '使用时间',
   `type` varchar(32) NOT NULL DEFAULT 'send' COMMENT '获取方式',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态（0：未使用，1：已使用, 2:已过期）',
@@ -1473,11 +1473,11 @@ CREATE TABLE `eb_store_coupon_user` (
 CREATE TABLE `eb_store_order` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '订单ID',
   `trade_no` varchar(50) NOT NULL DEFAULT '' COMMENT '支付宝支付,支付宝交易订单号',
-  `order_id` varchar(32) NOT NULL COMMENT '订单号',
-  `uid` int(11) UNSIGNED NOT NULL COMMENT '用户id',
-  `real_name` varchar(32) NOT NULL COMMENT '用户姓名',
-  `user_phone` varchar(18) NOT NULL COMMENT '用户电话',
-  `user_address` varchar(100) NOT NULL COMMENT '详细地址',
+  `order_id` varchar(32) NOT NULL DEFAULT '' COMMENT '订单号',
+  `uid` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
+  `real_name` varchar(32) NOT NULL DEFAULT '' COMMENT '用户姓名',
+  `user_phone` varchar(18) NOT NULL DEFAULT '' COMMENT '用户电话',
+  `user_address` varchar(100) NOT NULL DEFAULT '' COMMENT '详细地址',
   `cart_id` varchar(256) NOT NULL DEFAULT '[]' COMMENT '购物车id',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '订单类别 （0:课程订单 1:会员订单）',
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '会员期限ID',
@@ -1490,8 +1490,8 @@ CREATE TABLE `eb_store_order` (
   `coupon_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '优惠券金额',
   `paid` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '支付状态',
   `pay_time` int(11) UNSIGNED DEFAULT '0' COMMENT '支付时间',
-  `pay_type` varchar(32) NOT NULL COMMENT '支付方式',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
+  `pay_type` varchar(32) NOT NULL DEFAULT 'weixin' COMMENT '支付方式',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '订单状态（-1 : 申请退款 -2 : 退货成功 0：待取货；1：配送中；2：已收货；3：待评价；-1：已退款）',
   `refund_status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 未退款 1 申请中 2 已退款',
   `refund_reason_wap_img` varchar(255) DEFAULT NULL COMMENT '退款图片',
@@ -1500,12 +1500,12 @@ CREATE TABLE `eb_store_order` (
   `refund_reason_wap` varchar(255) DEFAULT NULL COMMENT '前台退款原因',
   `refund_reason` varchar(255) DEFAULT NULL COMMENT '不退款的理由',
   `refund_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '退款金额',
-  `mark` varchar(512) NOT NULL COMMENT '备注',
+  `mark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除',
-  `unique` char(32) NOT NULL COMMENT '唯一id(md5加密)类似id',
+  `unique` char(32) NOT NULL DEFAULT '' COMMENT '唯一id(md5加密)类似id',
   `remark` varchar(512) DEFAULT NULL COMMENT '管理员备注',
   `mer_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商户ID',
-  `cost` decimal(8,2) UNSIGNED NOT NULL COMMENT '成本价',
+  `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本价',
   `is_channel` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '支付渠道(0微信公众号1微信小程序)',
   `pink_time` int(11) NOT NULL DEFAULT '0' COMMENT '拼团有效时间',
   `combination_id` int(11) UNSIGNED DEFAULT '0' COMMENT '拼团产品id',
@@ -1538,8 +1538,8 @@ CREATE TABLE `eb_store_order_cart_info` (
   `oid` int(11) UNSIGNED NOT NULL COMMENT '订单id',
   `cart_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '购物车id',
   `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `cart_info` text NOT NULL COMMENT '购买东西的详细信息',
-  `unique` char(32) NOT NULL COMMENT '唯一id'
+  `cart_info` text NOT NULL DEFAULT '' COMMENT '购买东西的详细信息',
+  `unique` char(32) NOT NULL DEFAULT '' COMMENT '唯一id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单购物详情表';
 
 -- --------------------------------------------------------
@@ -1564,18 +1564,18 @@ CREATE TABLE `eb_store_order_status` (
 
 CREATE TABLE `eb_store_pink` (
   `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户id',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '拼团产品类型0=商品,1=专题',
-  `order_id` varchar(32) NOT NULL COMMENT '订单id 生成',
-  `order_id_key` int(10) UNSIGNED NOT NULL COMMENT '订单id  数据库',
-  `total_num` int(10) UNSIGNED NOT NULL COMMENT '购买商品个数',
-  `total_price` decimal(10,2) UNSIGNED NOT NULL COMMENT '购买总金额',
-  `cid` int(10) UNSIGNED NOT NULL COMMENT '拼团产品id',
-  `pid` int(10) UNSIGNED NOT NULL COMMENT '产品id',
-  `people` int(10) UNSIGNED NOT NULL COMMENT '拼图总人数',
-  `price` decimal(10,2) UNSIGNED NOT NULL COMMENT '拼团产品单价',
-  `add_time` varchar(24) NOT NULL COMMENT '开始时间',
-  `stop_time` varchar(24) NOT NULL,
+  `order_id` varchar(32) NOT NULL DEFAULT '' COMMENT '订单id 生成',
+  `order_id_key` int(10) UNSIGNED NOT NULL DEFAULT '' COMMENT '订单id  数据库',
+  `total_num` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '购买商品个数',
+  `total_price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '购买总金额',
+  `cid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼团产品id',
+  `pid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '产品id',
+  `people` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼图总人数',
+  `price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '拼团产品单价',
+  `add_time` varchar(24) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `stop_time` varchar(24) NOT NULL DEFAULT '0',
   `k_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '团长id 0为团长',
   `is_tpl` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否发送模板消息0未发送1已发送',
   `is_refund` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否退款 0未退款 1已退款',
@@ -1594,7 +1594,7 @@ CREATE TABLE `eb_store_pink_false` (
   `pink_id` int(11) NOT NULL DEFAULT '0' COMMENT '拼团id',
   `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
   `avatar` varchar(225) NOT NULL DEFAULT '' COMMENT '头像',
-  `add_time` int(11) NOT NULL COMMENT '添加时间'
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟参团人员';
 
 -- --------------------------------------------------------
@@ -1606,17 +1606,17 @@ CREATE TABLE `eb_store_pink_false` (
 CREATE TABLE `eb_store_product` (
   `id` mediumint(11) NOT NULL COMMENT '商品id',
   `mer_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商户Id(0为总后台管理员创建,不为0的时候是商户后台创建)',
-  `image` varchar(128) NOT NULL COMMENT '商品图片',
-  `slider_image` varchar(512) NOT NULL COMMENT '轮播图',
-  `store_name` varchar(128) NOT NULL COMMENT '商品名称',
-  `store_info` varchar(256) NOT NULL COMMENT '商品简介',
-  `keyword` varchar(256) NOT NULL COMMENT '关键字',
-  `cate_id` varchar(64) NOT NULL COMMENT '分类id',
+  `image` varchar(128) NOT NULL DEFAULT '' COMMENT '商品图片',
+  `slider_image` varchar(512) NOT NULL DEFAULT '' COMMENT '轮播图',
+  `store_name` varchar(128) NOT NULL DEFAULT '' COMMENT '商品名称',
+  `store_info` varchar(256) NOT NULL DEFAULT '' COMMENT '商品简介',
+  `keyword` varchar(256) NOT NULL DEFAULT '' COMMENT '关键字',
+  `cate_id` varchar(64) NOT NULL DEFAULT '' COMMENT '分类id',
   `price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '商品价格',
   `vip_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '会员价格',
   `ot_price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '市场价',
   `postage` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '邮费',
-  `unit_name` varchar(32) NOT NULL COMMENT '单位名',
+  `unit_name` varchar(32) NOT NULL DEFAULT '' COMMENT '单位名',
   `sort` smallint(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `sales` mediumint(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
   `stock` mediumint(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '库存',
@@ -1625,18 +1625,18 @@ CREATE TABLE `eb_store_product` (
   `is_benefit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否优惠',
   `is_best` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否精品',
   `is_new` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否新品',
-  `description` text NOT NULL COMMENT '产品描述',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '添加时间',
+  `description` text NOT NULL DEFAULT '' COMMENT '产品描述',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_postage` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否包邮',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除',
   `mer_use` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商户是否代理 0不可代理1可代理',
-  `give_integral` decimal(8,2) UNSIGNED NOT NULL COMMENT '获得积分',
-  `cost` decimal(8,2) UNSIGNED NOT NULL COMMENT '成本价',
+  `give_integral` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '获得积分',
+  `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本价',
   `is_seckill` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '秒杀状态 0 未开启 1已开启',
-  `is_bargain` tinyint(1) UNSIGNED NOT NULL COMMENT '砍价状态 0未开启 1开启',
+  `is_bargain` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '砍价状态 0未开启 1开启',
   `ficti` mediumint(11) DEFAULT '100' COMMENT '虚拟销量',
   `browse` int(11) DEFAULT '0' COMMENT '浏览量',
-  `code_path` varchar(70) NOT NULL
+  `code_path` varchar(70) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- --------------------------------------------------------
@@ -1647,8 +1647,8 @@ CREATE TABLE `eb_store_product` (
 
 CREATE TABLE `eb_store_product_attr` (
   `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `attr_name` varchar(32) NOT NULL COMMENT '属性名',
-  `attr_values` varchar(256) NOT NULL COMMENT '属性值'
+  `attr_name` varchar(32) NOT NULL DEFAULT '' COMMENT '属性名',
+  `attr_values` varchar(256) NOT NULL DEFAULT '' COMMENT '属性值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性表';
 
 -- --------------------------------------------------------
@@ -1658,9 +1658,9 @@ CREATE TABLE `eb_store_product_attr` (
 --
 
 CREATE TABLE `eb_store_product_attr_result` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `result` text NOT NULL COMMENT '商品属性参数',
-  `change_time` int(10) UNSIGNED NOT NULL COMMENT '上次修改时间'
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `result` text NOT NULL DEFAULT '' COMMENT '商品属性参数',
+  `change_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上次修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性详情表';
 
 -- --------------------------------------------------------
@@ -1670,15 +1670,15 @@ CREATE TABLE `eb_store_product_attr_result` (
 --
 
 CREATE TABLE `eb_store_product_attr_value` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `suk` varchar(128) NOT NULL COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
-  `stock` int(10) UNSIGNED NOT NULL COMMENT '属性对应的库存',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `suk` varchar(128) NOT NULL DEFAULT '' COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
+  `stock` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '属性对应的库存',
   `sales` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
-  `price` decimal(8,2) UNSIGNED NOT NULL COMMENT '属性金额',
+  `price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '属性金额',
   `vip_price` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '会员金额',
   `image` varchar(128) DEFAULT NULL COMMENT '图片',
   `unique` char(8) NOT NULL DEFAULT '' COMMENT '唯一值',
-  `cost` decimal(8,2) UNSIGNED NOT NULL COMMENT '成本价'
+  `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本价'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性值表';
 
 -- --------------------------------------------------------
@@ -1688,11 +1688,11 @@ CREATE TABLE `eb_store_product_attr_value` (
 --
 
 CREATE TABLE `eb_store_product_relation` (
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `type` varchar(32) NOT NULL COMMENT '类型(收藏(collect）、点赞(like))',
-  `category` varchar(32) NOT NULL COMMENT '某种类型的商品(普通商品、秒杀商品)',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间'
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '类型(收藏(collect）、点赞(like))',
+  `category` varchar(32) NOT NULL DEFAULT '' COMMENT '某种类型的商品(普通商品、秒杀商品)',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品点赞和收藏表';
 
 -- --------------------------------------------------------
@@ -1703,21 +1703,21 @@ CREATE TABLE `eb_store_product_relation` (
 
 CREATE TABLE `eb_store_product_reply` (
   `id` int(11) NOT NULL COMMENT '评论ID',
-  `uid` int(11) NOT NULL COMMENT '用户ID',
-  `oid` int(11) NOT NULL COMMENT '订单ID',
-  `unique` char(32) NOT NULL COMMENT '唯一id',
-  `product_id` int(11) NOT NULL COMMENT '产品id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `oid` int(11) NOT NULL DEFAULT '0' COMMENT '订单ID',
+  `unique` char(32) NOT NULL DEFAULT '' COMMENT '唯一id',
+  `product_id` int(11) NOT NULL DEFAULT '0' COMMENT '产品id',
   `reply_type` varchar(32) NOT NULL DEFAULT 'product' COMMENT '某种商品类型(普通商品、秒杀商品）',
-  `product_score` tinyint(1) NOT NULL COMMENT '商品分数',
-  `service_score` tinyint(1) NOT NULL COMMENT '服务分数',
+  `product_score` tinyint(1) NOT NULL DEFAULT '0' COMMENT '商品分数',
+  `service_score` tinyint(1) NOT NULL DEFAULT '0' COMMENT '服务分数',
   `packing_score` tinyint(1) NOT NULL DEFAULT '0' COMMENT '包装分数',
   `mer_score` tinyint(1) NOT NULL DEFAULT '0' COMMENT '商家评价',
   `delivery_score` tinyint(1) NOT NULL DEFAULT '0' COMMENT '配送速度分数',
-  `comment` varchar(512) NOT NULL COMMENT '评论内容',
-  `pics` text NOT NULL COMMENT '评论图片',
-  `add_time` int(11) NOT NULL COMMENT '评论时间',
-  `merchant_reply_content` varchar(300) NOT NULL COMMENT '管理员回复内容',
-  `merchant_reply_time` int(11) NOT NULL COMMENT '管理员回复时间',
+  `comment` varchar(512) NOT NULL DEFAULT '' COMMENT '评论内容',
+  `pics` text NOT NULL DEFAULT '' COMMENT '评论图片',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '评论时间',
+  `merchant_reply_content` varchar(300) NOT NULL DEFAULT '' COMMENT '管理员回复内容',
+  `merchant_reply_time` int(11) NOT NULL DEFAULT '' COMMENT '管理员回复时间',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0未删除1已删除',
   `is_reply` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未回复1已回复'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论表';
@@ -1730,29 +1730,29 @@ CREATE TABLE `eb_store_product_reply` (
 
 CREATE TABLE `eb_store_seckill` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '商品秒杀产品表id',
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品id',
-  `image` varchar(255) NOT NULL COMMENT '推荐图',
-  `images` varchar(1000) NOT NULL COMMENT '轮播图',
-  `title` varchar(255) NOT NULL COMMENT '活动标题',
-  `info` varchar(255) NOT NULL COMMENT '简介',
-  `price` decimal(10,2) UNSIGNED NOT NULL COMMENT '价格',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品id',
+  `image` varchar(255) NOT NULL DEFAULT '' COMMENT '推荐图',
+  `images` varchar(1000) NOT NULL DEFAULT '' COMMENT '轮播图',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '活动标题',
+  `info` varchar(255) NOT NULL DEFAULT '' COMMENT '简介',
+  `price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '价格',
   `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本',
-  `ot_price` decimal(10,2) UNSIGNED NOT NULL COMMENT '原价',
-  `give_integral` decimal(10,2) UNSIGNED NOT NULL COMMENT '返多少积分',
-  `sort` int(10) UNSIGNED NOT NULL COMMENT '排序',
-  `stock` int(10) UNSIGNED NOT NULL COMMENT '库存',
+  `ot_price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '原价',
+  `give_integral` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '返多少积分',
+  `sort` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
+  `stock` int(10) UNSIGNED NOT NULL  DEFAULT '0' COMMENT '库存',
   `sales` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
-  `unit_name` varchar(16) NOT NULL COMMENT '单位名',
+  `unit_name` varchar(16) NOT NULL DEFAULT '' COMMENT '单位名',
   `postage` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '邮费',
-  `description` text NOT NULL COMMENT '内容',
-  `start_time` varchar(128) NOT NULL COMMENT '开始时间',
-  `stop_time` varchar(128) NOT NULL COMMENT '结束时间',
-  `add_time` varchar(128) NOT NULL COMMENT '添加时间',
-  `status` tinyint(1) UNSIGNED NOT NULL COMMENT '产品状态',
+  `description` text NOT NULL DEFAULT '' COMMENT '内容',
+  `start_time` varchar(128) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `stop_time` varchar(128) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `add_time` varchar(128) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '产品状态',
   `is_postage` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否包邮',
   `is_hot` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '热门推荐',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '删除 0未删除1已删除',
-  `num` int(11) UNSIGNED NOT NULL COMMENT '最多秒杀几个',
+  `num` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '最多秒杀几个',
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '显示'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品秒杀产品表';
 
@@ -1764,8 +1764,8 @@ CREATE TABLE `eb_store_seckill` (
 
 CREATE TABLE `eb_store_seckill_attr` (
   `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `attr_name` varchar(32) NOT NULL COMMENT '属性名',
-  `attr_values` varchar(256) NOT NULL COMMENT '属性值'
+  `attr_name` varchar(32) NOT NULL DEFAULT '' COMMENT '属性名',
+  `attr_values` varchar(256) NOT NULL DEFAULT '' COMMENT '属性值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='秒杀商品属性表';
 
 -- --------------------------------------------------------
@@ -1775,9 +1775,9 @@ CREATE TABLE `eb_store_seckill_attr` (
 --
 
 CREATE TABLE `eb_store_seckill_attr_result` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `result` text NOT NULL COMMENT '商品属性参数',
-  `change_time` int(10) UNSIGNED NOT NULL COMMENT '上次修改时间'
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `result` text NOT NULL DEFAULT '' COMMENT '商品属性参数',
+  `change_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上次修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='秒杀商品属性详情表';
 
 -- --------------------------------------------------------
@@ -1787,14 +1787,14 @@ CREATE TABLE `eb_store_seckill_attr_result` (
 --
 
 CREATE TABLE `eb_store_seckill_attr_value` (
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品ID',
-  `suk` varchar(128) NOT NULL COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
-  `stock` int(10) UNSIGNED NOT NULL COMMENT '属性对应的库存',
+  `product_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `suk` varchar(128) NOT NULL DEFAULT '' COMMENT '商品属性索引值 (attr_value|attr_value[|....])',
+  `stock` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '属性对应的库存',
   `sales` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '销量',
-  `price` decimal(8,2) UNSIGNED NOT NULL COMMENT '属性金额',
+  `price` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '属性金额',
   `image` varchar(128) DEFAULT NULL COMMENT '图片',
   `unique` char(8) NOT NULL DEFAULT '' COMMENT '唯一值',
-  `cost` decimal(8,2) UNSIGNED NOT NULL COMMENT '成本价'
+  `cost` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '成本价'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='秒杀商品属性值表';
 
 -- --------------------------------------------------------
@@ -1806,11 +1806,11 @@ CREATE TABLE `eb_store_seckill_attr_value` (
 CREATE TABLE `eb_store_service` (
   `id` int(11) NOT NULL COMMENT '客服id',
   `mer_id` int(11) NOT NULL DEFAULT '0' COMMENT '商户id',
-  `uid` int(11) NOT NULL COMMENT '客服uid',
-  `avatar` varchar(250) NOT NULL COMMENT '客服头像',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '客服uid',
+  `avatar` varchar(250) NOT NULL DEFAULT '' COMMENT '客服头像',
   `notify` int(11) NOT NULL DEFAULT '0',
-  `nickname` varchar(50) NOT NULL COMMENT '代理名称',
-  `add_time` int(11) NOT NULL COMMENT '添加时间',
+  `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '代理名称',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '0隐藏1显示'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服表';
 
@@ -1823,10 +1823,10 @@ CREATE TABLE `eb_store_service` (
 CREATE TABLE `eb_store_service_log` (
   `id` int(11) NOT NULL COMMENT '客服用户对话记录表ID',
   `mer_id` int(11) NOT NULL DEFAULT '0' COMMENT '商户id',
-  `msn` text NOT NULL COMMENT '消息内容',
-  `uid` int(11) NOT NULL COMMENT '发送人uid',
-  `to_uid` int(11) NOT NULL COMMENT '接收人uid',
-  `add_time` int(11) NOT NULL COMMENT '发送时间',
+  `msn` text NOT NULL DEFAULT '' COMMENT '消息内容',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '发送人uid',
+  `to_uid` int(11) NOT NULL DEFAULT '0' COMMENT '接收人uid',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '发送时间',
   `type` tinyint(1) DEFAULT '0' COMMENT '是否已读（0：否；1：是；）',
   `remind` tinyint(1) DEFAULT '0' COMMENT '是否提醒过'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服用户对话记录表';
@@ -1839,7 +1839,7 @@ CREATE TABLE `eb_store_service_log` (
 
 CREATE TABLE `eb_store_visit` (
   `id` int(10) NOT NULL,
-  `product_id` int(11) DEFAULT NULL COMMENT '产品ID',
+  `product_id` int(11) DEFAULT 0 COMMENT '产品ID',
   `product_type` varchar(32) DEFAULT NULL COMMENT '产品类型',
   `cate_id` int(11) DEFAULT NULL COMMENT '产品分类ID',
   `type` char(50) DEFAULT NULL COMMENT '产品类型',
@@ -1857,14 +1857,14 @@ CREATE TABLE `eb_store_visit` (
 
 CREATE TABLE `eb_system_admin` (
   `id` smallint(5) UNSIGNED NOT NULL COMMENT '后台管理员表ID',
-  `account` varchar(32) NOT NULL COMMENT '后台管理员账号',
-  `pwd` char(32) NOT NULL COMMENT '后台管理员密码',
-  `real_name` varchar(16) NOT NULL COMMENT '后台管理员姓名',
-  `roles` varchar(128) NOT NULL COMMENT '后台管理员权限(menus_id)',
-  `phone` varchar(11) NOT NULL COMMENT '前端登录电话号码',
+  `account` varchar(32) NOT NULL DEFAULT '' COMMENT '后台管理员账号',
+  `pwd` char(32) NOT NULL DEFAULT '' COMMENT '后台管理员密码',
+  `real_name` varchar(16) NOT NULL DEFAULT '' COMMENT '后台管理员姓名',
+  `roles` varchar(128) NOT NULL DEFAULT '' COMMENT '后台管理员权限(menus_id)',
+  `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '前端登录电话号码',
   `last_ip` varchar(16) DEFAULT NULL COMMENT '后台管理员最后一次登录ip',
   `last_time` int(10) UNSIGNED DEFAULT NULL COMMENT '后台管理员最后一次登录时间',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '后台管理员添加时间',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '后台管理员添加时间',
   `login_count` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录次数',
   `level` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT '后台管理员级别',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '后台管理员状态 1有效0无效',
@@ -1887,13 +1887,13 @@ INSERT INTO `eb_system_admin` (`id`, `account`, `pwd`, `real_name`, `roles`, `la
 
 CREATE TABLE `eb_system_attachment` (
   `att_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL COMMENT '附件名称',
-  `att_dir` varchar(200) NOT NULL COMMENT '附件路径',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '附件名称',
+  `att_dir` varchar(200) NOT NULL DEFAULT '' COMMENT '附件路径',
   `satt_dir` varchar(200) DEFAULT NULL COMMENT '压缩图片路径',
-  `att_size` char(30) NOT NULL COMMENT '附件大小',
-  `att_type` char(30) NOT NULL COMMENT '附件类型',
-  `pid` int(10) NOT NULL COMMENT '分类id',
-  `time` int(11) NOT NULL COMMENT '上传时间'
+  `att_size` char(30) NOT NULL DEFAULT '' COMMENT '附件大小',
+  `att_type` char(30) NOT NULL DEFAULT '' COMMENT '附件类型',
+  `pid` int(10) NOT NULL DEFAULT '0' COMMENT '分类id',
+  `time` int(11) NOT NULL DEFAULT '0' COMMENT '上传时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件管理表';
 
 --
@@ -1963,8 +1963,8 @@ INSERT INTO `eb_system_attachment` (`att_id`, `name`, `att_dir`, `satt_dir`, `at
 CREATE TABLE `eb_system_attachment_category` (
   `id` int(11) NOT NULL,
   `pid` int(11) DEFAULT '0' COMMENT '父级ID',
-  `name` varchar(50) NOT NULL COMMENT '分类名称',
-  `enname` varchar(50) NOT NULL COMMENT '分类目录'
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '分类名称',
+  `enname` varchar(50) NOT NULL DEFAULT '' COMMENT '分类目录'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件分类表';
 
 --
@@ -1984,10 +1984,10 @@ INSERT INTO `eb_system_attachment_category` (`id`, `pid`, `name`, `enname`) VALU
 
 CREATE TABLE `eb_system_config` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '配置id',
-  `menu_name` varchar(255) NOT NULL COMMENT '字段名称',
-  `type` varchar(255) NOT NULL COMMENT '类型(文本框,单选按钮...)',
+  `menu_name` varchar(255) NOT NULL DEFAULT '' COMMENT '字段名称',
+  `type` varchar(255) NOT NULL DEFAULT '' COMMENT '类型(文本框,单选按钮...)',
   `input_type` varchar(20) DEFAULT 'input' COMMENT '表单类型',
-  `config_tab_id` int(10) UNSIGNED NOT NULL COMMENT '配置分类id',
+  `config_tab_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '配置分类id',
   `parameter` varchar(255) DEFAULT NULL COMMENT '规则 单选框和多选框',
   `upload_type` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '上传文件格式1单图2多图3文件',
   `required` varchar(255) DEFAULT NULL COMMENT '规则',
@@ -1996,8 +1996,8 @@ CREATE TABLE `eb_system_config` (
   `value` varchar(5000) DEFAULT NULL COMMENT '默认值',
   `info` varchar(255) NOT NULL COMMENT '配置名称',
   `desc` varchar(255) DEFAULT NULL COMMENT '配置简介',
-  `sort` int(10) UNSIGNED NOT NULL COMMENT '排序',
-  `status` tinyint(1) UNSIGNED NOT NULL COMMENT '是否隐藏'
+  `sort` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
+  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否隐藏'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置表';
 
 --
@@ -2121,7 +2121,7 @@ CREATE TABLE `eb_system_config_content` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '中文标题',
   `config_name` varchar(100) NOT NULL DEFAULT '' COMMENT '配置名',
-  `content` text NOT NULL COMMENT '内容',
+  `content` text NOT NULL DEFAULT '' COMMENT '内容',
   `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除'
@@ -2143,8 +2143,8 @@ INSERT INTO `eb_system_config_content` (`id`, `title`, `config_name`, `content`,
 
 CREATE TABLE `eb_system_config_tab` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '配置分类id',
-  `title` varchar(255) NOT NULL COMMENT '配置分类名称',
-  `eng_title` varchar(255) NOT NULL COMMENT '配置分类英文名称',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '配置分类名称',
+  `eng_title` varchar(255) NOT NULL DEFAULT '' COMMENT '配置分类英文名称',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '配置分类状态',
   `info` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '配置分类是否显示',
   `icon` varchar(30) DEFAULT NULL COMMENT '图标',
@@ -2185,11 +2185,11 @@ INSERT INTO `eb_system_config_tab` (`id`, `title`, `eng_title`, `status`, `info`
 
 CREATE TABLE `eb_system_file` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '文件对比ID',
-  `cthash` char(32) NOT NULL COMMENT '文件内容',
-  `filename` varchar(255) NOT NULL COMMENT '文价名称',
-  `atime` char(12) NOT NULL COMMENT '上次访问时间',
-  `mtime` char(12) NOT NULL COMMENT '上次修改时间',
-  `ctime` char(12) NOT NULL COMMENT '上次改变时间'
+  `cthash` char(32) NOT NULL DEFAULT '' COMMENT '文件内容',
+  `filename` varchar(255) NOT NULL DEFAULT '' COMMENT '文价名称',
+  `atime` char(12) NOT NULL DEFAULT '0' COMMENT '上次访问时间',
+  `mtime` char(12) NOT NULL DEFAULT '0' COMMENT '上次修改时间',
+  `ctime` char(12) NOT NULL DEFAULT '0' COMMENT '上次改变时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件对比表';
 
 -- --------------------------------------------------------
@@ -2200,9 +2200,9 @@ CREATE TABLE `eb_system_file` (
 
 CREATE TABLE `eb_system_group` (
   `id` int(11) NOT NULL COMMENT '组合数据ID',
-  `name` varchar(50) NOT NULL COMMENT '数据组名称',
-  `info` varchar(256) NOT NULL COMMENT '数据提示',
-  `config_name` varchar(50) NOT NULL COMMENT '数据字段',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '数据组名称',
+  `info` varchar(256) NOT NULL  DEFAULT ''COMMENT '数据提示',
+  `config_name` varchar(50) NOT NULL DEFAULT '' COMMENT '数据字段',
   `fields` text COMMENT '数据组字段以及类型（json数据）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合数据表';
 
@@ -2230,10 +2230,10 @@ INSERT INTO `eb_system_group` (`id`, `name`, `info`, `config_name`, `fields`) VA
 
 CREATE TABLE `eb_system_group_data` (
   `id` int(11) NOT NULL COMMENT '组合数据详情ID',
-  `gid` int(11) NOT NULL COMMENT '对应的数据组id',
-  `value` text NOT NULL COMMENT '数据组对应的数据值（json数据）',
-  `add_time` int(10) NOT NULL COMMENT '添加数据时间',
-  `sort` int(11) NOT NULL COMMENT '数据排序',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '对应的数据组id',
+  `value` text NOT NULL DEFAULT '' COMMENT '数据组对应的数据值（json数据）',
+  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加数据时间',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '数据排序',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（1：开启；2：关闭；）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合数据详情表';
 
@@ -2280,14 +2280,14 @@ INSERT INTO `eb_system_group_data` (`id`, `gid`, `value`, `add_time`, `sort`, `s
 
 CREATE TABLE `eb_system_log` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '管理员操作记录ID',
-  `admin_id` int(10) UNSIGNED NOT NULL COMMENT '管理员id',
-  `admin_name` varchar(64) NOT NULL COMMENT '管理员姓名',
-  `path` varchar(128) NOT NULL COMMENT '链接',
-  `page` varchar(64) NOT NULL COMMENT '行为',
-  `method` varchar(12) NOT NULL COMMENT '访问类型',
-  `ip` varchar(16) NOT NULL COMMENT '登录IP',
-  `type` varchar(32) NOT NULL COMMENT '类型',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '操作时间',
+  `admin_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '管理员id',
+  `admin_name` varchar(64) NOT NULL DEFAULT '' COMMENT '管理员姓名',
+  `path` varchar(128) NOT NULL DEFAULT '' COMMENT '链接',
+  `page` varchar(64) NOT NULL DEFAULT '' COMMENT '行为',
+  `method` varchar(12) NOT NULL DEFAULT '' COMMENT '访问类型',
+  `ip` varchar(16) NOT NULL DEFAULT '' COMMENT '登录IP',
+  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '类型',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作时间',
   `merchant_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商户id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员操作记录表';
 
@@ -2300,10 +2300,10 @@ CREATE TABLE `eb_system_log` (
 CREATE TABLE `eb_system_menus` (
   `id` smallint(5) UNSIGNED NOT NULL COMMENT '菜单ID',
   `pid` smallint(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父级id',
-  `icon` varchar(16) NOT NULL COMMENT '图标',
+  `icon` varchar(16) NOT NULL DEFAULT '' COMMENT '图标',
   `menu_name` varchar(32) NOT NULL DEFAULT '' COMMENT '按钮名',
   `module` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '模块名',
-  `controller` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '控制器',
+  `controller` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '控制器',
   `action` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '方法名',
   `params` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '[]' COMMENT '参数',
   `sort` int(5) NOT NULL DEFAULT '1' COMMENT '排序',
@@ -2594,13 +2594,13 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 
 CREATE TABLE `eb_system_notice` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '通知模板id',
-  `title` varchar(64) NOT NULL COMMENT '通知标题',
-  `type` varchar(64) NOT NULL COMMENT '通知类型',
-  `icon` varchar(16) NOT NULL COMMENT '图标',
-  `url` varchar(64) NOT NULL COMMENT '链接',
-  `table_title` varchar(256) NOT NULL COMMENT '通知数据',
-  `template` varchar(64) NOT NULL COMMENT '通知模板',
-  `push_admin` varchar(128) NOT NULL COMMENT '通知管理员id',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '通知标题',
+  `type` varchar(64) NOT NULL DEFAULT '' COMMENT '通知类型',
+  `icon` varchar(16) NOT NULL DEFAULT '' COMMENT '图标',
+  `url` varchar(64) NOT NULL DEFAULT '' COMMENT '链接',
+  `table_title` varchar(256) NOT NULL DEFAULT '' COMMENT '通知数据',
+  `template` varchar(64) NOT NULL DEFAULT '' COMMENT '通知模板',
+  `push_admin` varchar(128) NOT NULL DEFAULT '' COMMENT '通知管理员id',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知模板表' ROW_FORMAT=DYNAMIC;
 
@@ -2612,14 +2612,14 @@ CREATE TABLE `eb_system_notice` (
 
 CREATE TABLE `eb_system_notice_admin` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '通知记录ID',
-  `notice_type` varchar(64) NOT NULL COMMENT '通知类型',
-  `admin_id` smallint(5) UNSIGNED NOT NULL COMMENT '通知的管理员',
-  `link_id` int(10) UNSIGNED NOT NULL COMMENT '关联ID',
-  `table_data` text NOT NULL COMMENT '通知的数据',
+  `notice_type` varchar(64) NOT NULL DEFAULT '' COMMENT '通知类型',
+  `admin_id` smallint(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT '通知的管理员',
+  `link_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '关联ID',
+  `table_data` text NOT NULL DEFAULT '' COMMENT '通知的数据',
   `is_click` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT '点击次数',
   `is_visit` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT '访问次数',
-  `visit_time` int(11) NOT NULL COMMENT '访问时间',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '通知时间'
+  `visit_time` int(11) NOT NULL DEFAULT '0' COMMENT '访问时间',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '通知时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知记录表' ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
@@ -2630,9 +2630,9 @@ CREATE TABLE `eb_system_notice_admin` (
 
 CREATE TABLE `eb_system_role` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '身份管理id',
-  `role_name` varchar(32) NOT NULL COMMENT '身份管理名称',
-  `sign` varchar(50) NOT NULL COMMENT '身份标识',
-  `rules` text NOT NULL COMMENT '身份管理权限(menus_id)',
+  `role_name` varchar(32) NOT NULL DEFAULT '' COMMENT '身份管理名称',
+  `sign` varchar(50) NOT NULL DEFAULT '' COMMENT '身份标识',
+  `rules` text NOT NULL DEFAULT '' COMMENT '身份管理权限(menus_id)',
   `level` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='身份管理表';
@@ -2655,19 +2655,19 @@ INSERT INTO `eb_system_role` (`id`, `role_name`, `sign`, `rules`, `level`, `stat
 
 CREATE TABLE `eb_user` (
   `uid` int(10) UNSIGNED NOT NULL COMMENT '用户id',
-  `account` varchar(32) NOT NULL COMMENT '用户账号',
-  `pwd` varchar(32) NOT NULL COMMENT '用户密码',
-  `nickname` varchar(16) NOT NULL COMMENT '用户昵称',
-  `avatar` varchar(256) NOT NULL COMMENT '用户头像',
+  `account` varchar(32) NOT NULL DEFAULT '' COMMENT '用户账号',
+  `pwd` varchar(32) NOT NULL DEFAULT '' COMMENT '用户密码',
+  `nickname` varchar(16) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `avatar` varchar(256) NOT NULL DEFAULT '' COMMENT '用户头像',
   `name` varchar(255) DEFAULT NULL COMMENT '姓名',
-  `phone` char(15) NOT NULL COMMENT '手机号码',
-  `grade_id` int(11) NOT NULL COMMENT '年级id',
+  `phone` char(15) NOT NULL DEFAULT '0' COMMENT '手机号码',
+  `grade_id` int(11) NOT NULL DEFAULT '0' COMMENT '年级id',
   `full_name` varchar(35) NOT NULL DEFAULT '' COMMENT '真实姓名',
   `bank_card` varchar(50) NOT NULL DEFAULT '' COMMENT '银行卡号码',
-  `add_time` int(11) UNSIGNED NOT NULL COMMENT '添加时间',
-  `add_ip` varchar(16) NOT NULL COMMENT '添加ip',
-  `last_time` int(11) UNSIGNED NOT NULL COMMENT '最后一次登录时间',
-  `last_ip` varchar(16) NOT NULL COMMENT '最后一次登录ip',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `add_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '添加ip',
+  `last_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '最后一次登录时间',
+  `last_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '最后一次登录ip',
   `now_money` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '用户余额',
   `gold_num` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '虚拟币余额',
   `brokerage_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '可提现金额',
@@ -2675,17 +2675,17 @@ CREATE TABLE `eb_user` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1为正常，0为禁止',
   `level` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '等级',
   `spread_uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '推广元id',
-  `spread_time` int(11) NOT NULL,
+  `spread_time` int(11) NOT NULL DEFAULT '0',
   `valid_time` int(11) NOT NULL DEFAULT '0' COMMENT '客户关系解除时间',
-  `user_type` varchar(32) NOT NULL COMMENT '用户类型',
+  `user_type` varchar(32) NOT NULL DEFAULT '' COMMENT '用户类型',
   `is_promoter` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否为推广员',
   `pay_count` int(11) UNSIGNED DEFAULT '0' COMMENT '用户购买次数',
-  `is_binding` int(11) NOT NULL,
+  `is_binding` int(11) NOT NULL DEFAULT '0',
   `is_senior` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级推广人',
   `is_h5user` tinyint(1) DEFAULT '0' COMMENT '是否为H5虚拟用户',
   `is_permanent` tinyint(2) DEFAULT '0' COMMENT '会员是否永久',
   `overdue_time` int(11) UNSIGNED DEFAULT '0' COMMENT '会员过期时间',
-  `client_id` varchar(50) NOT NULL COMMENT 'client_id'
+  `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
@@ -2696,19 +2696,19 @@ CREATE TABLE `eb_user` (
 
 CREATE TABLE `eb_user_address` (
   `id` mediumint(8) UNSIGNED NOT NULL COMMENT '用户地址id',
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户id',
-  `real_name` varchar(32) NOT NULL COMMENT '收货人姓名',
-  `phone` varchar(16) NOT NULL COMMENT '收货人电话',
-  `province` varchar(64) NOT NULL COMMENT '收货人所在省',
-  `city` varchar(64) NOT NULL COMMENT '收货人所在市',
-  `district` varchar(64) NOT NULL COMMENT '收货人所在区',
-  `detail` varchar(256) NOT NULL COMMENT '收货人详细地址',
-  `post_code` int(10) UNSIGNED NOT NULL COMMENT '邮编',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
+  `real_name` varchar(32) NOT NULL DEFAULT '' COMMENT '收货人姓名',
+  `phone` varchar(16) NOT NULL DEFAULT '0' COMMENT '收货人电话',
+  `province` varchar(64) NOT NULL DEFAULT '' COMMENT '收货人所在省',
+  `city` varchar(64) NOT NULL DEFAULT '' COMMENT '收货人所在市',
+  `district` varchar(64) NOT NULL DEFAULT '' COMMENT '收货人所在区',
+  `detail` varchar(256) NOT NULL DEFAULT '' COMMENT '收货人详细地址',
+  `post_code` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '邮编',
   `longitude` varchar(16) NOT NULL DEFAULT '0' COMMENT '经度',
   `latitude` varchar(16) NOT NULL DEFAULT '0' COMMENT '纬度',
   `is_default` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否默认',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间'
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户地址表';
 
 -- --------------------------------------------------------
@@ -2723,12 +2723,12 @@ CREATE TABLE `eb_user_bill` (
   `get_uid` int(11) NOT NULL DEFAULT '0' COMMENT '由谁获得',
   `link_id` varchar(32) NOT NULL DEFAULT '0' COMMENT '关联id',
   `pm` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 = 支出 1 = 获得',
-  `title` varchar(64) NOT NULL COMMENT '账单标题',
-  `category` varchar(64) NOT NULL COMMENT '明细种类',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '账单标题',
+  `category` varchar(64) NOT NULL DEFAULT '' COMMENT '明细种类',
   `type` varchar(64) NOT NULL DEFAULT '' COMMENT '明细类型',
   `number` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '明细数字',
   `balance` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '剩余',
-  `mark` varchar(512) NOT NULL COMMENT '备注',
+  `mark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
   `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0 = 带确定 1 = 有效 -1 = 无效'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户账单表';
@@ -2741,20 +2741,20 @@ CREATE TABLE `eb_user_bill` (
 
 CREATE TABLE `eb_user_enter` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '商户申请ID',
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
-  `province` varchar(32) NOT NULL COMMENT '商户所在省',
-  `city` varchar(32) NOT NULL COMMENT '商户所在市',
-  `district` varchar(32) NOT NULL COMMENT '商户所在区',
-  `address` varchar(256) NOT NULL COMMENT '商户详细地址',
-  `merchant_name` varchar(256) NOT NULL COMMENT '商户名称',
-  `link_user` varchar(32) NOT NULL,
-  `link_tel` varchar(16) NOT NULL COMMENT '商户电话',
-  `charter` varchar(512) NOT NULL COMMENT '商户证书',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
-  `apply_time` int(10) UNSIGNED NOT NULL COMMENT '审核时间',
-  `success_time` int(11) NOT NULL COMMENT '通过时间',
-  `fail_message` varchar(256) NOT NULL COMMENT '未通过原因',
-  `fail_time` int(10) UNSIGNED NOT NULL COMMENT '未通过时间',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `province` varchar(32) NOT NULL DEFAULT '' COMMENT '商户所在省',
+  `city` varchar(32) NOT NULL DEFAULT '' COMMENT '商户所在市',
+  `district` varchar(32) NOT NULL DEFAULT '' COMMENT '商户所在区',
+  `address` varchar(256) NOT NULL DEFAULT '' COMMENT '商户详细地址',
+  `merchant_name` varchar(256) NOT NULL DEFAULT '' COMMENT '商户名称',
+  `link_user` varchar(32) NOT NULL DEFAULT '',
+  `link_tel` varchar(16) NOT NULL DEFAULT '' COMMENT '商户电话',
+  `charter` varchar(512) NOT NULL DEFAULT '' COMMENT '商户证书',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `apply_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '审核时间',
+  `success_time` int(11) NOT NULL DEFAULT '0' COMMENT '通过时间',
+  `fail_message` varchar(256) NOT NULL DEFAULT '' COMMENT '未通过原因',
+  `fail_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未通过时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '-1 审核未通过 0未审核 1审核通过',
   `is_lock` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 = 开启 1= 关闭',
   `is_del` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否删除'
@@ -2768,8 +2768,8 @@ CREATE TABLE `eb_user_enter` (
 
 CREATE TABLE `eb_user_extract` (
   `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) UNSIGNED DEFAULT NULL,
-  `mer_id` int(11) NOT NULL COMMENT '商户id',
+  `uid` int(10) UNSIGNED DEFAULT 0,
+  `mer_id` int(11) NOT NULL DEFAULT '0' COMMENT '商户id',
   `real_name` varchar(64) DEFAULT NULL COMMENT '名称',
   `partner_trade_no` varchar(32) NOT NULL DEFAULT '' COMMENT '商户订单号',
   `extract_type` varchar(32) DEFAULT 'bank' COMMENT 'bank = 银行卡 alipay = 支付宝wx=微信',
@@ -2805,14 +2805,14 @@ CREATE TABLE `eb_user_group` (
 
 CREATE TABLE `eb_user_notice` (
   `id` int(11) NOT NULL,
-  `uid` text NOT NULL COMMENT '接收消息的用户id（类型：json数据）',
+  `uid` text NOT NULL DEFAULT '0' COMMENT '接收消息的用户id（类型：json数据）',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '消息通知类型（1：系统消息；2：用户通知）',
   `user` varchar(20) NOT NULL DEFAULT '' COMMENT '发送人',
-  `title` varchar(20) NOT NULL COMMENT '通知消息的标题信息',
-  `content` varchar(500) NOT NULL COMMENT '通知消息的内容',
-  `add_time` int(11) NOT NULL COMMENT '通知消息发送的时间',
+  `title` varchar(20) NOT NULL DEFAULT '' COMMENT '通知消息的标题信息',
+  `content` varchar(500) NOT NULL DEFAULT '' COMMENT '通知消息的内容',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '通知消息发送的时间',
   `is_send` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否发送（0：未发送；1：已发送）',
-  `send_time` int(11) NOT NULL COMMENT '发送时间'
+  `send_time` int(11) NOT NULL DEFAULT '0' COMMENT '发送时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户通知表';
 
 --
@@ -2830,9 +2830,9 @@ INSERT INTO `eb_user_notice` (`id`, `uid`, `type`, `user`, `title`, `content`, `
 
 CREATE TABLE `eb_user_notice_see` (
   `id` int(11) NOT NULL,
-  `nid` int(11) NOT NULL COMMENT '查看的通知id',
-  `uid` int(11) NOT NULL COMMENT '查看通知的用户id',
-  `add_time` int(11) NOT NULL COMMENT '查看通知的时间'
+  `nid` int(11) NOT NULL DEFAULT '0' COMMENT '查看的通知id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '查看通知的用户id',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '查看通知的时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户通知发送记录表';
 
 -- --------------------------------------------------------
@@ -2843,7 +2843,7 @@ CREATE TABLE `eb_user_notice_see` (
 
 CREATE TABLE `eb_user_recharge` (
   `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) DEFAULT NULL COMMENT '充值用户UID',
+  `uid` int(10) DEFAULT 0 COMMENT '充值用户UID',
   `vip_id` int(11) NOT NULL DEFAULT '0' COMMENT '0为充值金额,',
   `order_id` varchar(32) DEFAULT NULL COMMENT '订单号',
   `price` decimal(8,2) DEFAULT NULL COMMENT '充值金额',
@@ -2852,7 +2852,7 @@ CREATE TABLE `eb_user_recharge` (
   `paid` tinyint(1) DEFAULT NULL COMMENT '是否充值',
   `pay_time` int(10) DEFAULT NULL COMMENT '充值支付时间',
   `add_time` int(12) DEFAULT NULL COMMENT '充值时间',
-  `refund_price` decimal(10,2) UNSIGNED NOT NULL COMMENT '退款金额'
+  `refund_price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '退款金额'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户充值表';
 
 -- --------------------------------------------------------
@@ -2863,12 +2863,12 @@ CREATE TABLE `eb_user_recharge` (
 
 CREATE TABLE `eb_wechat_media` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '微信视频音频id',
-  `type` varchar(16) NOT NULL COMMENT '回复类型',
-  `path` varchar(128) NOT NULL COMMENT '文件路径',
-  `media_id` varchar(64) NOT NULL COMMENT '微信服务器返回的id',
-  `url` varchar(256) NOT NULL COMMENT '地址',
+  `type` varchar(16) NOT NULL DEFAULT '' COMMENT '回复类型',
+  `path` varchar(128) NOT NULL DEFAULT '' COMMENT '文件路径',
+  `media_id` varchar(64) NOT NULL DEFAULT '' COMMENT '微信服务器返回的id',
+  `url` varchar(256) NOT NULL DEFAULT '' COMMENT '地址',
   `temporary` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否永久或者临时 0永久1临时',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间'
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信回复表';
 
 --
@@ -2886,10 +2886,10 @@ INSERT INTO `eb_wechat_media` (`id`, `type`, `path`, `media_id`, `url`, `tempora
 
 CREATE TABLE `eb_wechat_message` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '用户行为记录id',
-  `openid` varchar(32) NOT NULL COMMENT '用户openid',
-  `type` varchar(32) NOT NULL COMMENT '操作类型',
-  `result` varchar(512) NOT NULL COMMENT '操作详细记录',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '操作时间'
+  `openid` varchar(32) NOT NULL DEFAULT '' COMMENT '用户openid',
+  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '操作类型',
+  `result` varchar(512) NOT NULL DEFAULT '' COMMENT '操作详细记录',
+  `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户行为记录表';
 
 -- --------------------------------------------------------
@@ -2900,11 +2900,11 @@ CREATE TABLE `eb_wechat_message` (
 
 CREATE TABLE `eb_wechat_news_category` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '图文消息管理ID',
-  `cate_name` varchar(255) NOT NULL COMMENT '图文名称',
+  `cate_name` varchar(255) NOT NULL DEFAULT '' COMMENT '图文名称',
   `sort` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态',
-  `new_id` varchar(255) NOT NULL COMMENT '文章id',
-  `add_time` varchar(255) NOT NULL COMMENT '添加时间'
+  `new_id` varchar(255) NOT NULL DEFAULT '0' COMMENT '文章id',
+  `add_time` varchar(255) NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图文消息管理表';
 
 -- --------------------------------------------------------
@@ -2915,15 +2915,15 @@ CREATE TABLE `eb_wechat_news_category` (
 
 CREATE TABLE `eb_wechat_qrcode` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '微信二维码ID',
-  `third_type` varchar(32) NOT NULL COMMENT '二维码类型',
-  `third_id` int(11) UNSIGNED NOT NULL COMMENT '用户id',
-  `scan_id` int(10) NOT NULL COMMENT '扫描用户uid',
-  `ticket` varchar(255) NOT NULL COMMENT '二维码参数',
+  `third_type` varchar(32) NOT NULL DEFAULT '' COMMENT '二维码类型',
+  `third_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
+  `scan_id` int(10) NOT NULL DEFAULT '0' COMMENT '扫描用户uid',
+  `ticket` varchar(255) NOT NULL DEFAULT '' COMMENT '二维码参数',
   `expire_seconds` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '二维码有效时间',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '状态',
-  `add_time` varchar(255) NOT NULL COMMENT '添加时间',
-  `url` varchar(255) NOT NULL COMMENT '微信访问url',
-  `qrcode_url` varchar(255) NOT NULL COMMENT '微信二维码url',
+  `add_time` varchar(255) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '微信访问url',
+  `qrcode_url` varchar(255) NOT NULL DEFAULT '' COMMENT '微信二维码url',
   `scan` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '被扫的次数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信二维码管理表';
 
@@ -2935,9 +2935,9 @@ CREATE TABLE `eb_wechat_qrcode` (
 
 CREATE TABLE `eb_wechat_reply` (
   `id` mediumint(8) UNSIGNED NOT NULL COMMENT '微信关键字回复id',
-  `key` varchar(64) NOT NULL COMMENT '关键字',
-  `type` varchar(32) NOT NULL COMMENT '回复类型',
-  `data` text NOT NULL COMMENT '回复数据',
+  `key` varchar(64) NOT NULL DEFAULT '' COMMENT '关键字',
+  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '回复类型',
+  `data` text NOT NULL DEFAULT '' COMMENT '回复数据',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '0=不可用  1 =可用',
   `hide` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否隐藏'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信关键字回复表';
@@ -2950,11 +2950,11 @@ CREATE TABLE `eb_wechat_reply` (
 
 CREATE TABLE `eb_wechat_template` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '模板id',
-  `tempkey` char(50) NOT NULL COMMENT '模板编号',
-  `name` char(100) NOT NULL COMMENT '模板名',
-  `content` varchar(1000) NOT NULL COMMENT '回复内容',
+  `tempkey` char(50) NOT NULL DEFAULT '' COMMENT '模板编号',
+  `name` char(100) NOT NULL DEFAULT '' COMMENT '模板名',
+  `content` varchar(1000) NOT NULL DEFAULT '' COMMENT '回复内容',
   `tempid` char(100) DEFAULT NULL COMMENT '模板ID',
-  `add_time` varchar(15) NOT NULL COMMENT '添加时间',
+  `add_time` varchar(15) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信模板';
 
@@ -2984,17 +2984,17 @@ INSERT INTO `eb_wechat_template` (`id`, `tempkey`, `name`, `content`, `tempid`, 
 
 CREATE TABLE `eb_wechat_user` (
   `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '微信用户id',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '微信用户id',
   `unionid` varchar(30) DEFAULT NULL COMMENT '只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段',
   `openid` varchar(30) DEFAULT NULL COMMENT '用户的标识，对当前公众号唯一',
   `routine_openid` varchar(32) DEFAULT NULL COMMENT '小程序唯一身份ID',
-  `nickname` varchar(64) NOT NULL COMMENT '用户的昵称',
-  `headimgurl` varchar(256) NOT NULL COMMENT '用户头像',
+  `nickname` varchar(64) NOT NULL DEFAULT '' COMMENT '用户的昵称',
+  `headimgurl` varchar(256) NOT NULL DEFAULT '' COMMENT '用户头像',
   `sex` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户的性别，值为1时是男性，值为2时是女性，值为0时是未知',
-  `city` varchar(64) NOT NULL COMMENT '用户所在城市',
-  `language` varchar(64) NOT NULL COMMENT '用户的语言，简体中文为zh_CN',
-  `province` varchar(64) NOT NULL COMMENT '用户所在省份',
-  `country` varchar(64) NOT NULL COMMENT '用户所在国家',
+  `city` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在城市',
+  `language` varchar(64) NOT NULL DEFAULT '' COMMENT '用户的语言，简体中文为zh_CN',
+  `province` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在省份',
+  `country` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在国家',
   `remark` varchar(256) DEFAULT NULL COMMENT '公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注',
   `groupid` smallint(5) UNSIGNED DEFAULT '0' COMMENT '用户所在的分组ID（兼容旧的用户分组接口）',
   `tagid_list` varchar(256) DEFAULT NULL COMMENT '用户被打上的标签ID列表',
@@ -3017,16 +3017,16 @@ CREATE TABLE `eb_wechat_user` (
 CREATE TABLE `eb_member_ship` (
   `id` int(11) NOT NULL,
   `type` int(2) NOT NULL DEFAULT '1' COMMENT '会员类别(1:普通会员)',
-  `title` varchar(200) NOT NULL COMMENT '会员名称',
-  `vip_day` int(10) NOT NULL COMMENT '会员时间(天)',
+  `title` varchar(200) NOT NULL DEFAULT '' COMMENT '会员名称',
+  `vip_day` int(10) NOT NULL DEFAULT '0' COMMENT '会员时间(天)',
   `original_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '原价',
   `price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '优惠后价格',
   `is_permanent` int(2) NOT NULL DEFAULT '0' COMMENT '是否永久',
-  `is_publish` int(2) NOT NULL COMMENT '是否发布',
+  `is_publish` int(2) NOT NULL DEFAULT '1' COMMENT '是否发布',
   `is_free` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
-  `sort` int(10) NOT NULL COMMENT '排序倒序',
-  `is_del` int(2) NOT NULL COMMENT '删除',
-  `add_time` int(50) NOT NULL COMMENT '添加时间',
+  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序倒序',
+  `is_del` int(2) NOT NULL DEFAULT '0' COMMENT '删除',
+  `add_time` int(50) NOT NULL DEFAULT '0' COMMENT '添加时间',
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员管理表';
 -- --------------------------------------------------------
@@ -3048,15 +3048,15 @@ INSERT INTO `eb_member_ship` (`id`, `type`, `title`, `vip_day`, `original_price`
 --
 CREATE TABLE `eb_member_record` (
   `id` int(10) NOT NULL,
-  `oid` int(10) unsigned NOT NULL COMMENT '订单ID',
-  `uid` int(10) unsigned NOT NULL COMMENT '用户uid',
+  `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单ID',
+  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户uid',
   `type` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '区别 0:购买 1:会员卡',
   `code` varchar(255) DEFAULT NULL COMMENT '卡号',
   `price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '支付金额',
   `purchase_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '会员购买时间',
   `is_free` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
   `is_permanent` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '是否永久',
-  `overdue_time` int(50) unsigned NOT NULL COMMENT '会员过期时间',
+  `overdue_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '会员过期时间',
   `validity` varchar(10) DEFAULT '0' COMMENT '有效期',
   `add_time` int(50) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员购买记录表';
@@ -3069,11 +3069,11 @@ CREATE TABLE `eb_member_record` (
 
 CREATE TABLE `eb_live_reward` (
   `id` int(11) NOT NULL,
-  `live_id` int(11) unsigned NOT NULL COMMENT '直播间id',
+  `live_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '直播间id',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户uid',
-  `nickname` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '昵称',
-  `gift_id` int(11) NOT NULL COMMENT '礼物id',
-  `gift_name` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '礼物名称',
+  `nickname` varchar(100) NOT NULL DEFAULT '' COMMENT '昵称',
+  `gift_id` int(11) NOT NULL DEFAULT '0' COMMENT '礼物id',
+  `gift_name` varchar(100) NOT NULL DEFAULT '' COMMENT '礼物名称',
   `gift_price` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '虚拟货币价格',
   `gift_num` int(11) NOT NULL DEFAULT '0' COMMENT '礼物数量',
   `total_price` int(11) NOT NULL DEFAULT '0' COMMENT '总虚拟货币价格',
@@ -3095,8 +3095,8 @@ CREATE TABLE `eb_live_goods` (
   `sales` int(10) NOT NULL DEFAULT '0' COMMENT '销量',
   `fake_sales` int(10) NOT NULL DEFAULT '0' COMMENT '虚拟销量',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
-  `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
-  `update_time` int(11) NOT NULL COMMENT '修改时间'
+  `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间'
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='直播间带货表';
 
 --
@@ -3104,32 +3104,32 @@ CREATE TABLE `eb_live_goods` (
 --
 CREATE TABLE `eb_event_registration` (
   `id` int(10) NOT NULL,
-  `title` varchar(255) NOT NULL COMMENT '标题',
-  `phone` varchar(12) NOT NULL COMMENT '电话',
-  `image` varchar(255) NOT NULL COMMENT '封面图',
-  `signup_start_time` int(50) NOT NULL COMMENT '报名开始时间',
-  `signup_end_time` int(50) NOT NULL COMMENT '报名结束时间',
-  `start_time` int(50) NOT NULL COMMENT '活动开始时间',
-  `end_time` int(50) NOT NULL COMMENT '活动结束时间',
-  `province` varchar(255) NOT NULL COMMENT '省',
-  `city` varchar(255) NOT NULL COMMENT '市',
-  `district` varchar(255) NOT NULL COMMENT '区',
-  `detail` varchar(255) NOT NULL COMMENT '详细地址',
-  `latitude` varchar(255) NOT NULL COMMENT '纬度',
-  `longitude` varchar(255) NOT NULL COMMENT '经度',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+  `phone` varchar(12) NOT NULL DEFAULT '0' COMMENT '电话',
+  `image` varchar(255) NOT NULL DEFAULT '' COMMENT '封面图',
+  `signup_start_time` int(50) NOT NULL DEFAULT '0' COMMENT '报名开始时间',
+  `signup_end_time` int(50) NOT NULL DEFAULT '0' COMMENT '报名结束时间',
+  `start_time` int(50) NOT NULL DEFAULT '0' COMMENT '活动开始时间',
+  `end_time` int(50) NOT NULL DEFAULT '0' COMMENT '活动结束时间',
+  `province` varchar(255) NOT NULL DEFAULT '' COMMENT '省',
+  `city` varchar(255) NOT NULL DEFAULT '' COMMENT '市',
+  `district` varchar(255) NOT NULL DEFAULT '' COMMENT '区',
+  `detail` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `latitude` varchar(255) NOT NULL DEFAULT '' COMMENT '纬度',
+  `longitude` varchar(255) NOT NULL DEFAULT '' COMMENT '经度',
   `number` int(10) NOT NULL DEFAULT '0' COMMENT '人数',
   `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
   `activity_rules` varchar(3000) DEFAULT NULL COMMENT '活动规则',
   `content` varchar(5000) DEFAULT NULL COMMENT '活动详情',
   `pay_type` int(2) NOT NULL DEFAULT '0' COMMENT '是否免费',
   `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
-  `member_pay_type` tinyint(2) NOT NULL COMMENT '会员支付状态（0:免费1:付费）',
+  `member_pay_type` tinyint(2) NOT NULL DEFAULT '0' COMMENT '会员支付状态（0:免费1:付费）',
   `member_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '会员价格',
-  `write_off_code` varchar(255) NOT NULL COMMENT '核销码',
+  `write_off_code` varchar(255) NOT NULL DEFAULT '' COMMENT '核销码',
   `restrictions` tinyint(2) NOT NULL DEFAULT '0' COMMENT '限购',
   `is_fill` tinyint(2) NOT NULL DEFAULT '1' COMMENT '是否填写资料',
   `qrcode_img` varchar(255) DEFAULT NULL COMMENT '群聊二维码',
-  `is_show` tinyint(2) NOT NULL COMMENT '是否显示',
+  `is_show` tinyint(2) NOT NULL DEFAULT '1' COMMENT '是否显示',
   `is_del` int(2) NOT NULL DEFAULT '0' COMMENT '是否删除',
   `add_time` int(50) NOT NULL DEFAULT '1' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动报名表';
@@ -3138,10 +3138,10 @@ CREATE TABLE `eb_event_registration` (
 --
 CREATE TABLE `eb_event_sign_up` (
   `id` int(10) NOT NULL,
-  `order_id` varchar(64) NOT NULL COMMENT '订单号',
-  `trade_no` varchar(64) NOT NULL COMMENT '支付宝支付,支付宝交易订单号',
-  `uid` int(10) NOT NULL,
-  `user_info` varchar(3072) NOT NULL COMMENT '报名信息',
+  `order_id` varchar(64) NOT NULL DEFAULT '' COMMENT '订单号',
+  `trade_no` varchar(64) NOT NULL DEFAULT '' COMMENT '支付宝支付,支付宝交易订单号',
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `user_info` varchar(3072) NOT NULL DEFAULT '' COMMENT '报名信息',
   `activity_id` int(10) NOT NULL DEFAULT '0' COMMENT '活动ID',
   `pay_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付价格',
   `paid` int(2) NOT NULL DEFAULT '0' COMMENT '支付状态',
@@ -3149,7 +3149,7 @@ CREATE TABLE `eb_event_sign_up` (
   `pay_type` varchar(20) NOT NULL DEFAULT '0' COMMENT '支付方式',
   `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态（0:未核销1:已核销）',
   `write_off_code` varchar(255) DEFAULT NULL COMMENT '核销二维码',
-  `is_del` tinyint(2) NOT NULL,
+  `is_del` tinyint(2) NOT NULL DEFAULT '0',
   `add_time` int(50) NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户报名表';
 
@@ -3180,17 +3180,17 @@ CREATE TABLE `eb_sign_poster` (
 CREATE TABLE `eb_search_history` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL DEFAULT '0',
-  `search` varchar(255) NOT NULL COMMENT '搜索内容',
-  `add_time` int(50) NOT NULL
+  `search` varchar(255) NOT NULL DEFAULT '' COMMENT '搜索内容',
+  `add_time` int(50) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='历史搜索';
 --
 -- 表的结构 `eb_special_watch`
 --
 CREATE TABLE `eb_special_watch` (
   `id` int(11) NOT NULL,
-  `uid` int(11) NOT NULL COMMENT 'uid',
-  `special_id` int(11) NOT NULL COMMENT '专题ID',
-  `task_id` int(11) NOT NULL COMMENT '素材ID',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'uid',
+  `special_id` int(11) NOT NULL DEFAULT '0' COMMENT '专题ID',
+  `task_id` int(11) NOT NULL DEFAULT '0' COMMENT '素材ID',
   `viewing_time` int(50) DEFAULT '0' COMMENT '观看时间',
   `add_time` int(50) DEFAULT '0' COMMENT '时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户观看素材时间';

@@ -74,7 +74,7 @@
                     </script>
                     <!--图片-->
                     <script type="text/html" id="image">
-                        <img style="cursor: pointer" lay-event="open_image" src="{{d.image}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event="open_image" src="{{d.image}}">
                     </script>
                     <!--上架|下架-->
                     <script type="text/html" id="checkboxstatus">

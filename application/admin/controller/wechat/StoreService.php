@@ -122,7 +122,6 @@ class StoreService extends AuthController
     {
         $params = $request->post();
         if (empty($params["nickname"])) return Json::fail("客服名称不能为空！");
-//        print_r($params);die;
         $data = array("avatar" => $params["avatar"]
         , "nickname" => $params["nickname"]
         , 'status' => $params['status']

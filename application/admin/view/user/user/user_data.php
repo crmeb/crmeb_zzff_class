@@ -8,8 +8,9 @@
     .data .item .text{color: #1E9FFF;cursor: pointer}
     .data .item-right{float: right;padding-right: 25px}
     .data .item-right button{border-radius: 5px;}
-    .data .form table td{border: none;font-size: 18px;letter-spacing:5px}
     .data .form table tr:hover{background-color:#ffffff!important;}
+    .data .form table td{border: none;font-size: 14px;}
+    .layui-table td, .layui-table th {position: relative;line-height: 10px;padding: 8px 15px;}
 </style>
 {/block}
 {block name="content"}
@@ -56,10 +57,6 @@
                                             <td class="text-right">邮  箱:</td>
                                             <td>{{userinfo.mail}}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="text-right">年  级:</td>
-                                            <td>{{userinfo.grade_name}}</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -95,7 +92,7 @@
                                         </tr>
                                         <tr>
                                             <td class="text-right">待提现:</td>
-                                            <td>￥{{userinfo.now_money}}</td>
+                                            <td>￥{{userinfo.brokerage_price}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

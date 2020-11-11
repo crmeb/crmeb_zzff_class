@@ -14,17 +14,11 @@ namespace app\admin\controller\setting;
 
 use EasyWeChat\ShakeAround\Group;
 use service\UtilService as Util;
-
 use service\JsonService as Json;
-
 use think\Request;
-
 use think\Url;
-
 use app\admin\model\system\SystemGroup as GroupModel;
-
 use app\admin\model\system\SystemGroupData as GroupDataModel;
-
 use app\admin\controller\AuthController;
 
 

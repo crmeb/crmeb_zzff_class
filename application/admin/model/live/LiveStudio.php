@@ -174,7 +174,6 @@ class LiveStudio extends ModelBasic
             $item['add_time'] = date('Y-m-d H:i:s', $item['add_time']);
             $item['studio_pwd'] = $item['studio_pwd'] ?: '';
             $item['buy_user_num'] = StoreOrder::where(['paid' => 1, 'cart_id' => $item['special_id']])->count('id');
-           // $item['start_play_time'] = LiveStudio::where('special_id', $item['id'])->value('start_play_time');
         }
         $count = self::setLiveWhere($where, null, 'L')->join('__SPECIAL__ S', 'L.special_id=S.id', 'LEFT')->count();
         return compact('data', 'count');

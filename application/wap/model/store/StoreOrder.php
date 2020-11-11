@@ -98,58 +98,6 @@ class StoreOrder extends ModelBasic
         return self::where('id', $id)->value('order_id');
     }
 
-    /**
-     * 拼团
-     * @param $cartInfo
-     * @return array
-     */
-    public static function getCombinationOrderPriceGroup($cartInfo)
-    {
-        $storePostage = floatval(SystemConfigService::get('store_postage')) ?: 0;
-        $storeFreePostage = floatval(SystemConfigService::get('store_free_postage')) ?: 0;
-        $totalPrice = self::getCombinationOrderTotalPrice($cartInfo);
-        $costPrice = self::getCombinationOrderCostPrice($cartInfo);
-        if (!$storeFreePostage) {
-            $storePostage = 0;
-        } else {
-            foreach ($cartInfo as $cart) {
-                if (!StoreCombination::where('id', $cart['combination_id'])->value('is_postage'))
-                    $storePostage = bcadd($storePostage, StoreCombination::where('id', $cart['combination_id'])->value('postage'), 2);
-            }
-            if ($storeFreePostage <= $totalPrice) $storePostage = 0;
-        }
-        return compact('storePostage', 'storeFreePostage', 'totalPrice', 'costPrice');
-    }
-
-
-    /**
-     * 拼团价格
-     * @param $cartInfo
-     * @return float
-     */
-    public static function getCombinationOrderTotalPrice($cartInfo)
-    {
-        $totalPrice = 0;
-        foreach ($cartInfo as $cart) {
-            if ($cart['combination_id']) {
-                $totalPrice = bcadd($totalPrice, bcmul($cart['cart_num'], StoreCombination::where('id', $cart['combination_id'])->value('price'), 2), 2);
-            }
-        }
-        return (float)$totalPrice;
-    }
-
-    public static function getCombinationOrderCostPrice($cartInfo)
-    {
-        $costPrice = 0;
-        foreach ($cartInfo as $cart) {
-            if ($cart['combination_id']) {
-                $totalPrice = bcadd($costPrice, bcmul($cart['cart_num'], StoreCombination::where('id', $cart['combination_id'])->value('price'), 2), 2);
-            }
-        }
-        return (float)$costPrice;
-    }
-
-
     public static function cacheOrderInfo($uid, $cartInfo, $priceGroup, $other = [], $cacheTime = 600)
     {
         $key = md5(time());
@@ -414,22 +362,6 @@ class StoreOrder extends ModelBasic
         if (!UserAddress::be(['uid' => $uid, 'id' => $addressId, 'is_del' => 0]) || !($addressInfo = UserAddress::find($addressId)))
             return self::setErrorInfo('地址选择有误!');
 
-        //使用优惠劵
-        $res1 = true;
-        if ($couponId) {
-            $couponInfo = StoreCouponUser::validAddressWhere()->where('id', $couponId)->where('uid', $uid)->find();
-            if (!$couponInfo) return self::setErrorInfo('选择的优惠劵无效!');
-            if ($couponInfo['use_min_price'] > $payPrice)
-                return self::setErrorInfo('不满足优惠劵的使用条件!');
-            $payPrice = bcsub($payPrice, $couponInfo['coupon_price'], 2);
-            $res1 = StoreCouponUser::useCoupon($couponId);
-            $couponPrice = $couponInfo['coupon_price'];
-        } else {
-            $couponId = 0;
-            $couponPrice = 0;
-        }
-        if (!$res1) return self::setErrorInfo('使用优惠劵失败!');
-
         //是否包邮
         if ((isset($other['offlinePostage']) && $other['offlinePostage'] && $payType == 'offline')) $payPostage = 0;
         $payPrice = bcadd($payPrice, $payPostage, 2);
@@ -473,7 +405,7 @@ class StoreOrder extends ModelBasic
             'total_price' => $priceGroup['totalPrice'],
             'total_postage' => $priceGroup['storePostage'],
             'coupon_id' => $couponId,
-            'coupon_price' => $couponPrice,
+            'coupon_price' => 0,
             'pay_price' => $payPrice,
             'pay_postage' => $payPostage,
             'deduction_price' => $deductionPrice,
@@ -494,12 +426,7 @@ class StoreOrder extends ModelBasic
         if (!$order) return self::setErrorInfo('订单生成失败!');
         $res5 = true;
         foreach ($cartInfo as $cart) {
-            //减库存加销量
-            if ($combinationId) $res5 = $res5 && StoreCombination::decCombinationStock($cart['cart_num'], $combinationId);
-            else if ($seckill_id) $res5 = $res5 && StoreSeckill::decSeckillStock($cart['cart_num'], $seckill_id);
-            else if ($bargainId) $res5 = $res5 && StoreBargain::decBargainStock($cart['cart_num'], $bargainId);
-            else if ($integral_id) $res5 = $res5 && IntegralProduct::decIntegralStock($cart['cart_num'], $integral_id);
-            else $res5 = $res5 && StoreProduct::decProductStock($cart['cart_num'], $cart['productInfo']['id'], isset($cart['productInfo']['attrInfo']) ? $cart['productInfo']['attrInfo']['unique'] : '');
+            $res5 = $res5 && StoreProduct::decProductStock($cart['cart_num'], $cart['productInfo']['id'], isset($cart['productInfo']['attrInfo']) ? $cart['productInfo']['attrInfo']['unique'] : '');
 
         }
         //保存购物车商品信息
@@ -702,11 +629,6 @@ class StoreOrder extends ModelBasic
         else {
             //拼团未完成自动退款
             return self::autoRefundY($order);
-            //注销给管理员发送退款模板消息
-//            try{
-//                HookService::afterListen('store_product_order_apply_refund',$order['id'],$uid,false,StoreProductBehavior::class);
-//            }catch (\Exception $e){}
-//            return true;
         }
     }
 
@@ -761,7 +683,6 @@ class StoreOrder extends ModelBasic
             'refund_price' => $order['pay_price'],
             'status' => -1,
         ];
-        //self::getDb('pay_return')->insert(['order_id'=>$order['order_id'],'refund_price'=>$order['pay_price'],'add_time'=>time()]);
         self::edit($data, $order['id'], 'id');
         StorePink::setRefundPink($order['pink_id']);
         HookService::afterListen('store_product_order_refund_y', $data, $order['id'], false, StoreProductBehavior::class);
@@ -793,9 +714,6 @@ class StoreOrder extends ModelBasic
                 }
             }
         }
-
-        //$oid = self::where('order_id', $orderId)->value('id');
-
         StoreOrderStatus::status($order->id, 'pay_success', '用户付款成功');
         $site_url = SystemConfigService::get('site_url');
         try{

@@ -15,14 +15,13 @@ namespace app\wap\controller;
 use app\wap\model\store\StoreService;
 use service\SystemConfigService;
 use app\wap\model\user\User;
-use app\admin\model\system\Merchant;
 use think\Request;
 
 class Service extends AuthController
 {
     public function service_list(Request $request){
         $params = Request::instance()->param();
-        $merchant = isset($params['mer_id']) && $params['mer_id'] > 0 ? Merchant::where('id',$params['mer_id'])->find() : array("id"=>0,"mer_name"=>"");
+        $merchant =array("id"=>0,"mer_name"=>"");
         $list = StoreService::field('uid,avatar,nickname')->where('mer_id',$merchant['id'])->where('status',1)->order("id desc")->select();
         $this->assign(compact('list','merchant'));
         return $this->fetch();

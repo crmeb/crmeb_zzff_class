@@ -266,35 +266,46 @@
                 },
                 // 音频上一首
                 onAudioPrev: function () {
-                    var taskListLength = this.taskList.length,
-                        currentIndex = this.audioPlayer.currentIndex,
+                    var that=this;
+                    var taskListLength = that.taskList.length,
+                        currentIndex = that.audioPlayer.currentIndex,
                         currentTask;
-                    currentIndex = (taskListLength + currentIndex - 1) % taskListLength;
-                    currentTask = this.taskList[currentIndex];
+                    for(var i=0;i<taskListLength;i++){
+                        if(that.taskList[i].id==that.taskInfo.id){
+                            currentIndex=i;
+                        }
+                    }
+                    if(currentIndex>0){
+                        currentIndex=Number(currentIndex)-1;
+                    }else{
+                        return $h.pushMsgOnce('当前已是第一首');
+                    }
+                    currentTask = that.taskList[currentIndex];
                     if (currentTask.pay_status) {
                         return $h.pushMsgOnce('请购买后再播放');
                     }
-                    this.audioPlayer.currentIndex = currentIndex;
-                    this.audioPlayer.src = currentTask.link;
-                    this.$nextTick(function () {
-                        this.audioPlayer.paused = false;
-                    });
+                    that.play(currentTask);
                 },
                 // 音频下一首
                 onAudioNext: function () {
-                    var taskListLength = this.taskList.length,
-                        currentIndex = this.audioPlayer.currentIndex,
+                    var that=this;
+                    var taskListLength = that.taskList.length,
+                        currentIndex = that.audioPlayer.currentIndex,
                         currentTask;
-                    currentIndex = (taskListLength + currentIndex + 1) % taskListLength;
-                    currentTask = this.taskList[currentIndex];
+                    for(var i=0;i<taskListLength;i++){
+                        if(that.taskList[i].id==that.taskInfo.id){
+                            currentIndex=i;
+                        }
+                    }
+                    currentIndex=Number(currentIndex)+1;
+                    if(currentIndex==taskListLength){
+                        return $h.pushMsgOnce('当前已是最好一首');
+                    }
+                    currentTask = that.taskList[currentIndex];
                     if (currentTask.pay_status) {
                         return $h.pushMsgOnce('请购买后再播放');
                     }
-                    this.audioPlayer.currentIndex = currentIndex;
-                    this.audioPlayer.src = currentTask.link;
-                    this.$nextTick(function () {
-                        this.audioPlayer.paused = false;
-                    });
+                    that.play(currentTask);
                 },
                 // 播放记忆
                 setMemory: function (time) {

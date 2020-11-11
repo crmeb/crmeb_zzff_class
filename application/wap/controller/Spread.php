@@ -96,7 +96,6 @@ class Spread extends AuthController
             ['cardnum', ''],
             ['weixin', ''],
         ]);
-
         if (UserExtract::userExtract($this->userInfo, $extractInfo)) {
             return JsonService::successful('申请成功');
         } else {

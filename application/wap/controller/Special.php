@@ -152,8 +152,6 @@ class Special extends AuthController
         return $this->fetch();
     }
 
-
-
     /**
      * 礼物领取
      *
@@ -647,13 +645,12 @@ class Special extends AuthController
         if (!$special_id) return JsonService::fail('无法访问');
         if (!$task_id) return JsonService::fail('无法访问');
         $special_source = SpecialSource::getSpecialSource($special_id,[$task_id]);
-        if ($tash = $special_source ? $special_source->toArray() : [])
-        //$tash = SpecialTask::get($task_id);
-        if (!$tash) return JsonService::fail('您查看的视频已经下架');
-       // $task = SpecialTask::getSpecialTaskOne($task_id);
-        //if ($tash->is_show == 0) return JsonService::fail('您查看的视频已下架');
-       // if (!$task->link && $task->live_id != SPECIAL_LIVE) return JsonService::fail('该课程暂未更新，具体更新时间请咨询客服~');
-        return JsonService::successful();
+        $tash = $special_source ? $special_source->toArray() : [];
+        if (!$tash) {
+            return JsonService::fail('您查看的视频已经下架');
+        }else{
+            return JsonService::successful();
+        }
     }
 
     /**

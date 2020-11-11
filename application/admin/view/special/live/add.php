@@ -53,6 +53,7 @@
     .layui-tab-title .layui-this:after {
         border-bottom-color: #fff!important;
     }
+    .upload-image-box .mask p{width: 50px;}
 </style>
 <script type="text/javascript" charset="utf-8" src="{__ADMIN_PATH}plug/ueditor/third-party/zeroclipboard/ZeroClipboard.js"></script>
 <script type="text/javascript" charset="utf-8" src="{__ADMIN_PATH}plug/ueditor/ueditor.config.js"></script>
@@ -122,7 +123,9 @@
                                     <label class="layui-form-label" style="margin-right: 28px" >直播标签</label>
                                     <div class="layui-input-inline" style="width: 300px;">
                                         <input type="text" v-model="label" name="price_min" placeholder="最多4个字" autocomplete="off" class="layui-input" style="float: left;width: 200px">
-                                        <p class="special-label" @click="addLabrl"><i class="fa fa-plus" aria-hidden="true"></i></p>
+                                        <p class="special-label" @click="addLabrl">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="layui-input-block">
@@ -300,17 +303,14 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">会员付费方式</label>
                                     <div class="layui-input-block">
-                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type"
-                                            v-model="formData.member_pay_type" value="1" title="付费">
-                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type"
-                                            v-model="formData.member_pay_type" value="0" title="免费">
+                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type" v-model="formData.member_pay_type" value="1" title="付费">
+                                        <input type="radio" name="member_pay_type" lay-filter="member_pay_type" v-model="formData.member_pay_type" value="0" title="免费">
                                     </div>
                                 </div>
                                 <div class="layui-form-item" v-show="formData.member_pay_type == 1">
                                     <label class="layui-form-label">会员购买金额</label>
                                     <div class="layui-input-block">
-                                        <input style="width: 20%" type="number" name="member_money" lay-verify="number"
-                                            v-model="formData.member_money" autocomplete="off" class="layui-input" min="0">
+                                        <input style="width: 20%" type="number" name="member_money" lay-verify="number" v-model="formData.member_money" autocomplete="off" class="layui-input" min="0">
                                     </div>
                                 </div>
                             </div>

@@ -147,8 +147,6 @@ class Article extends AuthController
                 $res = true;
             else
                 $res =false;
-//            dump($res);
-//            exit();
             ArticleModel::checkTrans($res);
             if($res)
                 return Json::successful('修改图文成功!',$id);

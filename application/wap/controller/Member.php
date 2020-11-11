@@ -11,6 +11,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\wap\controller;
+
 use service\CacheService;
 use service\JsonService;
 use service\SystemConfigService;
@@ -21,7 +22,6 @@ use think\Session;
 use think\Url;
 use app\wap\model\user\User;
 use app\wap\model\user\MemberShip;
-
 
 
 class Member extends AuthController

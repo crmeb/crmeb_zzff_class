@@ -70,7 +70,7 @@
                         {{# } }}
                     </script>
                     <script type="text/html" id="avatar">
-                        <img style="cursor: pointer;width: 60px;" lay-event='open_image' src="{{d.avatar}}">
+                        <img style="cursor: pointer;width: 60px;height: 40px;" lay-event='open_image' src="{{d.avatar}}">
                     </script>
                     <script type="text/html" id="act">
                         <button class="layui-btn layui-btn-xs" lay-event='no_speaking'>
@@ -146,10 +146,10 @@
     layList.tool(function (event,data,obj) {
         switch (event) {
             case 'no_speaking':
-                $eb.createModalFrame('禁止发言',layList.U({a:'live_no_speaking',q:{id:data.id}}),{w:890,h:450});
+                $eb.createModalFrame('禁止发言',layList.U({a:'live_no_speaking',q:{id:data.id}}),{w:400,h:300});
                 break;
             case 'no_entry':
-                $eb.createModalFrame('禁止进入',layList.U({a:'live_no_entry',q:{id:data.id}}),{w:890,h:450});
+                $eb.createModalFrame('禁止进入',layList.U({a:'live_no_entry',q:{id:data.id}}),{w:400,h:300});
                 break;
         }
     })

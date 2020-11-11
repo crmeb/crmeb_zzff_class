@@ -179,8 +179,7 @@
          **/-->
          <div v-if="special.type === 4 && active" class="replay-directory">
             <ul v-if="liveTaskList.length">
-                <li v-for="(item, index) in liveTaskList" :key="index" :class="{ active: RecordId === item.RecordId }" class="item"
-                    @click="playBackRecord(item.RecordId)">
+                <li v-for="(item, index) in liveTaskList" :key="index" :class="{ active: RecordId === item.RecordId }" class="item" @click="playBackRecord(item.RecordId)">
                     <div class="label">回放</div>
                     <div class="name">{{ index | serial }} | {{ special.title }}</div>
                     <div></div>

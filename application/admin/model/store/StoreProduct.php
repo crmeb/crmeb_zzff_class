@@ -13,7 +13,6 @@
 namespace app\admin\model\store;
 
 use app\admin\model\wechat\WechatUser;
-use app\admin\model\system\Merchant;
 use service\PHPExcelService;
 use think\Db;
 use traits\ModelTrait;

@@ -30,7 +30,6 @@ use app\admin\model\system\SystemAdmin;
 use app\admin\model\user\User;
 use app\wap\model\user\WechatUser;
 use service\JsonService as Json;
-use service\JsonService;
 use service\SystemConfigService;
 use service\UtilService;
 use service\WechatTemplateService;
@@ -218,7 +217,7 @@ class AliyunLive extends AuthController
             ['value' => 0, 'label' => '否'],
         ]);
         $f[] = Form::number('ban_time', '禁言时间:分');
-        $form = Form::make_post_form('禁止发言', $f, Url::build('save_no_speaking', array('id' => $id)), 3);
+        $form = Form::make_post_form('禁止发言', $f, Url::build('save_no_speaking', array('id' => $id)), 2);
         $this->assign(compact('form'));
         return $this->fetch('public/form-builder');
     }
@@ -262,7 +261,7 @@ class AliyunLive extends AuthController
             ['value' => 0, 'label' => '否'],
         ]);
         $f[] = Form::number('open_ben_time', '禁止时间:分');
-        $form = Form::make_post_form('禁止进入', $f, Url::build('save_no_entry', array('id' => $id)), 3);
+        $form = Form::make_post_form('禁止进入', $f, Url::build('save_no_entry', array('id' => $id)), 2);
         $this->assign(compact('form'));
         return $this->fetch('public/form-builder');
     }
@@ -811,9 +810,9 @@ class AliyunLive extends AuthController
      */
     public function get_subject_list($grade_id = 0)
     {
-        if (!$grade_id) return JsonService::fail('缺少参数');
+        if (!$grade_id) return Json::fail('缺少参数');
         $subjectlist = SpecialSubject::where(['grade_id' => $grade_id, 'is_show' => 1])->order('sort desc')->select();
-        return JsonService::successful($subjectlist);
+        return Json::successful($subjectlist);
     }
 
     /**
@@ -828,16 +827,16 @@ class AliyunLive extends AuthController
         $where['is_del'] = 0;
         if ($subject_id) $where['subject_id'] = $subject_id;
         if (!$live_goods_list) {
-            $dataList = $specialList = Special::where($where)->order('sort desc')->select();
+            $dataList = $specialList = SpecialModel::where($where)->order('sort desc')->select();
         }else{
             $dataList = array();
-            $specialList = Special::where($where)->whereIn('type',[1,2,3,5])->order('type desc')->select();
+            $specialList = SpecialModel::where($where)->whereIn('type',[1,2,3,5])->order('type desc')->select();
             foreach($specialList as $k => $v) {
                 $dataList[$k]['value'] = $v['id'];
                 $dataList[$k]['title'] = SPECIAL_TYPE[$v['type']]."--".$v['title'];
             }
         }
-        return JsonService::successful($dataList);
+        return Json::successful($dataList);
     }
 
     public function move_live_admin() {
@@ -846,10 +845,10 @@ class AliyunLive extends AuthController
             'admin_id'
         ]);
         if (!$parm['special_id'] || !$parm['admin_id']) {
-            JsonService::fail('缺少参数');
+            Json::fail('缺少参数');
         }
-        $special_info = Special::get(['id' => $parm['special_id']]);
-        if (!$special_info) JsonService::fail('直播间不存在');
+        $special_info = SpecialModel::get(['id' => $parm['special_id']]);
+        if (!$special_info) Json::fail('直播间不存在');
         if ($special_info['admin_id'] == $parm['admin_id']) return Json::successful('转移成功');
         $special_info->save(['admin_id' => $parm['admin_id']]);
         return Json::successful('转移成功');
@@ -962,7 +961,7 @@ class AliyunLive extends AuthController
             ['live_id', 0],
             ['date', 0],
         ]);
-        return JsonService::successful(LiveReward::getBadge($where));
+        return Json::successful(LiveReward::getBadge($where));
     }
 
 }

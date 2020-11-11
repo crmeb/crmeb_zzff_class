@@ -98,8 +98,7 @@
                                     <span v-if="item.user_type==1">[讲师]</span>
                                     <span v-else-if="item.user_type==0">[助教]</span>
                                     <span>{{item.nickname}}</span>
-                                    <span class="return" v-if="user_type != 2 && item.uid != 0 "
-                                        @click="recall(item.id,index)">撤回</span>
+                                    <span class="return" v-if="user_type != 2 && item.uid != 0 " @click="recall(item.id,index)">撤回</span>
                                 </div>
                                 <div class="info" v-if="item.type==1">
                                     <div class="cont" v-html="item.content"></div>
@@ -110,20 +109,17 @@
                                 <div class="info" v-else-if="item.type==3">
                                     <div class="cont" v-if="userInfo.uid == item.uid "
                                         @click="play_audio(item,index,'OpenCommentList')">
-                                        {{item.duration || 0}}’’<img
-                                            :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                                            class="signal signalR" style="margin-left:0.27rem;cursor: pointer">
+                                        {{item.duration || 0}}’’
+                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'" class="signal signalR" style="margin-left:0.27rem;cursor: pointer">
                                     </div>
-                                    <div class="conter acea-row row-middle" v-else
-                                        @click="play_audio(item,index,'OpenCommentList')">
-                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'"
-                                            class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
+                                    <div class="conter acea-row row-middle" v-else @click="play_audio(item,index,'OpenCommentList')">
+                                        <img :src="item.is_play ? '/wap/first/zsff/images/signal2.gif':'/wap/first/zsff/images/signal.png'" class="signal" style="margin-left:0.27rem;cursor: pointer;">{{item.duration || 0}}’’
                                     </div>
                                     <div class="spot" v-if="item.is_play"></div>
                                 </div>
                                 <div v-else-if="item.type === 4" class="info">
-                                    <div class="cont">{{ item.content }}{{ item.gift_name }}<img
-                                            :src="item.gift_image">×{{ item.gift_num }}</div>
+                                    <div class="cont">{{ item.content }}{{ item.gift_name }}
+                                        <img :src="item.gift_image">×{{ item.gift_num }}</div>
                                 </div>
                             </div>
                         </div>
@@ -226,8 +222,7 @@
             <!-- 输入 -->
             <div class="control">
                 <button class="button" type="button" @click="emoticon">
-                    <img class="img"
-                        :src="emojiShow ? '{__WAP_PATH}zsff/images/keyboard.png' : '{__WAP_PATH}zsff/images/face.png'">
+                    <img class="img" :src="emojiShow ? '{__WAP_PATH}zsff/images/keyboard.png' : '{__WAP_PATH}zsff/images/face.png'">
                 </button>
                 <button v-if="user_type == 0 || user_type == 1" class="button" type="button" @click="push">
                     <img class="img" src="{__WAP_PATH}zsff/images/plus.png">
@@ -255,41 +250,6 @@
                 <div id="emoji-pagination" class="swiper-pagination"></div>
             </div>
         </div>
-        <!-- 打赏 -->
-       <!-- <div :class="{ mask: giftShow }" @click="giftShow = false"></div>-->
-      <!--  <div v-show="giftShow" class="gift-wrapper">
-            <div id="gift" class="swiper-container gift">
-                <div class="swiper-wrapper">
-                    <div v-for="(item, index) in updateGiftList" :key="index" class="swiper-slide">
-                        <div v-for="(itm, idx) in item" :key="itm.id" :class="{ on: idx === giftIndexOn }" class="item"
-                            @click="giftIndexOn = idx; giftOn = itm">
-                            <div class="image">
-                                <img :src="itm.live_gift_show_img" class="img">
-                            </div>
-                            <div class="name">{{ itm.live_gift_name }}</div>
-                            <div :style="{ backgroundImage: 'url(' + goldInfo.gold_image + ')' }" class="num">{{ itm.live_gift_price }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div v-show="updateGiftList.length > 1" id="gift-pagination" class="swiper-pagination"></div>
-            </div>
-            <div class="foot">
-                <a :href="$h.U({c: 'special', a: 'recharge_index'}) + '?from=live&stream_name=' + liveInfo.stream_name + '&record_id=' + recordId" class="text-group">
-                    <span v-if="userInfo.gold_num" :style="{ backgroundImage: 'url(' + goldInfo.gold_image + ')' }" class="number">{{ userInfo.gold_num }}</span>
-                    <span v-else>充值</span>
-                    <span class="knowledge iconxiangyou"></span>
-                </a>
-                <div class="button-group">
-                    <button class="button select" type="button" @click="giftSelectShow = !giftSelectShow">
-                        {{ giftNumSelected }}<span :class="['knowledge', giftSelectShow ? 'iconxiangxia' : 'iconxiangshang']"></span>
-                        <ul v-show="giftSelectShow" class="list">
-                            <li v-for="(item, index) in giftOn.live_gift_num" :key="item" @click.prevent="giftNumSelected = item">{{ item }}</li>
-                        </ul>
-                    </button>
-                    <button class="button post" type="button" @click="giveGift">赠送</button>
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>
 <script>

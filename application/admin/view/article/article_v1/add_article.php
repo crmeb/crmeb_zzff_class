@@ -86,7 +86,7 @@
                        <div class="layui-form-item">
                             <label class="layui-form-label">文章分类</label>
                             <div class="layui-input-block">
-                               <select class="chosen-select"  style="width:100%;" lay-filter="getSelect">
+                               <select class="chosen-select" v-model="formData.cid"  style="width:100%;" lay-filter="getSelect">
                                    <option value="0" >选择分类</option>
                                     <option v-for="(item,idx) in all"  :value="idx" :key="idx">{{item}}</option>
                                 </select>

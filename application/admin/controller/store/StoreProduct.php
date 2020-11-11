@@ -18,7 +18,6 @@ use app\admin\model\store\StoreProductAttr;
 use app\admin\model\store\StoreProductAttrResult;
 use app\admin\model\store\StoreProductRelation;
 use app\admin\model\system\SystemConfig;
-use service\JsonService;
 use traits\CurdControllerTrait;
 use service\UtilService as Util;
 use service\JsonService as Json;
@@ -27,11 +26,8 @@ use think\Request;
 use app\admin\model\store\StoreCategory as CategoryModel;
 use app\admin\model\store\StoreProduct as ProductModel;
 use think\Url;
-use app\admin\model\ump\StoreSeckill as StoreSeckillModel;
 use app\admin\model\order\StoreOrder as StoreOrderModel;
-use app\admin\model\ump\StoreBargain as StoreBargainModel;
 use app\admin\model\system\SystemAttachment;
-use app\admin\model\system\Merchant;
 
 
 /**
@@ -90,7 +86,7 @@ class StoreProduct extends AuthController
             ['mer_id', 0],
             ['type', $this->request->param('type')]
         ]);
-        return JsonService::successlayui(ProductModel::ProductList($where));
+        return Json::successlayui(ProductModel::ProductList($where));
     }
 
     /**
@@ -100,12 +96,12 @@ class StoreProduct extends AuthController
      */
     public function set_show($is_show = '', $id = '')
     {
-        ($is_show == '' || $id == '') && JsonService::fail('缺少参数');
+        ($is_show == '' || $id == '') && Json::fail('缺少参数');
         $res = ProductModel::where(['id' => $id])->update(['is_show' => (int)$is_show]);
         if ($res) {
-            return JsonService::successful($is_show == 1 ? '上架成功' : '下架成功');
+            return Json::successful($is_show == 1 ? '上架成功' : '下架成功');
         } else {
-            return JsonService::fail($is_show == 1 ? '上架失败' : '下架失败');
+            return Json::fail($is_show == 1 ? '上架失败' : '下架失败');
         }
     }
 
@@ -116,11 +112,11 @@ class StoreProduct extends AuthController
      */
     public function set_product($field = '', $id = '', $value = '')
     {
-        $field == '' || $id == '' || $value == '' && JsonService::fail('缺少参数');
+        $field == '' || $id == '' || $value == '' && Json::fail('缺少参数');
         if (ProductModel::where(['id' => $id])->update([$field => $value]))
-            return JsonService::successful('保存成功');
+            return Json::successful('保存成功');
         else
-            return JsonService::fail('保存失败');
+            return Json::fail('保存失败');
     }
 
     /**
@@ -134,13 +130,13 @@ class StoreProduct extends AuthController
             ['ids', []]
         ]);
         if (empty($post['ids'])) {
-            return JsonService::fail('请选择需要上架的产品');
+            return Json::fail('请选择需要上架的产品');
         } else {
             $res = ProductModel::where('id', 'in', $post['ids'])->update(['is_show' => 1]);
             if ($res)
-                return JsonService::successful('上架成功');
+                return Json::successful('上架成功');
             else
-                return JsonService::fail('上架失败');
+                return Json::fail('上架失败');
         }
     }
 
@@ -151,8 +147,6 @@ class StoreProduct extends AuthController
      */
     public function create()
     {
-//        $this->assign(['title'=>'添加产品','action'=>Url::build('save'),'rules'=>$this->rules()->getContent()]);
-//        return $this->fetch('public/common_form');
         $field = [
             Form::select('cate_id', '产品分类')->setOptions(function () {
                 $list = CategoryModel::getTierList();
@@ -245,8 +239,6 @@ class StoreProduct extends AuthController
         if (count($data['cate_id']) < 1) return Json::fail('请选择产品分类');
         $data['cate_id'] = implode(',', $data['cate_id']);
         if (!$data['store_name']) return Json::fail('请输入产品名称');
-//        if(!$data['store_info']) return Json::fail('请输入产品简介');
-//        if(!$data['keyword']) return Json::fail('请输入产品关键字');
         if (count($data['image']) < 1) return Json::fail('请上传产品图片');
         if (count($data['slider_image']) < 1) return Json::fail('请上传产品轮播图');
         if ($data['price'] == '' || $data['price'] < 0) return Json::fail('请输入产品售价');
@@ -358,7 +350,6 @@ class StoreProduct extends AuthController
         if ($data['cate_id'] == '') return Json::fail('请选择产品分类');
         if (!$data['store_name']) return Json::fail('请输入产品名称');
         if (!$data['store_info']) return Json::fail('请输入产品简介');
-//        if(!$data['keyword']) return Json::fail('请输入产品关键字');
         if (count($data['image']) < 1) return Json::fail('请上传产品图片');
         if (count($data['slider_image']) < 1) return Json::fail('请上传产品轮播图');
         if (count($data['slider_image']) > 5) return Json::fail('轮播图最多5张图');

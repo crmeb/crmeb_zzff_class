@@ -14,7 +14,6 @@ namespace app\admin\controller\user;
 
 use app\admin\controller\AuthController;
 use service\FormBuilder as Form;
-use service\JsonService;
 use service\UtilService as Util;
 use service\JsonService as Json;
 use think\Request;
@@ -315,7 +314,7 @@ class UserNotice extends AuthController
      */
     public function send_user($id = 0, $uid = '')
     {
-        if (!$id || $uid == '') return JsonService::fail('参数错误');
+        if (!$id || $uid == '') return Json::fail('参数错误');
         $uid = "," . $uid . ",";
         UserNoticeModel::edit(array("is_send" => 1, "send_time" => time(), 'uid' => $uid), $id);
         return Json::successful('发送成功!');

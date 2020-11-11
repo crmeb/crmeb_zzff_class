@@ -72,8 +72,5 @@
         ];
     });
     layList.search('search');
-    $('.export').click(function(){
-        location.href=layList.U({a:'save_export'});
-    })
 </script>
 {/block}

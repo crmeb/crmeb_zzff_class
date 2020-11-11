@@ -52,7 +52,6 @@ class PublicApi
     public function get_cid_article($cid = 0, $first = 0, $limit = 8)
     {
         $list = ArticleCategory::cidByArticleList($cid, $first, $limit, 'id,title,image_input,visit,add_time,synopsis,url') ?: [];
-
         foreach ($list as &$article) {
             $article['add_time'] = date('Y-m-d H:i', $article['add_time']);
         }

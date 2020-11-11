@@ -135,7 +135,6 @@ class LiveGoods extends ModelBasic
         } catch (\Exception $e) {
             return false;
         }
-
     }
 
 }

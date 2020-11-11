@@ -293,7 +293,6 @@ HTML;
      */
     public static function getOrderWhere($where, $model, $aler = '', $join = '')
     {
-//        $model = $model->where('combination_id',0);
         if ($where['status'] != '') $model = self::statusByWhere($where['status'], $model, $aler);
         if ($where['is_del'] != '' && $where['is_del'] != -1) $model = $model->where($aler . 'is_del', $where['is_del']);
         if (isset($where['mer_id']) && $where['mer_id']) $model->where($aler . 'mer_id', $where['mer_id']);
@@ -512,7 +511,10 @@ HTML;
                 ];
                 $list[$index] = $item;
             }
-            ExportService::exportCsv($export, '订单导出' . time(), ['订单号', '支付方式', '商品总数', '商品总价', '邮费', '支付金额', '退款金额', '用户备注', '管理员备注', '收货人信息', '商品信息', '支付状态']);
+            PHPExcelService::setExcelHeader(['订单号', '支付方式', '商品总数', '商品总价', '邮费', '支付金额', '退款金额', '用户备注', '管理员备注', '收货人信息', '商品信息', '支付状态'])
+                ->setExcelTile('订单导出', '订单导出' . time())
+                ->setExcelContent($export)
+                ->ExcelSave();
         }
 
         return self::page($model, function ($item) {
@@ -533,9 +535,8 @@ HTML;
      */
     public static function getOrderWherePink($where, $model)
     {
+        if ($where['status'] != '') $model = self::statusByWhere($where['status']);
         $model = $model->where('combination_id', 'GT', 0);
-        if ($where['status'] != '') $model = $model::statusByWhere($where['status']);
-//        if($where['is_del'] != '' && $where['is_del'] != -1) $model = $model->where('is_del',$where['is_del']);
         if ($where['real_name'] != '') {
             $model = $model->where('order_id|real_name|user_phone', 'LIKE', "%$where[real_name]%");
         }
@@ -678,8 +679,6 @@ HTML;
             'group_concat(cart_id SEPARATOR "|") cart_ids'
         ])->group('_add_time')->order('_add_time asc')->select();
         count($orderlist) && $orderlist = $orderlist->toArray();
-        var_dump($orderlist);
-        exit;
         $legend = ['商品数量', '订单数量', '订单金额', '退款金额'];
         $seriesdata = [
             [
@@ -869,28 +868,4 @@ HTML;
         if (!$uid) return 0;
         return self::where('uid', $uid)->where('paid', 1)->where('refund_status', 0)->where('status', 2)->count();
     }
-    /*
-     * 退款列表
-     * $where array
-     * return array
-     */
-//    public static function getRefundList($where){
-//        $refundlist=self::setEchatWhere($where)->field([
-//            'order_id','total_price','coupon_price','deduction_price',
-//            'use_integral','FROM_UNIXTIME(add_time,"%Y-%m-%d") as add_time','FROM_UNIXTIME(pay_time,"%Y-%m-%d") as pay_time','combination_id',
-//            'seckill_id','bargain_id','cost','status','cart_id','pay_price','refund_status'
-//        ])->page((int)$where['page'],(int)$where['limit'])->select();
-//        count($refundlist) && $refundlist=$refundlist->toArray();
-//        foreach($refundlist as &$item){
-//            $item['product']=StoreProduct::where('id','in',function ($quers) use($item){
-//                $quers->name('store_cart')->where('id','in',json_decode($item['cart_id'],true))->field('product_id');
-//            })->field(['store_name','cost','price','image'])->select()->toArray();
-//            if($item['refund_status']==1) {
-//                $item['_refund'] = '申请退款中';
-//            }elseif ($item['refund_status']==2){
-//                $item['_refund'] = '退款成功';
-//            }
-//        }
-//        return $refundlist;
-//    }
 }

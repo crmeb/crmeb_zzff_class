@@ -14,11 +14,9 @@ namespace app\admin\controller\article;
 use app\admin\controller\AuthController;
 use app\admin\model\article\ArticleCategory as ArticleCategoryModel;
 use app\admin\model\article\ArticleContent;
-use service\JsonService;
 use service\UtilService as Util;
 use service\JsonService as Json;
 use service\UploadService as Upload;
-use service\UtilService;
 use think\Request;
 use app\admin\model\article\Article;
 use app\admin\model\system\Recommend;
@@ -44,7 +42,7 @@ class ArticleV1 extends AuthController
 
     public function article_list()
     {
-        $where = UtilService::getMore([
+        $where = Util::getMore([
             ['limit', 20],
             ['page', 1],
             ['cid', $this->request->param('cid')],
@@ -107,7 +105,7 @@ class ArticleV1 extends AuthController
 
     public function save_article($id = 0)
     {
-        $data = UtilService::postMore([
+        $data = Util::postMore([
             ['title', ''],
             ['synopsis', ''],
             ['sort', 0],
@@ -150,9 +148,9 @@ class ArticleV1 extends AuthController
 
     public function delete($id = 0)
     {
-        if (!$id) return JsonService::fail('缺少参数');
+        if (!$id) return Json::fail('缺少参数');
         $article = Article::get($id);
-        if (!$article) return JsonService::fail('没有查找到图文');
+        if (!$article) return Json::fail('没有查找到图文');
         Article::beginTrans();
         try {
             $res = $article->delete();
@@ -200,7 +198,7 @@ class ArticleV1 extends AuthController
     public function save_recommend($article_id = 0)
     {
         if (!$article_id) $this->failed('缺少参数');
-        $data = UtilService::postMore([
+        $data = Util::postMore([
             ['recommend_id', 0],
             ['sort', 0],
         ]);

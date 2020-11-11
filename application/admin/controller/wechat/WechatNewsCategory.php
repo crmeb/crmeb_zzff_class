@@ -15,7 +15,6 @@ namespace app\admin\controller\wechat;
 use app\admin\controller\AuthController;
 use app\admin\model\article\Article;
 use service\FormBuilder as Form;
-use service\JsonService;
 use service\UtilService as Util;
 use service\JsonService as Json;
 use app\admin\model\wechat\WechatReply;
@@ -252,13 +251,13 @@ class WechatNewsCategory extends AuthController
         ], $request);
         $id = [];
         $countList = count($data['list']);
-        if (!$countList) return JsonService::fail('请添加图文');
+        if (!$countList) return Json::fail('请添加图文');
         Article::beginTrans();
         foreach ($data['list'] as $k => $v) {
-            if ($v['title'] == '') return JsonService::fail('标题不能为空');
-            if ($v['author'] == '') return JsonService::fail('作者不能为空');
-            if ($v['content'] == '') return JsonService::fail('正文不能为空');
-            if ($v['synopsis'] == '') return JsonService::fail('摘要不能为空');
+            if ($v['title'] == '') return Json::fail('标题不能为空');
+            if ($v['author'] == '') return Json::fail('作者不能为空');
+            if ($v['content'] == '') return Json::fail('正文不能为空');
+            if ($v['synopsis'] == '') return Json::fail('摘要不能为空');
             $v['status'] = 1;
             $v['add_time'] = time();
             if ($v['id']) {
@@ -279,8 +278,8 @@ class WechatNewsCategory extends AuthController
         $countId = count($id);
         if ($countId != $countList) {
             Article::checkTrans(false);
-            if ($data['id']) return JsonService::fail('修改失败');
-            else return JsonService::fail('添加失败');
+            if ($data['id']) return Json::fail('修改失败');
+            else return Json::fail('添加失败');
         } else {
             Article::checkTrans(true);
             $newsCategory['cate_name'] = $data['list'][0]['title'];
@@ -290,10 +289,10 @@ class WechatNewsCategory extends AuthController
             $newsCategory['status'] = 1;
             if ($data['id']) {
                 WechatNewsCategoryModel::edit($newsCategory, $data['id']);
-                return JsonService::successful('修改成功');
+                return Json::successful('修改成功');
             } else {
                 WechatNewsCategoryModel::set($newsCategory);
-                return JsonService::successful('添加成功');
+                return Json::successful('添加成功');
             }
         }
     }

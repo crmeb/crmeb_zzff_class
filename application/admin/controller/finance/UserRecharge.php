@@ -87,7 +87,6 @@ class UserRecharge extends AuthController
         if ($bj < 0) return Json::fail('退款金额大于支付金额，请修改退款金额');
         $refund_data['pay_price'] = $UserRecharge['price'];
         $refund_data['refund_price'] = $refund_price;
-//        $refund_data['refund_account']='REFUND_SOURCE_RECHARGE_FUNDS';
         try {
             HookService::listen('user_recharge_refund', $UserRecharge['order_id'], $refund_data, true, PaymentBehavior::class);
         } catch (\Exception $e) {

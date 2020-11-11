@@ -68,9 +68,6 @@ class SpecialSource extends ModelBasic
         if (!$source_list_ids || !is_array($source_list_ids)) {
             return false;
         }
-        /*if (!is_array($source_list_ids)) {
-            $source_list_ids = array_column(json_decode($source_list_ids, true), 'value');
-        }*/
         try {
             $specialSourceAll = self::getSpecialSource($special_id)->toArray();
 
@@ -89,8 +86,6 @@ class SpecialSource extends ModelBasic
         } catch (\Exception $e) {
             return false;
         }
-
     }
-
 
 }

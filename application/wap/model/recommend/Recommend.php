@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 //
+
 namespace app\wap\model\recommend;
 
 use app\wap\model\user\User;

@@ -74,7 +74,7 @@
                         <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
                     </script>
                     <script type="text/html" id="image_input">
-                        <img style="cursor: pointer" lay-event='open_image' src="{{d.image_input}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image_input}}">
                     </script>
                     <script type="text/html" id="act">
                         <a class="layui-btn layui-btn-xs" href="{:Url('add_article',['type'=>2])}?id={{d.id}}">

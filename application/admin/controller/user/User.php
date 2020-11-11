@@ -18,7 +18,6 @@ use app\admin\model\special\Special;
 use app\admin\model\special\SpecialSubject;
 use app\wap\model\special\SpecialBuy;
 use service\FormBuilder as Form;
-use service\JsonService;
 use think\Db;
 use traits\CurdControllerTrait;
 use service\UtilService as Util;
@@ -34,7 +33,6 @@ use behavior\wap\UserBehavior;
 use app\admin\model\store\StoreVisit;
 use app\admin\model\wechat\WechatMessage;
 use app\admin\model\order\StoreOrder;
-use app\admin\model\store\StoreCouponUser;
 use service\SystemConfigService;
 use app\admin\model\user\MemberRecord as MemberRecordModel;
 /**
@@ -102,12 +100,12 @@ class User extends AuthController
     }
     public function get_subjec_list($grade_id = 0)
     {
-        return JsonService::successful(SpecialSubject::where(['grade_id' => $grade_id, 'is_show' => 1])->order('sort desc,add_time desc')->field('id,name')->select());
+        return Json::successful(SpecialSubject::where(['grade_id' => $grade_id, 'is_show' => 1])->order('sort desc,add_time desc')->field('id,name')->select());
     }
 
     public function get_special_list($subjec_id = 0)
     {
-        return JsonService::successful(Special::PreWhere()->where('subject_id', $subjec_id)->order('sort desc,add_time desc')->field('id,title')->select());
+        return Json::successful(Special::PreWhere()->where('subject_id', $subjec_id)->order('sort desc,add_time desc')->field('id,title')->select());
     }
 
     public function save_give()
@@ -116,18 +114,18 @@ class User extends AuthController
             ['uid', 0],
             ['special_id', 0],
         ]);
-        if (!$post['uid'] || !$post['special_id']) return JsonService::fail('缺少参数无法赠送');
-        if (SpecialBuy::be(['uid' => $post['uid'], 'special_id' => $post['special_id'], 'is_del' => 0])) return JsonService::fail('此用户已经拥有此专题无需赠送');
+        if (!$post['uid'] || !$post['special_id']) return Json::fail('缺少参数无法赠送');
+        if (SpecialBuy::be(['uid' => $post['uid'], 'special_id' => $post['special_id'], 'is_del' => 0])) return Json::fail('此用户已经拥有此专题无需赠送');
         if (SpecialBuy::set(['uid' => $post['uid'], 'special_id' => $post['special_id'], 'add_time' => time(), 'type' => 3]))
-            return JsonService::successful('赠送成功');
+            return Json::successful('赠送成功');
         else
-            return JsonService::fail('赠送失败');
+            return Json::fail('赠送失败');
     }
 
     public function get_user_info($uid = 0)
     {
-        if (!$uid) return JsonService::fail('缺少用户参数');
-        return JsonService::successful(UserModel::getUserinfoV1($uid));
+        if (!$uid) return Json::fail('缺少用户参数');
+        return Json::successful(UserModel::getUserinfoV1($uid));
     }
 
     public function get_pay_list()
@@ -137,7 +135,7 @@ class User extends AuthController
             ['limit', 10],
             ['page', 1],
         ]);
-        return JsonService::successful(SpecialBuy::getPayList($where));
+        return Json::successful(SpecialBuy::getPayList($where));
     }
 
     public function get_spread_list()
@@ -147,7 +145,7 @@ class User extends AuthController
             ['limit', 10],
             ['page', 1],
         ]);
-        return JsonService::successful(UserModel::getSpreadListV1($where));
+        return Json::successful(UserModel::getSpreadListV1($where));
     }
 
     public function get_order_list()
@@ -160,7 +158,7 @@ class User extends AuthController
             ['start_date', ''],
             ['end_date', ''],
         ]);
-        return JsonService::successful(StoreOrder::getOrderList($where));
+        return Json::successful(StoreOrder::getOrderList($where));
     }
 
     public function get_bill_list()
@@ -173,12 +171,12 @@ class User extends AuthController
             ['start_date', ''],
             ['end_date', ''],
         ]);
-        return JsonService::successful(UserBillAdmin::getBillList($where, $where['uid']));
+        return Json::successful(UserBillAdmin::getBillList($where, $where['uid']));
     }
 
     public function update_user_spread($uid = 0, $type = 0)
     {
-        if (!$uid || !$type) return JsonService::fail('缺少参数');
+        if (!$uid || !$type) return Json::fail('缺少参数');
         $user = UserModel::get($uid);
         switch ($type) {
             case '1':
@@ -195,9 +193,9 @@ class User extends AuthController
                 break;
         }
         if ($user->save())
-            return JsonService::successful('修改成功');
+            return Json::successful('修改成功');
         else
-            return JsonService::fail('修改失败');
+            return Json::fail('修改失败');
     }
 
     /**
@@ -241,8 +239,6 @@ class User extends AuthController
         $f[] = Form::input('nickname', '用户姓名', $user->getData('nickname'));
         $f[] = Form::radio('money_status', '修改余额', 1)->options([['value' => 1, 'label' => '增加'], ['value' => 2, 'label' => '减少']]);
         $f[] = Form::number('money', '余额')->min(0);
-//        $f[] = Form::radio('integration_status', '修改积分', 1)->options([['value' => 1, 'label' => '增加'], ['value' => 2, 'label' => '减少']]);
-//        $f[] = Form::number('integration', '积分')->min(0);
         $f[] = Form::radio('status', '状态', $user->getData('status'))->options([['value' => 1, 'label' => '开启'], ['value' => 0, 'label' => '锁定']]);
         $f[] = Form::radio('is_promoter', '推广员', $user->getData('is_promoter'))->options([
             ['value' => 0, 'label' => '关闭'],

@@ -29,11 +29,11 @@ class LiveGoods extends ModelBasic
     public static function getLiveGoodsList($where,$page = 0,$limit = 10)
     {
         $model = self::alias('g');
-        $list = $model->where('g.is_delete',0);
+        $model = $model->where('g.is_delete',0);
         if ($where['is_show'] != "" && isset($where['is_show'])){
-            $list = $model->where('g.is_show',$where['is_show']);
+            $model = $model->where('g.is_show',$where['is_show']);
         }
-        $list = $model->join('special s','g.special_id=s.id')->field('g.id as live_goods_id, g.sort as gsort, g.fake_sales as gfake_sales, g.is_show as gis_show, g.sales as gsales, s.*');
+        $model = $model->join('special s','g.special_id=s.id')->field('g.id as live_goods_id, g.sort as gsort, g.fake_sales as gfake_sales, g.is_show as gis_show, g.sales as gsales, s.*');
         $list = $model->order('g.sort desc')->page((int)$page,(int)$limit)->select();
         $list = count($list) ? $list->toArray() : [];
         foreach ($list as &$item){

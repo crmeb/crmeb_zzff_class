@@ -232,7 +232,6 @@ class Index extends AuthController
                         'is_plus' => $cha_price > 0 ? -1 : ($cha_price == 0 ? 0 : 1)
                     ];
                 }
-                var_dump($cycle);
                 return JsonService::successful('ok', $chartdata);
                 break;
             case 'week':
@@ -532,7 +531,7 @@ class Index extends AuthController
                 return JsonService::successful($chartdata);
                 break;
             default:
-                return sonService::successful([]);
+                return JsonService::successful([]);
                 break;
         }
 

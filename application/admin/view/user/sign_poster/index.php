@@ -33,7 +33,7 @@
         return [
             {field: 'id', title: '编号', sort: true,event:'id',width:'10%',align:'center'},
             {field: 'sign_time', title: '签到时间',align:'center'},
-            {field: 'poster', title: '海报', event:'open_image', width: '30%',align: 'center', templet: '<p><img class="avatar" style="cursor: pointer" class="open_image" data-image="{{d.poster}}" src="{{d.poster}}" ></p>'},
+            {field: 'poster', title: '海报', event:'open_image', width: '30%',align: 'center', templet: '<p><img class="avatar" style="cursor: pointer;width: 100px;height: 120px;" class="open_image" data-image="{{d.poster}}" src="{{d.poster}}" ></p>'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'20%'},
         ];
     });

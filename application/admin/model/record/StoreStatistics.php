@@ -205,8 +205,6 @@ class StoreStatistics extends ModelBasic
                 $cost=$info['cost'];//成本
                 $export[] = [$time,$price,$zhichu,$cost,$coupon,$deduction,$profit];
             }
-//            ExportService::exportCsv($export,'统计'.time(),['时间','营业额(元)','支出(元)','成本','优惠','积分抵扣','盈利(元)']);
-            dump($export);
             PHPExcelService::setExcelHeader(['时间','营业额(元)','支出(元)','成本','优惠','积分抵扣','盈利(元)'])->setExcelTile('财务统计', '财务统计',date('Y-m-d H:i:s',time()))->setExcelContent($export)->ExcelSave();
         }
     }

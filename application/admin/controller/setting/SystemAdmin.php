@@ -15,7 +15,6 @@ namespace app\admin\controller\setting;
 use app\admin\controller\AuthController;
 use app\wap\model\user\User;
 use service\FormBuilder as Form;
-use service\JsonService;
 use service\UtilService as Util;
 use service\JsonService as Json;
 use think\Request;
@@ -190,11 +189,11 @@ class SystemAdmin extends AuthController
     public function delete($id)
     {
         if (!$id)
-            return JsonService::fail('删除失败!');
+            return Json::fail('删除失败!');
         if (AdminModel::edit(['is_del' => 1, 'status' => 0], $id, 'id'))
-            return JsonService::successful('删除成功!');
+            return Json::successful('删除成功!');
         else
-            return JsonService::fail('删除失败!');
+            return Json::fail('删除失败!');
     }
 
     /**
@@ -217,7 +216,6 @@ class SystemAdmin extends AuthController
                 ['pwd', ''],
                 'real_name',
             ], $request);
-//            if ($data['pwd'] == '') unset($data['pwd']);
             if ($data['pwd'] != '') {
                 $pwd = md5($data['pwd']);
                 if ($adminInfo['pwd'] != $pwd) return Json::fail('原始密码错误');

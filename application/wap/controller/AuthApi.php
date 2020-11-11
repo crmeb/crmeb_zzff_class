@@ -51,6 +51,7 @@ use think\Url;
 use app\wap\model\user\MemberShip;
 use app\wap\model\user\MemberCard;//会员卡
 use app\wap\model\user\MemberCardBatch;//会员卡批次
+
 class AuthApi extends AuthController
 {
 

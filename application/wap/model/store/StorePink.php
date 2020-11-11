@@ -745,7 +745,6 @@ class StorePink extends ModelBasic
                     'remark' => '分享至朋友圈或好友群，成团速度更快哦~'
                 ], Url::build('wap/special/order_pink', ['pink_id' => $res1['id']], true, true));
             }
-           // print_r(self::getPinkPeople($order['pink_id'], $special['pink_number']));die;
             if ($people = self::getPinkPeople($order['pink_id'], $special['pink_number'])) {
 
                 $userInfo = User::where('uid', $order['uid'])->find();

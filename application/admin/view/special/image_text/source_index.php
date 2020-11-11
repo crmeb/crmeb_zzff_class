@@ -1,16 +1,6 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid">
-    <!--<div class="layui-tab layui-tab-brief" lay-filter="tab">
-        <ul class="layui-tab-title">
-            <li lay-id="list" {eq name='activity_type' value='1'}class="layui-this" {/eq} >
-            <a href="{eq name='activity_type' value='1'}javascript:;{else}{:Url('index',['activity_type'=>1, 'special_type'=>$special_type])}{/eq}">{$special_title}列表</a>
-            </li>
-            <li lay-id="list" {eq name='activity_type' value='2'}class="layui-this" {/eq}>
-            <a href="{eq name='activity_type' value='2'}javascript:;{else}{:Url('source_index',['activity_type'=>2, 'special_type'=>$special_type])}{/eq}">{$special_title}素材列表</a>
-            </li>
-        </ul>
-    </div>-->
     <div class="layui-row layui-col-space15"  id="app">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -75,7 +65,7 @@
                         <p>{{d.course_name}} {{# if(d.live_id){ }}<span class="layui-badge layui-bg-green">直播</span> {{# } }}</p>
                     </script>-->
                     <script type="text/html" id="image">
-                        <img style="cursor: pointer;width: 80px;" lay-event='open_image' src="{{d.image}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
                     </script>
                     <script type="text/html" id="is_show">
                         <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>

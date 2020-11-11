@@ -46,7 +46,6 @@ class StoreService extends ModelBasic
                 array_push($arr_to_user,$value["to_uid"]);
             }
             $uids = array_merge($arr_user,$arr_to_user);
-
             $list = WechatUser::field("uid,nickname,headimgurl")->where(array("uid"=>array(array("in",$uids),array("neq",$now_service["uid"]))))->select();
             foreach ($list as $index => $user) {
                 $service = self::field("uid,nickname,avatar as headimgurl")->where(array("uid"=>$user["uid"]))->find();

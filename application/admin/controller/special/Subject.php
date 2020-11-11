@@ -15,7 +15,6 @@ namespace app\admin\controller\special;
 use app\admin\model\special\SpecialSubject;
 use app\admin\model\special\Grade;
 use app\admin\model\special\Special;
-use service\JsonService;
 use think\Url;
 use service\FormBuilder as Form;
 use service\UtilService as Util;
@@ -124,12 +123,12 @@ class Subject extends AuthController
      */
     public function set_show($is_show = '', $id = '')
     {
-        ($is_show == '' || $id == '') && JsonService::fail('缺少参数');
+        ($is_show == '' || $id == '') && Json::fail('缺少参数');
         $res = SpecialSubject::where(['id' => $id])->update(['is_show' => (int)$is_show]);
         if ($res) {
-            return JsonService::successful($is_show == 1 ? '显示成功' : '隐藏成功');
+            return Json::successful($is_show == 1 ? '显示成功' : '隐藏成功');
         } else {
-            return JsonService::fail($is_show == 1 ? '显示失败' : '隐藏失败');
+            return Json::fail($is_show == 1 ? '显示失败' : '隐藏失败');
         }
     }
     /**

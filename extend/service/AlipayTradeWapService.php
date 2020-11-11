@@ -10,11 +10,13 @@
 //
 namespace service;
 
+use app\wap\model\activity\EventSignUp;
+use app\wap\model\store\StoreOrder;
+use service\HookService;
 use think\Log;
 use think\Request;
 use think\Url;
 use behavior\wechat\PaymentBehavior;
-use service\HookService;
 use service\SystemConfigService;
 
 
@@ -209,7 +211,21 @@ class AlipayTradeWapService
     public static function handleNotify()
     {
         self::init()->AliPayNotify(function ($data, $result) {
-            HookService::listen('wechat_pay_success', $data, null, true, PaymentBehavior::class);
+            if($result && isset($data->out_trade_no) && $data->passback_params) {
+                if (($count = strpos($data->out_trade_no, '_')) !== false) {
+                    $data->out_trade_no = substr($data->out_trade_no, $count + 1);
+                }
+                if($data->passback_params=='special') {
+                    StoreOrder::where('order_id', $data->out_trade_no)->where('type',0)->update(['trade_no' => $data->trade_no]);
+                }elseif ($data->passback_params=='signup'){
+                    EventSignUp::where('order_id', $data->out_trade_no)->update(['trade_no' => $data->trade_no]);
+                }elseif ($data->passback_params=='member'){
+                    StoreOrder::where('order_id', $data->out_trade_no)->where('type',1)->update(['trade_no' => $data->trade_no]);
+                }elseif ($data->passback_params=='goods'){
+                    StoreOrder::where('order_id', $data->out_trade_no)->where('type',2)->update(['trade_no' => $data->trade_no]);
+                }
+                HookService::listen('wechat_pay_success', $data, null, true, PaymentBehavior::class);
+            }
         });
     }
 

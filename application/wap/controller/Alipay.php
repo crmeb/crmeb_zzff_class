@@ -57,15 +57,6 @@ class Alipay extends WapBasic
     {
         $res = AlipayTradeWapService::init()->AliPayReturn();
         $result = $res['result'];
-        if (isset($res['get']['trade_no']) && isset($res['get']['out_trade_no']) && isset($res['get']['passback_params'])){
-            if($res['get']['passback_params']=='special') {
-                StoreOrder::where('order_id', $res['get']['out_trade_no'])->where('type',0)->update(['trade_no' => $res['get']['trade_no']]);
-            }elseif ($res['get']['passback_params']=='signup'){
-                EventSignUp::where('order_id', $res['get']['out_trade_no'])->update(['trade_no' => $res['get']['trade_no']]);
-            }elseif ($res['get']['passback_params']=='member'){
-                StoreOrder::where('order_id', $res['get']['out_trade_no'])->where('type',1)->update(['trade_no' => $res['get']['trade_no']]);
-            }
-        }
         if ($result) $is_pay = true;
         else $is_pay = false;
         $this->assign('is_pay', $is_pay);

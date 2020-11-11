@@ -58,8 +58,6 @@ class Reply extends AuthController
             ['key'],
             ['add', 0],
         ], $this->request);
-//        dump($where);
-//        exit();
         if (!empty($where['key'])) $replay = WechatReply::where('key', $where['key'])->find();
         $replay_arr = $replay->toArray();
         $replay_arr['code'] = 200;
@@ -170,8 +168,6 @@ class Reply extends AuthController
             ['status', 0],
             ['data', []],
         ], $request);
-//        dump($data);
-//        exit();
         if (!isset($data['key']) && empty($data['key']))
             return Json::fail('请输入关键字');
         if (isset($data['key']) && !empty($data['key'])) {

@@ -48,9 +48,7 @@ class SystemConfig extends AuthController
         } else {
             $config_tab = ConfigModel::getConfigTabAll($type);
         }
-
         if ($pid) {
-
             $children_config_tab = ConfigModel::getConfigChildrenTabAll($pid);
             foreach ($children_config_tab as $kk => $vv) {
                 $arr = ConfigModel::getAll($vv['id'])->toArray();
@@ -62,7 +60,6 @@ class SystemConfig extends AuthController
             //表单字段
             $list = ConfigModel::getAll($children_tab_id);
         } else {
-
             $children_config_tab = ConfigModel::getConfigChildrenTabAll($tab_id);
             foreach ($children_config_tab as $kk => $vv) {
                 $arr = ConfigModel::getAll($vv['id'])->toArray();
@@ -79,8 +76,6 @@ class SystemConfig extends AuthController
         $this->assign('tab_id', $tab_id);
         $this->assign('config_tab', $config_tab);
         $this->assign('children_config_tab', $children_config_tab);
-
-
         $formbuider = [];
         foreach ($list as $data) {
             switch ($data['type']) {
@@ -184,7 +179,6 @@ class SystemConfig extends AuthController
                     break;
             }
         }
-
         $form = Form::make_post_form('编辑配置', $formbuider, Url::build('save_basics'));
         $this->assign(compact('form'));
         $this->assign('list', $list);

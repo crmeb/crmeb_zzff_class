@@ -59,7 +59,7 @@
                         <input type='checkbox' name='live_goods_id' lay-skin='switch' value="{{d.live_goods_id}}" lay-filter='gis_show' lay-text='显示|隐藏'  {{ d.gis_show == 1 ? 'checked' : '' }}>
                     </script>
                     <script type="text/html" id="image">
-                        <img style="cursor: pointer;width: 80px;" lay-event='open_image' src="{{d.image}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
                     </script>
                     <script type="text/html" id="act">
                         <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>

@@ -14,11 +14,7 @@ namespace app\admin\controller\user;
 
 use app\admin\model\user\MemberCardBatch;
 use app\admin\model\user\MemberCard as MemberCardMode;
-use app\admin\model\user\UserVip as UserVipModel;
 use app\admin\controller\AuthController;
-use app\admin\model\user\SystemVip;
-use service\JsonService;
-use service\UtilService as Util;
 use service\JsonService as Json;
 use service\FormBuilder as Form;
 use service\UtilService;
@@ -91,10 +87,10 @@ class MemberCard extends AuthController
                 }
             }
             MemberCardBatch::commitTrans();
-            return JsonService::successful('添加成功');
+            return Json::successful('添加成功');
         }catch (\Exception $e) {
             MemberCardBatch::rollbackTrans();
-            return JsonService::fail('添加失败');
+            return Json::fail('添加失败');
         }
 
     }
@@ -110,10 +106,10 @@ class MemberCard extends AuthController
     {
 
         if ($field == "use_day" && $id) {
-            if (!$value || !is_numeric($value) || $value <= 0) return JsonService::fail('非法数值');
+            if (!$value || !is_numeric($value) || $value <= 0) return Json::fail('非法数值');
             $get_one = MemberCardMode::getCardOne(['card_batch_id' => $id, 'use_uid' => ['>',0]]);
             if ($get_one){
-                return JsonService::fail('此批次卡片已经在使用当中，无法进行此非法操作');
+                return Json::fail('此批次卡片已经在使用当中，无法进行此非法操作');
             }
         }
         return  set_field_value([$field => $value], ['id' => $id], $value, $model_type);
@@ -151,53 +147,5 @@ class MemberCard extends AuthController
         ]);
         $card_list = MemberCardMode::getCardList($where);
         return Json::successlayui($card_list);
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public function getUserVipList()
-    {
-        $where = Util::getMore([
-            ['page', 1],
-            ['limit', 20],
-            ['vip_id', ''],
-            ['status', ''],
-            ['is_forever', ''],
-            ['title', ''],
-        ]);
-        return Json::successlayui(UserVipModel::getUserVipList($where));
-    }
-
-    public function delete($id = '')
-    {
-        if ($id == '') return Json::fail('缺少参数');
-        $uservip = UserVipModel::get($id);
-        if (!$uservip) return Json::fail('删除会员信息不存在');
-        if ($uservip->is_del == 1) return Json::fail('改会员已删除');
-        $uservip->is_del = 1;
-        if ($uservip->save())
-            return Json::successful('删除成功');
-        else
-            return Json::fail('删除失败');
-    }
-
-    public function set_status($id = '', $status = '')
-    {
-        if ($id == '') return Json::fail('缺少参数');
-        $uservip = UserVipModel::get($id);
-        if (!$uservip) return Json::fail('会员信息不存在');
-        $uservip->status = $status;
-        if ($uservip->save())
-            return Json::successful($status == 1 ? '锁定成功' : '解锁成功');
-        else
-            return Json::fail($status == 1 ? '锁定失败' : '解锁失败');
     }
 }

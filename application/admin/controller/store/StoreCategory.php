@@ -14,7 +14,6 @@ namespace app\admin\controller\store;
 
 use app\admin\controller\AuthController;
 use service\FormBuilder as Form;
-use service\JsonService;
 use service\UtilService as Util;
 use service\JsonService as Json;
 use service\UploadService as Upload;
@@ -57,7 +56,7 @@ class StoreCategory extends AuthController
             ['limit', 20],
             ['order', '']
         ]);
-        return JsonService::successlayui(CategoryModel::CategoryList($where));
+        return Json::successlayui(CategoryModel::CategoryList($where));
     }
 
     /**
@@ -67,12 +66,12 @@ class StoreCategory extends AuthController
      */
     public function set_show($is_show = '', $id = '')
     {
-        ($is_show == '' || $id == '') && JsonService::fail('缺少参数');
+        ($is_show == '' || $id == '') && Json::fail('缺少参数');
         $res = CategoryModel::where(['id' => $id])->update(['is_show' => (int)$is_show]);
         if ($res) {
-            return JsonService::successful($is_show == 1 ? '显示成功' : '隐藏成功');
+            return Json::successful($is_show == 1 ? '显示成功' : '隐藏成功');
         } else {
-            return JsonService::fail($is_show == 1 ? '显示失败' : '隐藏失败');
+            return Json::fail($is_show == 1 ? '显示失败' : '隐藏失败');
         }
     }
 
@@ -83,11 +82,11 @@ class StoreCategory extends AuthController
      */
     public function set_category($field = '', $id = '', $value = '')
     {
-        $field == '' || $id == '' || $value == '' && JsonService::fail('缺少参数');
+        $field == '' || $id == '' || $value == '' && Json::fail('缺少参数');
         if (CategoryModel::where(['id' => $id])->update([$field => $value]))
-            return JsonService::successful('保存成功');
+            return Json::successful('保存成功');
         else
-            return JsonService::fail('保存失败');
+            return Json::fail('保存失败');
     }
 
     /**
@@ -128,7 +127,6 @@ class StoreCategory extends AuthController
         //产品图片上传记录
         $fileInfo = $res->fileInfo->getinfo();
         SystemAttachment::attachmentAdd($res->fileInfo->getSaveName(), $fileInfo['size'], $fileInfo['type'], $res->dir, $thumbPath, 1);
-
         if ($res->status == 200)
             return Json::successful('图片上传成功!', ['name' => $res->fileInfo->getSaveName(), 'url' => Upload::pathToUrl($thumbPath)]);
         else
@@ -173,7 +171,6 @@ class StoreCategory extends AuthController
         $form = Form::create(Url::build('update', array('id' => $id)), [
             Form::select('pid', '父级', (string)$c->getData('pid'))->setOptions(function () use ($id) {
                 $list = CategoryModel::getTierList(CategoryModel::where('id', '<>', $id));
-//                $list = (Util::sortListTier(CategoryModel::where('id','<>',$id)->select()->toArray(),'顶级','pid','cate_name'));
                 $menus = [['value' => 0, 'label' => '顶级菜单']];
                 foreach ($list as $menu) {
                     $menus[] = ['value' => $menu['id'], 'label' => $menu['html'] . $menu['cate_name']];

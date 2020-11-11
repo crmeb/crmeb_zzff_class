@@ -54,7 +54,7 @@
                         <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
                     </script>
                     <script type="text/html" id="avatar">
-                        <img style="cursor: pointer" lay-event='open_image' src="{{d.avatar}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.avatar}}">
                     </script>
                     <script type="text/html" id="act">
                         <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event='delete'>

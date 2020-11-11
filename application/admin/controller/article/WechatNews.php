@@ -68,7 +68,6 @@ class WechatNews extends AuthController
             $news = \app\admin\model\wechat\WechatNews::where('n.id',$id)->alias('n')->field('n.*,c.content')->join('__WECHAT_NEWS_CONTENT__ c','c.nid=n.id')->find();
             if(!$news) return $this->failedNotice('数据不存在!');
             $news['cid'] = explode(',',$news['cid']);
-//            dump($news);
         }
         $all = array();
         $select =  0;
@@ -142,8 +141,6 @@ class WechatNews extends AuthController
                 $res = true;
             else
                 $res =false;
-//            dump($res);
-//            exit();
             ArticleModel::checkTrans($res);
             if($res)
                 return Json::successful('修改图文成功!',$id);

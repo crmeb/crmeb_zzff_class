@@ -78,7 +78,6 @@ class SystemGroupData extends ModelBasic
             $data[$key]["id"] = $value["id"];
             $fields = json_decode($value["value"],true);
             foreach ($fields as $index => $field) {
-//                $data[$key][$index] = $field['type'] == 'upload' ? (isset($field["value"][0]) ? $field["value"][0]: ''):$field["value"];
                 $data[$key][$index] = $field["value"];
             }
         }
@@ -107,11 +106,15 @@ class SystemGroupData extends ModelBasic
      */
     public static function getDateValue($id){
         $value = self::alias('a')->where(array("id"=>$id))->find();
-        $data["id"] = $value["id"];
-        $fields = json_decode($value["value"],true);
-        foreach ($fields as $index => $field) {
-            $data[$index] = $field["value"];
+        if($value){
+            $data["id"] = $value["id"];
+            $fields = json_decode($value["value"],true);
+            foreach ($fields as $index => $field) {
+                $data[$index] = $field["value"];
+            }
+            return $data;
+        }else{
+            return [];
         }
-        return $data;
     }
 }

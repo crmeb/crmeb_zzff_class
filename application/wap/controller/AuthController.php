@@ -12,9 +12,7 @@
 
 namespace app\wap\controller;
 
-
 use app\admin\model\wechat\WechatQrcode;
-use app\routine\model\user\UserVip;
 use app\wap\model\store\StoreOrder;
 use app\wap\model\user\User;
 use app\wap\model\user\WechatUser;
@@ -27,6 +25,7 @@ use think\Cookie;
 use think\Session;
 use think\Url;
 use app\wap\model\user\MemberShip;
+
 class AuthController extends WapBasic
 {
     /**

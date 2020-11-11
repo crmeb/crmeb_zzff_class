@@ -84,7 +84,7 @@
     </div>`,
         data: function () {
             return {
-                payType: phone_ios ? 'zhifubao' : 'weixin',
+                payType: phone_ios ? 'zhifubao' : (this.iswechat ? 'weixin':'zhifubao'),
                 phoneIos: phone_ios,
             }
         },

@@ -10,10 +10,7 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
-
-
 namespace app\admin\model\user;
-
 
 use app\admin\model\live\LiveStudio;
 use app\admin\model\order\StoreOrder;
@@ -736,7 +733,7 @@ class User extends ModelBasic
         $balanceChang_count = UserBill::where(['uid' => $uid, 'category' => 'now_money'])
             ->where('type', 'in', ['system_add', 'pay_product', 'extract', 'pay_product_refund', 'system_sub'])
             ->count();
-        $coupon_count = StoreCouponUser::where(['uid' => $uid])->count();
+        $coupon_count =0;
         $spread_count = self::where(['spread_uid' => $uid])->count();
         $pay_count = self::getDb('special_buy')->where('uid', $uid)->where('is_del', 0)->count();
         return compact('order_count', 'integral_count', 'sign_count', 'balanceChang_count', 'coupon_count', 'spread_count', 'pay_count');

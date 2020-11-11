@@ -88,7 +88,7 @@
                         <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_recording' lay-text='是|否'  {{ d.is_recording == 1 ? 'checked' : '' }}>
                     </script>
                     <script type="text/html" id="image">
-                        <img style="cursor: pointer" lay-event='open_image' src="{{d.live_image}}">
+                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.live_image}}">
                     </script>
                     <script type="text/html" id="act">
                         <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>

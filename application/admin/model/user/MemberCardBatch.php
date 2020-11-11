@@ -91,7 +91,6 @@ class MemberCardBatch extends ModelBasic
     }
     public static function getBatchAll(array $where)
     {
-
         if (!$where || !is_array($where)) {
             $where = array();
         }

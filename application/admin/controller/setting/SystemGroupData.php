@@ -20,7 +20,6 @@ use app\admin\model\system\RecommendRelation;
 use app\admin\model\user\Group;
 use service\FormBuilder as Form;
 use service\JsonService as Json;
-use service\JsonService;
 use service\UploadService as Upload;
 use service\UtilService as Util;
 use think\Request;
@@ -154,7 +153,6 @@ class SystemGroupData extends AuthController
      */
     public function read($id)
     {
-        //
     }
 
     /**
@@ -485,8 +483,8 @@ class SystemGroupData extends AuthController
             ['page', ''],
             ['limit', ''],
         ]);
-        if ($where['id'] == '') return JsonService::fail('缺少参数');
-        return JsonService::successlayui(RecommendBanner::getRecemmodBannerList($where));
+        if ($where['id'] == '') return Json::fail('缺少参数');
+        return Json::successlayui(RecommendBanner::getRecemmodBannerList($where));
     }
 
     /*
@@ -514,18 +512,18 @@ class SystemGroupData extends AuthController
             ['is_show', 0],
             ['pic', ''],
         ]);
-        if ($id == '') return JsonService::fail('缺少参数');
-        if ($post['pic'] == '') return JsonService::fail('请上传封面图!');
+        if ($id == '') return Json::fail('缺少参数');
+        if ($post['pic'] == '') return Json::fail('请上传封面图!');
         if ($post['is_show'] == 'on') $post['is_show'] = 1;
         else $post['is_show'] = 0;
         $post['recommend_id'] = $id;
         if ($banner_id) {
             RecommendBanner::edit($post, $banner_id);
-            return JsonService::successful('修改成功');
+            return Json::successful('修改成功');
         } else {
             $post['add_time'] = time();
             RecommendBanner::set($post);
-            return JsonService::successful('保存成功');
+            return Json::successful('保存成功');
         }
     }
 
@@ -637,7 +635,7 @@ class SystemGroupData extends AuthController
             }
         }
         $count = $model->count();
-        return JsonService::successlayui(compact('data', 'count'));
+        return Json::successlayui(compact('data', 'count'));
     }
 
     /**
@@ -649,14 +647,14 @@ class SystemGroupData extends AuthController
     public function set_group_data($field = '', $id = 0, $value = '')
     {
         if ('id' == $field) {
-            return JsonService::fail('修改失败,主键不允许修改');
+            return Json::fail('修改失败,主键不允许修改');
         }
         if (!$field && !$value) {
-            return JsonService::fail('缺少修改参数');
+            return Json::fail('缺少修改参数');
         }
         $info = GroupDataModel::where('id', $id)->find();
         if (!$info) {
-            return JsonService::fail('修改的信息不存在');
+            return Json::fail('修改的信息不存在');
         }
         if (in_array($field, ['sort', 'status'])) {
             $info->{$field} = $value;
@@ -668,9 +666,9 @@ class SystemGroupData extends AuthController
             $res = $info->save();
         }
         if ($res) {
-            return JsonService::successful('修改成功');
+            return Json::successful('修改成功');
         } else {
-            return JsonService::fail('修改失败');
+            return Json::fail('修改失败');
         }
     }
 
@@ -718,20 +716,20 @@ class SystemGroupData extends AuthController
         $gid = GroupModel::where(['config_name' => $name])->value('id');
         if (!isset($data['id']) || !$data['id']) {
             if (GroupDataModel::where('gid', $gid)->count() >= 3) {
-                return JsonService::fail('最多能添加3条信息');
+                return Json::fail('最多能添加3条信息');
             }
         }
         if (!$data['title']) {
-            return JsonService::fail('请输入标题');
+            return Json::fail('请输入标题');
         }
         if (!$data['image']) {
-            return JsonService::fail('请选择图片');
+            return Json::fail('请选择图片');
         }
         if (!$data['info']) {
-            return JsonService::fail('请输入简介');
+            return Json::fail('请输入简介');
         }
         if (!$data['select_id']) {
-            return JsonService::fail('请选择' . ($data['type'] ? '分类' : "专题"));
+            return Json::fail('请选择' . ($data['type'] ? '分类' : "专题"));
         }
         $info = '{"pic":{"type":"upload","value":""},"title":{"type":"input","value":""},"info":{"type":"input","value":""},"wap_link":{"type":"select","value":""}}';
         $info = json_decode($info, true);
@@ -763,11 +761,10 @@ class SystemGroupData extends AuthController
                 'status' => $data['status'],
             ]);
         }
-
         if ($res) {
-            return JsonService::successful('编辑成功');
+            return Json::successful('编辑成功');
         } else {
-            return JsonService::fail('编辑失败');
+            return Json::fail('编辑失败');
         }
     }
 }

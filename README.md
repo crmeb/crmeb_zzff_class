@@ -48,6 +48,8 @@ CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatA
 
 ###  论坛地址
 http://bbs.crmeb.net
+###  联系客服
+![联系客服](/readme/images/kefu.jpg)
 ###  前台演示
 ![前端演示](/readme/images/扫码关注.jpg)
 ### 后端演示:[ 查看 ]

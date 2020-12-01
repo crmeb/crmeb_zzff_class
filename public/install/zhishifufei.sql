@@ -56,7 +56,7 @@ CREATE TABLE `eb_article_category` (
 
 CREATE TABLE `eb_article_content` (
   `nid` int(10) UNSIGNED NOT NULL COMMENT '文章id',
-  `content` text  COMMENT '文章内容'
+  `content` text  DEFAULT NULL COMMENT '文章内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章内容表';
 
 
@@ -68,7 +68,7 @@ CREATE TABLE `eb_article_content` (
 
 CREATE TABLE `eb_cache` (
   `key` varchar(32) NOT NULL,
-  `result` text COMMENT '缓存数据',
+  `result` text DEFAULT NULL COMMENT '缓存数据',
   `add_time` int(10) DEFAULT '0' COMMENT '缓存时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='记录缓存';
 

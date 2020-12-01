@@ -1567,7 +1567,7 @@ CREATE TABLE `eb_store_pink` (
   `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户id',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '拼团产品类型0=商品,1=专题',
   `order_id` varchar(32) NOT NULL DEFAULT '' COMMENT '订单id 生成',
-  `order_id_key` int(10) UNSIGNED NOT NULL DEFAULT '' COMMENT '订单id  数据库',
+  `order_id_key` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单id  数据库',
   `total_num` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '购买商品个数',
   `total_price` decimal(10,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '购买总金额',
   `cid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '拼团产品id',

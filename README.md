@@ -71,17 +71,25 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ![](/readme/images/界面2.jpg)
 
 ![](/readme/images/界面3.jpg)
-![](/readme/images/后台1.jpg)
+![](/readme/images/后台1.png)
 
-![](/readme/images/后台2.jpg)
-![](/readme/images/后台3.jpg)
+![](/readme/images/后台2.png)
+![](/readme/images/后台3.png)
 
-![](/readme/images/后台4.jpg)
-![](/readme/images/后台5.jpg)
+![](/readme/images/后台4.png)
+![](/readme/images/后台5.png)
 
-![](/readme/images/后台6.jpg)
-![](/readme/images/后台7.jpg)
-![](/readme/images/后台8.jpg)
+![](/readme/images/后台6.png)
+![](/readme/images/后台7.png)
+![](/readme/images/后台8.png)
+
+![](/readme/images/后台9.png)
+![](/readme/images/后台10.png)
+![](/readme/images/后台11.png)
+
+![](/readme/images/后台12.png)
+![](/readme/images/后台13.png)
+![](/readme/images/后台14.png)
 #### 商业版与 VS 开源版差异
 ![](/readme/images/开源_付费对比.jpg)
 ####  官方交流群

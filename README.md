@@ -59,6 +59,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ![](/readme/images/admin2.png)        
 ![](/readme/images/admin3.png)        
 ![](/readme/images/admin4.png)        
+![](/readme/images/admin5.png)        
 ###  前端功能清单
 ![](/readme/images/home1.png)<br>
 ![](/readme/images/home2.png)<br>
@@ -67,6 +68,7 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 ###  前后端界面展示
 ![](/readme/images/界面1.jpg)
 ![](/readme/images/界面2.jpg)
+![](/readme/images/界面4.jpg)
 
 ![](/readme/images/界面3.jpg)
 ![](/readme/images/后台1.jpg)

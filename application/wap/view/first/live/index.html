@@ -76,8 +76,6 @@
         <div class="nav">
             <div :class="{ active: navActive === 0 }" class="item" @click="navActive = 0">聊天</div>
             <div :class="{ active: navActive === 1 }" class="item" @click="navActive = 1">课堂</div>
-            <!--<div :class="{ active: navActive === 2 }" class="item" @click="navActive = 2">推荐</div>
-            <div :class="{ active: navActive === 3 }" class="item" @click="navActive = 3">排行</div>-->
         </div>
         <div class="main">
             <!-- 聊天 -->
@@ -911,6 +909,7 @@
                         }
                     }, 1000);
                     that.content = '';
+                    socket.sendOut();
                     socket.ws.send('{"room":' + this.liveInfo.id + ',"content":"' + content + '","ms_type":"' + type + '","type":"send"}');
                 },
                 KeyboardStatus: function () {

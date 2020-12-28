@@ -2,6 +2,7 @@
     var socketDebug = window.socketDebug == undefined ? false : window.socketDebug, port = window.workermanConfig === undefined ? '20005' : window.workermanConfig.port;
     window.uid = window.uids === undefined ? 0 : window.uids;
     window.room = window.room === undefined ? 0 : window.room;
+    var send=0;
     var socket = {
         ws: null,
         connect: function () {
@@ -25,10 +26,20 @@
         sendMsg: function (content, type, id) {
             socket.ws.send("{content:'" + content + "',m_type:'" + type + "',room:" + id + ",type:'send',uid:" + window.uid + "}")
         },
+        reconnection:function(){
+            setTimeout(function () {
+                if(send){socket.ws.close();}
+            }, 3000);
+        },
+        sendOut:function(){
+            send=1;
+            socket.reconnection();
+        },
         onmessage: function (e) {
             try {
                 var data = JSON.parse(e.data);
-                socketDebug && console.log(data)
+                if(data){send=0;}
+                socketDebug && console.log(data);
                 switch (data.type) {
                     case 'init':
                         break;

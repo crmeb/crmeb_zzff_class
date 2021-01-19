@@ -2653,40 +2653,40 @@ INSERT INTO `eb_system_role` (`id`, `role_name`, `sign`, `rules`, `level`, `stat
 -- 表的结构 `eb_user`
 --
 
-CREATE TABLE `eb_user` (
-  `uid` int(10) UNSIGNED NOT NULL COMMENT '用户id',
-  `account` varchar(32) NOT NULL DEFAULT '' COMMENT '用户账号',
-  `pwd` varchar(32) NOT NULL DEFAULT '' COMMENT '用户密码',
+CREATE TABLE `eb_user`(
+  `uid` int(10) unsigned NOT NULL COMMENT '用户id',
+  `account` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户账号',
+  `pwd` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户密码',
   `nickname` varchar(16) NOT NULL DEFAULT '' COMMENT '用户昵称',
   `avatar` varchar(256) NOT NULL DEFAULT '' COMMENT '用户头像',
-  `name` varchar(255) DEFAULT NULL COMMENT '姓名',
-  `phone` char(15) NOT NULL DEFAULT '0' COMMENT '手机号码',
+  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '姓名',
+  `phone` char(15) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '手机号码',
   `grade_id` int(11) NOT NULL DEFAULT '0' COMMENT '年级id',
-  `full_name` varchar(35) NOT NULL DEFAULT '' COMMENT '真实姓名',
-  `bank_card` varchar(50) NOT NULL DEFAULT '' COMMENT '银行卡号码',
-  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间',
-  `add_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '添加ip',
-  `last_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '最后一次登录时间',
-  `last_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '最后一次登录ip',
-  `now_money` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '用户余额',
-  `gold_num` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '虚拟币余额',
+  `full_name` varchar(35) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `bank_card` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '银行卡号码',
+  `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `add_ip` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '添加ip',
+  `last_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '最后一次登录时间',
+  `last_ip` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '最后一次登录ip',
+  `now_money` decimal(8,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '用户余额',
+  `gold_num` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '虚拟币余额',
   `brokerage_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '可提现金额',
-  `integral` decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '用户剩余积分',
+  `integral` decimal(8,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '用户剩余积分',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1为正常，0为禁止',
-  `level` tinyint(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '等级',
-  `spread_uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '推广元id',
+  `level` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '等级',
+  `spread_uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '推广元id',
   `spread_time` int(11) NOT NULL DEFAULT '0',
   `valid_time` int(11) NOT NULL DEFAULT '0' COMMENT '客户关系解除时间',
-  `user_type` varchar(32) NOT NULL DEFAULT '' COMMENT '用户类型',
-  `is_promoter` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否为推广员',
-  `pay_count` int(11) UNSIGNED DEFAULT '0' COMMENT '用户购买次数',
+  `user_type` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户类型',
+  `is_promoter` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为推广员',
+  `pay_count` int(11) unsigned DEFAULT '0' COMMENT '用户购买次数',
   `is_binding` int(11) NOT NULL DEFAULT '0',
   `is_senior` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为高级推广人',
   `is_h5user` tinyint(1) DEFAULT '0' COMMENT '是否为H5虚拟用户',
   `is_permanent` tinyint(2) DEFAULT '0' COMMENT '会员是否永久',
-  `overdue_time` int(11) UNSIGNED DEFAULT '0' COMMENT '会员过期时间',
-  `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+  `overdue_time` int(11) unsigned DEFAULT '0' COMMENT '会员过期时间',
+  `client_id` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT '0' COMMENT 'client_id'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- --------------------------------------------------------
 
@@ -2982,33 +2982,33 @@ INSERT INTO `eb_wechat_template` (`id`, `tempkey`, `name`, `content`, `tempid`, 
 -- 表的结构 `eb_wechat_user`
 --
 
-CREATE TABLE `eb_wechat_user` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '微信用户id',
-  `unionid` varchar(30) DEFAULT NULL COMMENT '只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段',
-  `openid` varchar(30) DEFAULT NULL COMMENT '用户的标识，对当前公众号唯一',
-  `routine_openid` varchar(32) DEFAULT NULL COMMENT '小程序唯一身份ID',
+CREATE TABLE `eb_wechat_user`(
+  `id` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '微信用户id',
+  `unionid` varchar(30) CHARACTER SET utf8 DEFAULT NULL COMMENT '只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段',
+  `openid` varchar(30) CHARACTER SET utf8 DEFAULT NULL COMMENT '用户的标识，对当前公众号唯一',
+  `routine_openid` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '小程序唯一身份ID',
   `nickname` varchar(64) NOT NULL DEFAULT '' COMMENT '用户的昵称',
   `headimgurl` varchar(256) NOT NULL DEFAULT '' COMMENT '用户头像',
-  `sex` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户的性别，值为1时是男性，值为2时是女性，值为0时是未知',
-  `city` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在城市',
-  `language` varchar(64) NOT NULL DEFAULT '' COMMENT '用户的语言，简体中文为zh_CN',
-  `province` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在省份',
-  `country` varchar(64) NOT NULL DEFAULT '' COMMENT '用户所在国家',
-  `remark` varchar(256) DEFAULT NULL COMMENT '公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注',
-  `groupid` smallint(5) UNSIGNED DEFAULT '0' COMMENT '用户所在的分组ID（兼容旧的用户分组接口）',
-  `tagid_list` varchar(256) DEFAULT NULL COMMENT '用户被打上的标签ID列表',
-  `subscribe` tinyint(3) UNSIGNED DEFAULT '1' COMMENT '用户是否订阅该公众号标识',
-  `subscribe_time` int(10) UNSIGNED DEFAULT NULL COMMENT '关注公众号时间',
-  `add_time` int(10) UNSIGNED DEFAULT NULL COMMENT '添加时间',
-  `stair` int(11) UNSIGNED DEFAULT NULL COMMENT '一级推荐人',
-  `second` int(11) UNSIGNED DEFAULT NULL COMMENT '二级推荐人',
+  `sex` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '用户的性别，值为1时是男性，值为2时是女性，值为0时是未知',
+  `city` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户所在城市',
+  `language` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户的语言，简体中文为zh_CN',
+  `province` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户所在省份',
+  `country` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '用户所在国家',
+  `remark` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注',
+  `groupid` smallint(5) unsigned DEFAULT '0' COMMENT '用户所在的分组ID（兼容旧的用户分组接口）',
+  `tagid_list` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '用户被打上的标签ID列表',
+  `subscribe` tinyint(3) unsigned DEFAULT '1' COMMENT '用户是否订阅该公众号标识',
+  `subscribe_time` int(10) unsigned DEFAULT NULL COMMENT '关注公众号时间',
+  `add_time` int(10) unsigned DEFAULT NULL COMMENT '添加时间',
+  `stair` int(11) unsigned DEFAULT NULL COMMENT '一级推荐人',
+  `second` int(11) unsigned DEFAULT NULL COMMENT '二级推荐人',
   `order_stair` int(11) DEFAULT NULL COMMENT '一级推荐人订单',
-  `order_second` int(11) UNSIGNED DEFAULT NULL COMMENT '二级推荐人订单',
-  `now_money` int(11) UNSIGNED DEFAULT NULL COMMENT '佣金',
-  `session_key` varchar(32) DEFAULT NULL COMMENT '小程序用户会话密匙',
-  `user_type` varchar(32) DEFAULT 'wechat' COMMENT '用户类型'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信用户表';
+  `order_second` int(11) unsigned DEFAULT NULL COMMENT '二级推荐人订单',
+  `now_money` int(11) unsigned DEFAULT NULL COMMENT '佣金',
+  `session_key` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '小程序用户会话密匙',
+  `user_type` varchar(32) CHARACTER SET utf8 DEFAULT 'wechat' COMMENT '用户类型'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='微信用户表';
 -- --------------------------------------------------------
 
 --

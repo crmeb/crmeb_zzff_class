@@ -57,7 +57,7 @@ return [
     // +----------------------------------------------------------------------
 
     // 默认模块名
-    'default_module' => 'admin',
+    'default_module' => 'wap',
     // 禁止访问模块
     'deny_module_list' => ['common'],
     // 默认控制器名
@@ -143,14 +143,6 @@ return [
 
     // 视图输出字符串内容替换
     'view_replace_str' => [
-        // '{__ADMIN_PATH}'=>PUBILC_PATH.'/system/',
-        // '{__FRAME_PATH}'=>PUBILC_PATH.'/system/frame/',
-        // '{__PLUG_PATH}'=>PUBILC_PATH.'/static/plug/',
-        // '{__MODULE_PATH}'=>PUBILC_PATH.'/system/module/',
-        // '{__STATIC_PATH}'=>PUBILC_PATH.'/static/',
-        // '{__PUBLIC_PATH}'=>PUBILC_PATH.'/',
-        // '{__WAP_PATH}'=>PUBILC_PATH.'/wap/first/',
-        // '{__PC_PATH}'=>'/public/pc/',
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl' => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',

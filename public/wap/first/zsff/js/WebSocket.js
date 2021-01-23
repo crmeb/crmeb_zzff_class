@@ -92,16 +92,10 @@
                     socket.ws.send("{'type':'ping'}");
                 }, this.timeout);
             },
-            /* countRoomUser: function(){
-                 var con = '{"type":"room_user_count","uid":'+window.uid+',"room":'+window.room+'}';
-                 socket.ws.send(con);
-             }*/
         },
     };
 
-    // window.onload=function () {
     socket.connect();
-    //};
 
     global.socket = socket;
 

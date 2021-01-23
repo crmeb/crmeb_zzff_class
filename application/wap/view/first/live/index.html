@@ -250,6 +250,7 @@
         </div>
     </div>
 </div>
+<script charset="utf-8" type="text/javascript" src="{__WAP_PATH}zsff/js/WebSocket.js"></script>
 <script>
     var liveInfo = {$liveInfo},
     PullUrl = '{$PullUrl? $PullUrl: ""}',
@@ -514,7 +515,7 @@
                                     console.log(res);
                                     if (res.code == 200) {
                                         that.isAnimate = true;
-                                        socket.ws.send('{"room":' + that.liveInfo.id + ',"content":"' + res.data.url + '","ms_type":"2","type":"send"}');
+                                        socket.ws.send('{"room":' + that.liveInfo.id + ',"uid":' + window.uids + ',"content":"' + res.data.url + '","ms_type":"2","type":"send"}');
                                     } else {
                                         that.msg(res.msg);
                                     }
@@ -698,12 +699,12 @@
                             }
                             that.OpenCommentList.unshift(value);
                         });
-                        that.$nextTick(function () {
+                        setTimeout(function () {
                             if (that.Opage++ == 1) {
                                 that.countRoomUser();
                                 that.isDown = true;
                             }
-                        });
+                        }, 1500);
                         that.Oloadend = res.length < that.Olimit;
                     }, function (res) {
                         that.Oloading = false;
@@ -910,7 +911,7 @@
                     }, 1000);
                     that.content = '';
                     socket.sendOut();
-                    socket.ws.send('{"room":' + this.liveInfo.id + ',"content":"' + content + '","ms_type":"' + type + '","type":"send"}');
+                    socket.ws.send('{"room":' + this.liveInfo.id + ',"uid":' + window.uids + ',"content":"' + content + '","ms_type":"' + type + '","type":"send"}');
                 },
                 KeyboardStatus: function () {
                     var winHeight = $(window).height(), that = this, interval = null, bfscrolltop = document.body.scrollTop;;   //获取当前页面高度
@@ -1186,7 +1187,4 @@
         });
     });
 </script>
-{/block}
-{block name="foot"}
-<script charset="utf-8" type="text/javascript" src="{__WAP_PATH}zsff/js/WebSocket.js"></script>
 {/block}

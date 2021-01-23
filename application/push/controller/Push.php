@@ -110,7 +110,10 @@ class Push
         $this->message_data = $message_data;
 
         $this->client_id = $client_id;
-
+        $uid=$this->checkValue('uid');
+        if($uid){
+            Gateway::bindUid($client_id, $uid);
+        }
         $this->uid = Gateway::getUidByClientId($client_id);
         //记录用户上线
         if ($this->uid && Gateway::isOnline($client_id) && ($live_id = $this->checkValue('room'))) {

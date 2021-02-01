@@ -1,13 +1,13 @@
 <?php
 // +----------------------------------------------------------------------
-// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2016~2020 https://www.crmeb.com All rights reserved.
+// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
-// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
-// | Author: CRMEB Team <admin@crmeb.com>
-//
+// | Author: liu21st <liu21st@gmail.com>
+// +----------------------------------------------------------------------
 
 return [
     // 数据库类型
@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => 'localhost',
     // 数据库名
-    'database'        => 'open_crmeb',
+    'database'        => 'kaiyuan',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'kaiyuan',
     // 密码
-    'password'        => 'root',
+    'password'        => 'kaiyuan',
 
     // 端口
     'hostport'        => '3306',

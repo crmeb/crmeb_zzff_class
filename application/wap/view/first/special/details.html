@@ -737,8 +737,13 @@
                         if(that.special.type == 4){
                             window.location.href = $h.U({c:'live',a:'index',q:{stream_name:item.stream_name, special_id:item.special_id, live_id:item.live_id}});
                         }else{
-                            app.baseGet($h.U({c:'special',a:'play_num',q:{task_id:item.id, special_id:item.special_id}}));
-                            location.href = $h.U({c:"special",a:"task_info",q:{id:item.id,specialId:item.special_id}});
+                            app.baseGet($h.U({ c: 'special', a: 'play_num', q: { task_id: item.id, special_id: item.special_id } }),function (res) {
+                                if(res.data.code==200){
+                                    window.location.href = $h.U({c:"special",a:"task_info",q:{id:item.id,specialId:item.special_id}});
+                                }else{
+                                    return $h.showMsg('更新数据有误！');
+                                }
+                            });
                         }
                     },function (err) {
                         return $h.pushMsgOnce(err);
@@ -753,13 +758,8 @@
                         }else{
                             that.otherLoading == false && that.getCourseList();
                         }
-
                     },false);
                 },
-               /* //获取参加拼团跳转链接
-                getAttendUrl:function(pink_id,special_id){
-                    return $h.U({c:'special',a:'details',q:{id:special_id,pinkId:pink_id}})+'#partake';
-                },*/
                 //收藏和取消收藏
                 collect:function(){
                     app.baseGet($h.U({c:'special',a:'collect',q:{id:this.special.id}}),function (res) {

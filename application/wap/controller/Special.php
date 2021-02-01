@@ -277,14 +277,13 @@ class Special extends AuthController
                 if ($special_source) {
                     SpecialSource::where(['special_id' => $special_id, 'source_id' => $task_id])->setInc('play_count',1);
                 }
-                return JsonService::successful();
+                return JsonService::successful('ok');
             }else {
-                return JsonService::fail();
+                return JsonService::fail('err');
             }
         }catch (\Exception $e) {
-            return JsonService::fail();
+            return JsonService::fail('err');
         }
-
     }
 
     /**
@@ -682,9 +681,6 @@ class Special extends AuthController
             return $this->failed('该课程已经下架');
         }
         $isPay = SpecialBuy::PaySpecial($specialId, $this->uid);
-        if ($isPay === false && $special->money <= 0 && !$special->is_pink) {
-            $isPay = true;
-        }
 
         $special_content = SpecialContent::where('special_id',$specialId)->value("content");
         if ($play_content == 2) {
@@ -702,7 +698,23 @@ class Special extends AuthController
         }
         $user_level = !$this->uid ? 0 : User::getUserInfo($this->uid);
         $taskInfo->content =  $content;
-        $this->assign('taskInfo', json_encode($taskInfo->toArray()));
+
+        if ($isPay || $special->pay_type == 0 || ($user_level['level'] > 0 && $special->member_pay_type == 0)) {
+            $isPay = true;
+        }else{
+            $special_source = SpecialSource::where(['special_id' => $specialId,'source_id' => $id, 'pay_status' => 0])->find();
+            if (!$special_source) {
+                return $this->failed('您选择的素材不存在',Url::build('special/details',array('id'=>$specialId)));
+            }else{
+                $special_source = $special_source->toArray();
+                $taskInfo = SpecialTask::defaultWhere()->order('sort DESC')->where('id', $special_source['source_id'])->find();
+                if(!$taskInfo){
+                    return $this->failed('您选择的素材不存在',Url::build('special/details',array('id'=>$specialId)));
+                }
+                $taskInfo->content =  $content;
+            }
+        }
+        $this->assign('taskInfo', json_encode($taskInfo ? $taskInfo->toArray() : []));
         $this->assign('is_member', isset($user_level['level']) ? $user_level['level'] : 0);
         $this->assign('specialId', (int)$specialId);
         $this->assign('specialInfo', json_encode($special->toArray()));

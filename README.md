@@ -38,66 +38,80 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
  | [服务器](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z)
  | [授权价格](https://www.crmeb.com)
 
-### 推荐项目
+### 技术选型
+#### 后端技术
+|  技术   | 说明 | 官网 |
+|  :----:  | :----:  | :----:|
+| ThinkPHP5  | 项目框架| https://www.kancloud.cn/manual/thinkphp5/118003 |
+| Redis  | 分布式缓存| https://redis.io/ |
+| OSS  | 对象存储| https://help.aliyun.com/product/31815.html?spm=a2c4g.750001.list.20.68857b130IiER4 |
+| WorkerMan  | 开源高性能异步PHP socket框架| http://doc2.workerman.net/ |
+| EasyWeChat  | 开源的 微信 非官方 SDK| https://www.easywechat.com/docs |
+| git  | 分布式版本控制系统| https://www.runoob.com/git/git-tutorial.html |
 
-CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search
+#### 前端技术
+|  技术   | 说明 | 官网 |
+|  :----:  | :----:  | :----:|
+| Vue  | 前端框架| https://vuejs.org/ |
+| Axios  | 	前端HTTP框架| https://github.com/axios/axios |
+| layui  | UI 框架| https://www.layui.com/doc/ |
+| echarts  | UI 框架| https://echarts.apache.org |
+### 功能
+#### 后端功能清单
+* [功能清单图-【课程 讲师】.png](/readme/images/admin1.png)
+* [功能清单图-【直播 商品 订单 新闻 用户】.png](/readme/images/admin2.png)
+* [功能清单图-【分销 营销 财务】.png](/readme/images/admin3.png)
+* [功能清单图-【公众号】.png](/readme/images/admin4.png)
+* [功能清单图-【设置】.png](/readme/images/admin5.png)
 
-CRMEB商城JAVA版：https://gitee.com/ZhongBangKeJi/crmeb_java
+#### 前端功能清单
+* [功能清单图-【课程】.png](/readme/images/home1.png)
+* [功能清单图-【商品 直播】.png](/readme/images/home2.png)
+* [功能清单图-【分销 会员 营销 支付 客服】.png](/readme/images/home3.png)
+* [功能清单图-【新闻 账户 通知】.png](/readme/images/home4.png)
 
-CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatApplet
+#### 后端界面展示
+* [界面展示图-分类.png](/readme/images/后台1.png)
+* [界面展示图-课程.png](/readme/images/后台2.png)
+* [界面展示图-讲师.png](/readme/images/后台3.png)
+* [界面展示图-商品.png](/readme/images/后台4.png)
+* [界面展示图-直播.png](/readme/images/后台5.png)
+* [界面展示图-礼物打赏.png](/readme/images/后台8.png)
+* [界面展示图-订单.png](/readme/images/后台6.png)
+* [界面展示图-新闻.png](/readme/images/后台9.png)
+* [界面展示图-用户.png](/readme/images/后台10.png)
+* [界面展示图-会员.png](/readme/images/后台11.png)
+* [界面展示图-分销.png](/readme/images/后台12.png)
+* [界面展示图-营销.png](/readme/images/后台13.png)
+* [界面展示图-线下活动.png](/readme/images/后台14.png)
 
-###  论坛地址
-http://bbs.crmeb.net
+#### 前端界面展示
+* [界面展示图-【主页 课程分类 个人中心 拼团 赠送 活动】.png](/readme/images/界面1.jpg)
+* [界面展示图-【直播 打赏 充值 会员】.png](/readme/images/界面2.jpg)
+* [界面展示图-【分销 推广 海报】.png](/readme/images/界面3.jpg)
+* [界面展示图-【讲师】.png](/readme/images/界面4.jpg)
+
+### 项目演示
+####  前台演示
+![前端演示](/readme/images/扫码关注.jpg)
+#### 后端演示:[ 查看 ]
+* http://zhishifufei.crmeb.net/index.php/admi
+* 账号：demo    密码：crmeb.com
+
+### 商业版与 VS 开源版差异
+![](/readme/images/开源_付费对比.jpg)
+
+###  论坛地址 http://bbs.crmeb.net
+
 ###  联系客服
 ![联系客服](/readme/images/kefu.jpg)
-###  前台演示
-![前端演示](/readme/images/扫码关注.jpg)
-### 后端演示:[ 查看 ]
-http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
-###  后台功能清单
-![](/readme/images/admin1.png)        
-![](/readme/images/admin2.png)        
-![](/readme/images/admin3.png)        
-![](/readme/images/admin4.png)        
-![](/readme/images/admin5.png)        
-###  前端功能清单
-![](/readme/images/home1.png)<br>
-![](/readme/images/home2.png)<br>
-![](/readme/images/home3.png)<br>
-![](/readme/images/home4.png)<br>
-###  前后端界面展示
-![](/readme/images/界面1.jpg)
-![](/readme/images/界面4.jpeg)
-![](/readme/images/界面2.jpg)
 
-![](/readme/images/界面3.jpg)
-![](/readme/images/后台1.png)
 
-![](/readme/images/后台2.png)
-![](/readme/images/后台3.png)
+###  官方交流群
+| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
+| :----:| :----: |
+| 如果群已经加满或失效请加我的企业微信 | 企业微信 |
 
-![](/readme/images/后台4.png)
-![](/readme/images/后台5.png)
-
-![](/readme/images/后台6.png)
-![](/readme/images/后台7.png)
-![](/readme/images/后台8.png)
-
-![](/readme/images/后台9.png)
-![](/readme/images/后台10.png)
-![](/readme/images/后台11.png)
-
-![](/readme/images/后台12.png)
-![](/readme/images/后台13.png)
-![](/readme/images/后台14.png)
-#### 商业版与 VS 开源版差异
-![](/readme/images/开源_付费对比.jpg)
-####  官方交流群
-<img src="/readme/images/0201.png"  height="220" width="200">
-
-如果群已经加满或失效请加我的企业微信
-
-<img src="/readme/images/456.png"  height="200" width="200">
 
 #### 吐槽、意见或需求反馈请戳下方链接   
 [<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
@@ -108,6 +122,13 @@ http://zhishifufei.crmeb.net/index.php/admin 账号：demo    密码：crmeb.com
 
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
+### 推荐项目
+
+CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search
+
+CRMEB商城JAVA版：https://gitee.com/ZhongBangKeJi/crmeb_java
+
+CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatApplet
 ### CRMEB推荐阿里云服务器配置
 1.阿里云短信配置
 

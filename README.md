@@ -52,15 +52,21 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 | 如果群已经加满或失效请加企业微信 | 企业微信 |
 
 ###  项目文档
-* [功能列表](http://help.crmeb.net/crmeb_zsff/1809860)
 
-* [安装视频](http://help.crmeb.net/crmeb_zsff/1882897)
-
-* [安装文档](http://help.crmeb.net/crmeb_zsff/1514719)
-
-* [使用文档](http://help.crmeb.net/crmeb_zsff/1514738)
-
-* [数据字典](http://help.crmeb.net/crmeb_zsff/1748508)
+ <table>
+    <tr>
+        <td><a href="http://help.crmeb.net/crmeb_zsff/1809860">功能列表</a></td>
+        <td><a href="http://help.crmeb.net/crmeb_zsff/1882897">安装视频</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://help.crmeb.net/crmeb_zsff/1514719">安装文档</a></td>
+        <td><a href="http://help.crmeb.net/crmeb_zsff/1514738">使用文档</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://help.crmeb.net/crmeb_zsff/1748508">数据字典</a></td>
+        <td></td>
+    </tr>
+ </table>
 
 ### 运行环境
 * PHP  7.1 
@@ -95,6 +101,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 | echarts  | UI 框架| https://echarts.apache.org |
 
 ### 开发工具
+
 |  工具   | 版本号 | 下载 |
 |  :----:  | :----:  | :----:|
 | 宝塔  | 7.x | https://www.bt.cn/?invite_code=MV90c2l1cmY= |

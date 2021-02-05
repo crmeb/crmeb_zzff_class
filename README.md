@@ -53,7 +53,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ###  项目文档
 
- <table width="400">
+ <table>
     <tr>
         <td><a href="http://help.crmeb.net/crmeb_zsff/1809860">功能列表</a></td>
         <td><a href="http://help.crmeb.net/crmeb_zsff/1882897">安装视频</a></td>

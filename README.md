@@ -38,6 +38,43 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
  | [服务器](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=dligum2z)
  | [授权价格](https://www.crmeb.com)
 
+### 项目演示
+####  前台演示:
+![前端演示](/readme/images/扫码关注.jpg)
+#### 后端演示:
+* 地址：http://zhishifufei.crmeb.net/index.php/admi
+* 账号：demo    
+* 密码：crmeb.com
+
+###  技术交流
+| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
+| :----:| :----: |
+| 如果群已经加满或失效请加企业微信 | 企业微信 |
+
+###  项目文档
+* [功能列表](http://help.crmeb.net/crmeb_zsff/1809860)
+
+* [安装视频](http://help.crmeb.net/crmeb_zsff/1882897)
+
+* [安装文档](http://help.crmeb.net/crmeb_zsff/1514719)
+
+* [使用文档](http://help.crmeb.net/crmeb_zsff/1514738)
+
+* [数据字典](http://help.crmeb.net/crmeb_zsff/1748508)
+
+### 运行环境
+* PHP  7.1 
+
+* MYSQL  5.7
+
+* PDO PHP Extension 
+
+* MBstring PHP Extension 
+
+* CURL PHP Extension 
+
+* Mylsqi PHP Extension
+需要开启端口: 20005 20014 20015 端口
 ### 技术选型
 #### 后端技术
 |  技术   | 说明 | 官网 |
@@ -56,60 +93,76 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 | Axios  | 	前端HTTP框架| https://github.com/axios/axios |
 | layui  | UI 框架| https://www.layui.com/doc/ |
 | echarts  | UI 框架| https://echarts.apache.org |
-### 功能
-#### 后端功能清单
-* [功能清单图-【课程 讲师】.png](/readme/images/admin1.png)
-* [功能清单图-【直播 商品 订单 新闻 用户】.png](/readme/images/admin2.png)
-* [功能清单图-【分销 营销 财务】.png](/readme/images/admin3.png)
-* [功能清单图-【公众号】.png](/readme/images/admin4.png)
-* [功能清单图-【设置】.png](/readme/images/admin5.png)
 
-#### 前端功能清单
-* [功能清单图-【课程】.png](/readme/images/home1.png)
-* [功能清单图-【商品 直播】.png](/readme/images/home2.png)
-* [功能清单图-【分销 会员 营销 支付 客服】.png](/readme/images/home3.png)
-* [功能清单图-【新闻 账户 通知】.png](/readme/images/home4.png)
+### 开发工具
+|  工具   | 版本号 | 下载 |
+|  :----:  | :----:  | :----:|
+| 宝塔  | 7.x | https://www.bt.cn/?invite_code=MV90c2l1cmY= |
+| Mysql  | 5.7 | https://www.mysql.com/ |
+| Redis  | 5.0| https://redis.io/download |
+| Nginx  | 1.10 | http://nginx.org/en/download.html |
+| PHP  | 7.1 | https://www.php.net/ |
 
-#### 后端界面展示
-* [界面展示图-分类.png](/readme/images/后台1.png)
-* [界面展示图-课程.png](/readme/images/后台2.png)
-* [界面展示图-讲师.png](/readme/images/后台3.png)
-* [界面展示图-商品.png](/readme/images/后台4.png)
-* [界面展示图-直播.png](/readme/images/后台5.png)
-* [界面展示图-礼物打赏.png](/readme/images/后台8.png)
-* [界面展示图-订单.png](/readme/images/后台6.png)
-* [界面展示图-新闻.png](/readme/images/后台9.png)
-* [界面展示图-用户.png](/readme/images/后台10.png)
-* [界面展示图-会员.png](/readme/images/后台11.png)
-* [界面展示图-分销.png](/readme/images/后台12.png)
-* [界面展示图-营销.png](/readme/images/后台13.png)
-* [界面展示图-线下活动.png](/readme/images/后台14.png)
+### 功能说明
+* [前端页面设置](http://help.crmeb.net/crmeb_zsff/1514740)
 
+* [直播课堂](http://help.crmeb.net/crmeb_zsff/1514744)
+
+* [专题课程](http://help.crmeb.net/crmeb_zsff/1514747)
+
+* [课程拼团](http://help.crmeb.net/crmeb_zsff/1514751)
+
+* [会员系统](http://help.crmeb.net/crmeb_zsff/1716093)
+
+* [商品管理](http://help.crmeb.net/crmeb_zsff/1861031)
+
+* [客服管理](http://help.crmeb.net/crmeb_zsff/1943119)
+
+### 界面展示
 #### 前端界面展示
-* [界面展示图-【主页 课程分类 个人中心 拼团 赠送 活动】.png](/readme/images/界面1.jpg)
-* [界面展示图-【直播 打赏 充值 会员】.png](/readme/images/界面2.jpg)
-* [界面展示图-【分销 推广 海报】.png](/readme/images/界面3.jpg)
-* [界面展示图-【讲师】.png](/readme/images/界面4.jpg)
+![](/readme/images/界面1.jpg)
+![](/readme/images/界面4.jpeg)
+![](/readme/images/界面2.jpg)
+![](/readme/images/界面3.jpg)
+#### 后端界面展示
+![](/readme/images/后台1.png)
 
-### 项目演示
-####  前台演示:
-![前端演示](/readme/images/扫码关注.jpg)
-#### 后端演示:
-* http://zhishifufei.crmeb.net/index.php/admi
-* 账号：demo    密码：crmeb.com
+![](/readme/images/后台2.png)
+![](/readme/images/后台3.png)
 
-### 商业版与 VS 开源版差异
+![](/readme/images/后台4.png)
+![](/readme/images/后台5.png)
+
+![](/readme/images/后台6.png)
+![](/readme/images/后台7.png)
+![](/readme/images/后台8.png)
+
+![](/readme/images/后台9.png)
+![](/readme/images/后台10.png)
+![](/readme/images/后台11.png)
+
+![](/readme/images/后台12.png)
+![](/readme/images/后台13.png)
+![](/readme/images/后台14.png)
+
+### 功能对比
 ![](/readme/images/开源_付费对比.jpg)
+
+### 搭建步骤
+#### Linux环境安装
+*  宝塔版安装请参考：[宝塔版-源码安装教程](http://help.crmeb.net/crmeb_zsff/1514719)
+#### Windows环境安装
+*  宝塔版安装请参考：[windows+宝塔安装教程](http://help.crmeb.net/crmeb_zsff/2006076)
+#### 手动安装 [参考](http://help.crmeb.net/crmeb_zsff/1514721)
+#### 注意：
+* 扩展安装：[知识付费需要安装PHP插件：fileinfo、redis](http://help.crmeb.net/crmeb_zsff/1863590)
+* 安装 swoole-loader：[请使用知识付费系统里help里的swoole-loader文件；不要在官方下载](http://help.crmeb.net/crmeb_zsff/1944228)
+* 伪静态配置：[通过URL重写隐藏应用的入口文件](http://help.crmeb.net/crmeb_zsff/1514733)
+* 解禁函数：[解禁对应php版本版本函数](http://help.crmeb.net/crmeb_zsff/2073740)
+* 启动workerman：[部分功能依赖workerman，必须启动workerman](http://help.crmeb.net/crmeb_zsff/1514723)
 
 ###  联系客服
 ![联系客服](/readme/images/kefu.jpg)
-
-###  官方交流群
-| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
-| :----:| :----: |
-| 如果群已经加满或失效请加企业微信 | 企业微信 |
-
-###  官方论坛地址 http://bbs.crmeb.net
 
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;
@@ -117,15 +170,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 2.如果商用必须保留版权信息，请自觉遵守。开源版不适合商用，商用请购买商业版;
 
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
-### 吐槽、意见或需求反馈请戳下方链接   
-[<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
-### 推荐项目
 
-CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search
-
-CRMEB商城JAVA版：https://gitee.com/ZhongBangKeJi/crmeb_java
-
-CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatApplet
 ### CRMEB推荐阿里云服务器配置
 1.阿里云短信配置
 
@@ -176,12 +221,12 @@ CRMEB商城微信小程序前端：https://gitee.com/ZhongBangKeJi/CRMEB_WechatA
  
    </td>
    </tr></table>
-   
+     
 ### 版权信息
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2017-2019 by CRMEB (http://www.crmeb.com)
+版权所有Copyright © 2017-2021 by CRMEB (http://www.crmeb.com)
 
 All rights reserved。
 

@@ -107,18 +107,18 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ###  官方交流群
 | <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
 | :----:| :----: |
-| 如果群已经加满或失效请加我的企业微信 |       &nbsp;&nbsp企业微信             |
+| 如果群已经加满或失效请加企业微信 | 企业微信 |
 
 ###  官方论坛地址 http://bbs.crmeb.net
-#### 吐槽、意见或需求反馈请戳下方链接   
-[<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
+
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;
 
 2.如果商用必须保留版权信息，请自觉遵守。开源版不适合商用，商用请购买商业版;
 
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
-
+### 吐槽、意见或需求反馈请戳下方链接   
+[<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
 ### 推荐项目
 
 CRMEB商城PHP版：https://gitee.com/ZhongBangKeJi/CRMEB?_from=gitee_search

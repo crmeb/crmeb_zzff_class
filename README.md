@@ -53,40 +53,25 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ###  项目文档
 
- <table>
-    <tr>
-        <td><a href="http://help.crmeb.net/crmeb_zsff/1809860">功能列表</a></td>
-        <td><a href="http://help.crmeb.net/crmeb_zsff/1882897">安装视频</a></td>
-         <td><a href="http://help.crmeb.net/crmeb_zsff/1514719">安装文档</a></td>
-    </tr>
-    <tr>
-        <td><a href="http://help.crmeb.net/crmeb_zsff/1514738">使用文档</a></td>
-        <td><a href="http://help.crmeb.net/crmeb_zsff/1748508">数据字典</a></td>
-                <td></td>
-    </tr>
- </table>
+* [功能列表](http://help.crmeb.net/crmeb_zsff/1809860)
+* [安装视频](http://help.crmeb.net/crmeb_zsff/1882897)
+* [安装文档](http://help.crmeb.net/crmeb_zsff/1514719) 
+* [使用文档](http://help.crmeb.net/crmeb_zsff/1514738)
 
+* [数据字典](http://help.crmeb.net/crmeb_zsff/1748508)
 ### 运行环境
+* PHP  7.1 
 
- <table >
-    <tr>
-        <td> PHP  7.1 </td>
-        <td>MYSQL  5.7</td>
-    </tr>
-    <tr>
-        <td> PDO PHP Extension </td>
-        <td> MBstring PHP Extension </td>
-    </tr>
-    <tr>
-        <td> CURL PHP Extension </td>
-        <td> Mylsqi PHP Extension </td>
-    </tr>
-     <tr>
-            <td> 需要开启端口: 20005 20014 20015 端口 </td>
-            <td> </td>
-      </tr>
- </table>
- 
+* MYSQL  5.7
+
+* PDO PHP Extension 
+
+* MBstring PHP Extension 
+
+* CURL PHP Extension 
+
+* Mylsqi PHP Extension
+需要开启端口: 20005 20014 20015 端口
 ### 技术选型
 #### 后端技术
 |  技术   | 说明 | 官网 |

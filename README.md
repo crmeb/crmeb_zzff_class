@@ -92,27 +92,24 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * [界面展示图-【讲师】.png](/readme/images/界面4.jpg)
 
 ### 项目演示
-####  前台演示
+####  前台演示:
 ![前端演示](/readme/images/扫码关注.jpg)
-#### 后端演示:[ 查看 ]
+#### 后端演示:
 * http://zhishifufei.crmeb.net/index.php/admi
 * 账号：demo    密码：crmeb.com
 
 ### 商业版与 VS 开源版差异
 ![](/readme/images/开源_付费对比.jpg)
 
-###  论坛地址 http://bbs.crmeb.net
-
 ###  联系客服
 ![联系客服](/readme/images/kefu.jpg)
-
 
 ###  官方交流群
 | <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
 | :----:| :----: |
 | 如果群已经加满或失效请加我的企业微信 | 企业微信 |
 
-
+###  官方论坛地址 http://bbs.crmeb.net
 #### 吐槽、意见或需求反馈请戳下方链接   
 [<a href="http://bbs.crmeb.net/forum.php?mod=viewthread&tid=3474&page=1&extra=#pid24388">我要吐槽</a>]
 ###   :tw-1f50a: 开源版使用须知

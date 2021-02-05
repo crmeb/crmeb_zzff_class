@@ -53,12 +53,11 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ###  项目文档
 
-* [功能列表](http://help.crmeb.net/crmeb_zsff/1809860)
-* [安装视频](https://www.bilibili.com/video/BV16t4y1U7DD/)
-* [安装文档](http://help.crmeb.net/crmeb_zsff/1514719) 
-* [使用文档](http://help.crmeb.net/crmeb_zsff/1514738)
-
-* [数据字典](http://help.crmeb.net/crmeb_zsff/1748508)
+* 功能列表：<http://help.crmeb.net/crmeb_zsff/1809860>
+* 安装视频：<https://www.bilibili.com/video/BV16t4y1U7DD/>
+* 安装文档：<http://help.crmeb.net/crmeb_zsff/1514719>
+* 使用文档：<http://help.crmeb.net/crmeb_zsff/1514738>
+* 数据字典：<http://help.crmeb.net/crmeb_zsff/1748508>
 ### 运行环境
 * PHP  7.1 
 
@@ -102,20 +101,33 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 | PHP  | 7.1 | https://www.php.net/ |
 
 ### 功能说明
-* [前端页面设置](http://help.crmeb.net/crmeb_zsff/1514740)
+* 前端页面设置：[首页、课程分类、在线商城、个人中心banner、图标、内容编辑修改
+](http://help.crmeb.net/crmeb_zsff/1514740)
 
-* [直播课堂](http://help.crmeb.net/crmeb_zsff/1514744)
+* 直播课堂：[直播课堂添加、列表管理、直播打赏、直播带货管理](http://help.crmeb.net/crmeb_zsff/1514744)
 
-* [专题课程](http://help.crmeb.net/crmeb_zsff/1514747)
+* 专题课程：[视频点播、付费音频、付费图文内容管理
+](http://help.crmeb.net/crmeb_zsff/1514747)
 
-* [课程拼团](http://help.crmeb.net/crmeb_zsff/1514751)
+* 课程拼团：[课程、专题拼团活动开启、赠送好友、订单管理
+](http://help.crmeb.net/crmeb_zsff/1514751)
 
-* [会员系统](http://help.crmeb.net/crmeb_zsff/1716093)
+* 讲师管理：[课程、直播讲师管理](http://help.crmeb.net/crmeb_zsff/2053392)
 
-* [商品管理](http://help.crmeb.net/crmeb_zsff/1861031)
+* 分销系统：[课程分销推广、分销海报管理
+](http://help.crmeb.net/crmeb_zsff/1514757)
 
-* [客服管理](http://help.crmeb.net/crmeb_zsff/1943119)
+* 会员系统：[付费会员、实体会员卡、卡密激活、会员权益管理
+](http://help.crmeb.net/crmeb_zsff/1716093)
 
+* 商品管理：[实物商品添加、分类、订单、发货管理
+](http://help.crmeb.net/crmeb_zsff/1861031)
+
+* 客服管理：[在线客服管理
+](http://help.crmeb.net/crmeb_zsff/1943119)
+
+* 权限管理：[系统子账号权限分配管理
+](http://help.crmeb.net/crmeb_zsff/1988014)
 ### 界面展示
 #### 前端界面展示
 ![](/readme/images/界面1.jpg)

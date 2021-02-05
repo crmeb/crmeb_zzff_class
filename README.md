@@ -107,7 +107,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ###  官方交流群
 | <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
 | :----:| :----: |
-| 如果群已经加满或失效请加我的企业微信 |       企业微信             |
+| 如果群已经加满或失效请加我的企业微信 |       &nbsp;&nbsp企业微信             |
 
 ###  官方论坛地址 http://bbs.crmeb.net
 #### 吐槽、意见或需求反馈请戳下方链接   

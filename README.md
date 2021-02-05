@@ -161,7 +161,10 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ###  联系客服
 ![联系客服](/readme/images/kefu.jpg)
-
+###  加入群聊
+| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
+| :----:| :----: |
+| 如果群已经加满或失效请加企业微信 | 企业微信 |
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;
 

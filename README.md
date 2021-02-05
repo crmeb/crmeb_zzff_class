@@ -69,18 +69,26 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
  </table>
 
 ### 运行环境
-* PHP  7.1 
 
-* MYSQL  5.7
-
-* PDO PHP Extension 
-
-* MBstring PHP Extension 
-
-* CURL PHP Extension 
-
-* Mylsqi PHP Extension
-需要开启端口: 20005 20014 20015 端口
+ <table>
+    <tr>
+        <td> PHP  7.1 </td>
+        <td>MYSQL  5.7</td>
+    </tr>
+    <tr>
+        <td> PDO PHP Extension </td>
+        <td> MBstring PHP Extension </td>
+    </tr>
+    <tr>
+        <td> CURL PHP Extension </td>
+        <td> Mylsqi PHP Extension </td>
+    </tr>
+     <tr>
+            <td> 需要开启端口: 20005 20014 20015 端口 </td>
+            <td> </td>
+      </tr>
+ </table>
+ 
 ### 技术选型
 #### 后端技术
 |  技术   | 说明 | 官网 |

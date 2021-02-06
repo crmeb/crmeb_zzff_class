@@ -157,7 +157,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ![](/readme/images/后台14.png)
 
 ### 功能对比
-![](/readme/images/开源_付费对比.jpg)
+![](/readme/images/vs.jpg)
 
 ### 搭建步骤
 #### Linux环境安装

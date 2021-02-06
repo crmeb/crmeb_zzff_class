@@ -44,7 +44,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ### 项目演示
 ####  前台演示:
-![前端演示](/readme/images/扫码关注.jpg)
+![前端演示](/readme/images/前台关注.jpg)
 #### 后端演示:
 * 地址：http://zhishifufei.crmeb.net/index.php/admin
 * 账号：demo    
@@ -120,8 +120,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * 分销系统：[课程分销推广、分销海报管理
 ](http://help.crmeb.net/crmeb_zsff/1514757)
 
-* 会员系统：[付费会员、实体会员卡、卡密激活、会员权益管理
-](http://help.crmeb.net/crmeb_zsff/1716093)
+* 会员系统：[付费会员、实体会员卡、卡密激活、会员权益管理](http://help.crmeb.net/crmeb_zsff/1716093)
 
 * 商品管理：[实物商品添加、分类、订单、发货管理
 ](http://help.crmeb.net/crmeb_zsff/1861031)

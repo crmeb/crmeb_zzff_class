@@ -157,8 +157,8 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ![](/readme/images/后台14.png)
 
 ### 功能对比
-![](/readme/images/vs.jpg)
 
+* 开源版本VS商业版本功能对比: [点击查看](/readme/images/vs.jpg)
 ### 搭建步骤
 #### Linux环境安装
 *  宝塔版安装请参考：[宝塔版-源码安装教程](http://help.crmeb.net/crmeb_zsff/1514719)

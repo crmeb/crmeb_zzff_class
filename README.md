@@ -51,7 +51,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * 密码：crmeb.com
 
 ###  技术交流
-| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
+| <img src="/readme/images/0219.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
 | :----:| :----: |
 | 如果群已经加满或失效请加企业微信 | 企业微信 |
 

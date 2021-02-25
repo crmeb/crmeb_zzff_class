@@ -177,7 +177,8 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ![联系客服](/readme/images/kefu.jpg)
 ###  加入群聊[技术交流 技术咨询 二开指导 售后反馈]
 | <img src="/readme/images/0219.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
-|<a target="_blank" href=" ">< img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="CRMEB知识付费交流群" title="CRMEB知识付费交流群"></a > |
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="CRMEB知识付费交流群" title="CRMEB知识付费交流群"></a>
+
 | :----:| :----: |
 | 如果群已经加满或失效请加企业微信 | 企业微信 |
 ###   :tw-1f50a: 开源版使用须知
@@ -248,9 +249,6 @@ All rights reserved。
 
 CRMEB® 商标和著作权所有者为西安众邦网络科技有限公司。    
     
-
-
-
 
 
 

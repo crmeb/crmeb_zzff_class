@@ -51,7 +51,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * 密码：crmeb.com
 
 ###  技术交流
-**CRMEB知识付费QQ交流群**：780179818  <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="CRMEB知识付费交流群" title="CRMEB知识付费交流群"></a>
+**CRMEB知识付费QQ交流群**：780179818    <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="CRMEB知识付费交流群" title="CRMEB知识付费交流群"></a>
 
 
 ###  项目文档

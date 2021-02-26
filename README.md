@@ -28,8 +28,8 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 我们专注于原创研发和创意设计，探索并实现传统教育行业转型发展的难题，通过互联网工具，为合作伙伴长远发展贡献全力。在更深远的认知中，将不断修正服务导向，以开放共享的理念服务中小企业，心之所向，素履以往，以敬畏之心拥抱互联网，勇做推动行业发展的中坚力量，创造价值，为推进企业互联网转型发展做出贡献。
 
 
-<img src="readme/images/荣誉1.jpg"  height="300" width="300">
-<img src="readme/images/荣誉2.jpg"  height="300" width="300">
+<img src="readme/images/rongyu1.jpg"  height="300" width="300">
+<img src="readme/images/rongyu2.jpg"  height="300" width="300">
 
 ### 导航栏目
 

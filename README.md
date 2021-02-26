@@ -51,9 +51,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * 密码：crmeb.com
 
 ###  技术交流
-| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
-| :----:| :----: |
-| 如果群已经加满或失效请加企业微信 | 企业微信 |
+**CRMEB知识付费QQ交流群**：780179818 （<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi">立即加群</a>）
 
 ###  项目文档
 * 功能列表：[http://help.crmeb.net/crmeb_zsff/1809860](http://help.crmeb.net/crmeb_zsff/1809860)
@@ -176,9 +174,8 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ###  联系客服
 ![联系客服](/readme/images/kefu.jpg)
 ###  加入群聊[技术交流 技术咨询 二开指导 售后反馈]
-| <img src="/readme/images/0201.png"  height="150" width="150"> | <img src="/readme/images/456.png"  height="150" width="150"> |
-| :----:| :----: |
-| 如果群已经加满或失效请加企业微信 | 企业微信 |
+**CRMEB知识付费QQ交流群**：780179818 （<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi">立即加群</a>）
+
 ###   :tw-1f50a: 开源版使用须知
 1.允许用于个人学习、毕业设计、教学案例、公益事业;
 

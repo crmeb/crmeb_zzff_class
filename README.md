@@ -135,25 +135,6 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/12189202102271508176072.jpg)
 ![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/29462202102271508179282.jpg)
 #### 后端界面展示
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B01.png)
-
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B02.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B03.png)
-
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B04.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B05.png)
-
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B06.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B07.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B08.png)
-
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B09.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B010.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B011.png)
-
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B012.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B013.png)
-![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B014.png)
 
 ### 功能对比
 

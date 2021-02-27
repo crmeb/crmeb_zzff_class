@@ -128,13 +128,6 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 * 权限管理：[系统子账号权限分配管理
 ](http://help.crmeb.net/crmeb_zsff/1988014)
-### 界面展示
-#### 前端界面展示
-![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/a8fd0202102271508165357.jpg)
-![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/ed92820210227150817214.jpeg)
-![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/12189202102271508176072.jpg)
-![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/29462202102271508179282.jpg)
-#### 后端界面展示
 
 ### 功能对比
 

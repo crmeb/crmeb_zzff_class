@@ -28,8 +28,8 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 我们专注于原创研发和创意设计，探索并实现传统教育行业转型发展的难题，通过互联网工具，为合作伙伴长远发展贡献全力。在更深远的认知中，将不断修正服务导向，以开放共享的理念服务中小企业，心之所向，素履以往，以敬畏之心拥抱互联网，勇做推动行业发展的中坚力量，创造价值，为推进企业互联网转型发展做出贡献。
 
 
-<img src="http://cremb-zsff.oss-cn-beijing.aliyuncs.com/a474e202102271508274194.jpg"  height="300" width="300">
-<img src="http://cremb-zsff.oss-cn-beijing.aliyuncs.com/3ca7a202102271508287477.jpg"  height="300" width="300">
+<img src="http://cremb-zsff.oss-cn-beijing.aliyuncs.com/a474e202102271508274194.jpg"  height="200" width="240">
+<img src="http://cremb-zsff.oss-cn-beijing.aliyuncs.com/3ca7a202102271508287477.jpg"  height="200" width="240">
 
 ### 导航栏目
 
@@ -44,7 +44,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 
 ### 项目演示
 ####  前台演示:
-![前端演示](/readme/images/前台关注.jpg)
+![前端演示](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/00717202102271508212688.jpg)
 #### 后端演示:
 * 地址：http://zhishifufei.crmeb.net/index.php/admin
 * 账号：demo    
@@ -130,30 +130,30 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 ](http://help.crmeb.net/crmeb_zsff/1988014)
 ### 界面展示
 #### 前端界面展示
-![](/readme/images/界面1.jpg)
-![](/readme/images/界面4.jpeg)
-![](/readme/images/界面2.jpg)
-![](/readme/images/界面3.jpg)
+![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/a8fd0202102271508165357.jpg)
+![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/ed92820210227150817214.jpeg)
+![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/12189202102271508176072.jpg)
+![](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/29462202102271508179282.jpg)
 #### 后端界面展示
-![](/readme/images/后台1.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B01.png)
 
-![](/readme/images/后台2.png)
-![](/readme/images/后台3.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B02.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B03.png)
 
-![](/readme/images/后台4.png)
-![](/readme/images/后台5.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B04.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B05.png)
 
-![](/readme/images/后台6.png)
-![](/readme/images/后台7.png)
-![](/readme/images/后台8.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B06.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B07.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B08.png)
 
-![](/readme/images/后台9.png)
-![](/readme/images/后台10.png)
-![](/readme/images/后台11.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B09.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B010.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B011.png)
 
-![](/readme/images/后台12.png)
-![](/readme/images/后台13.png)
-![](/readme/images/后台14.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B012.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B013.png)
+![](https://gitee.com/ZhongBangKeJi/crmeb_zzff_class/raw/master/readme/images/%E5%90%8E%E5%8F%B014.png)
 
 ### 功能对比
 
@@ -172,7 +172,7 @@ CRMEB知识付费系统是西安众邦科技旗下的具有自主知识产权的
 * 启动workerman：[部分功能依赖workerman，必须启动workerman](http://help.crmeb.net/crmeb_zsff/1514723)
 
 ###  联系客服
-![联系客服](/readme/images/kefu.jpg)
+![联系客服](http://cremb-zsff.oss-cn-beijing.aliyuncs.com/40186202102271508269297.jpg)
 ###  加入群聊[技术交流 技术咨询 二开指导 售后反馈]
 **CRMEB知识付费QQ交流群**：780179818 （<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=7oOwLqKCjy3OZLVBWbjuSwqZF6B_6X6X&jump_from=webapi">立即加群</a>）
 

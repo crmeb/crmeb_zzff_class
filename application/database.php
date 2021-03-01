@@ -19,7 +19,7 @@ return [
     // 用户名
     'username'        => 'kaiyuan',
     // 密码
-    'password'        => 'kaiyuans',
+    'password'        => 'kaiyuan',
 
     // 端口
     'hostport'        => '3306',

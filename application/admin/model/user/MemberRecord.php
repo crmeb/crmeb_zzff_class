@@ -96,6 +96,9 @@ class MemberRecord extends ModelBasic
                 case 5:
                     $model=$model->where('p.type',1);
                     break;
+                case 6:
+                    $model=$model->where('p.type',0)->where('p.is_free',1);
+                    break;
             }
 
         }

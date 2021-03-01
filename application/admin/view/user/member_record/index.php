@@ -22,6 +22,7 @@
                                 <div class="layui-input-block">
                                     <select name="type" lay-verify="type">
                                         <option value="">全部</option>
+                                        <option value="6">免费</option>
                                         <option value="1">月卡</option>
                                         <option value="2">季卡</option>
                                         <option value="3">年卡</option>

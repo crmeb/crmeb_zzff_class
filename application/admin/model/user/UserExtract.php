@@ -36,10 +36,10 @@ class UserExtract extends ModelBasic
     public static function systemPage($where)
     {
         $model = new self;
+        $model = $model->alias('a');
         if ($where['status'] != '') $model = $model->where('a.status', $where['status']);
         if ($where['extract_type'] != '') $model = $model->where('a.extract_type', $where['extract_type']);
-        if ($where['nireid'] != '') $model = $model->where('a.real_name|a.id|b.nickname|a.bank_code|a.alipay_code', 'like', "%$where[nireid]%");
-        $model = $model->alias('a');
+        if ($where['nireid'] != '') $model = $model->where('a.real_name|a.id|b.nickname|a.bank_code|a.alipay_code|a.wechat', 'like', "%$where[nireid]%");
         $model = $model->field('a.*,b.nickname');
         $model = $model->join('__USER__ b', 'b.uid=a.uid', 'LEFT');
         $model = $model->order('a.id desc');

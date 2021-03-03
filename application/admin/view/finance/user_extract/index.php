@@ -30,6 +30,7 @@
                                 <option value="">提现方式</option>
                                 <option value="alipay" {eq name="where.extract_type" value="alipay" }selected="selected"{/eq}>支付宝</option>
                                 <option value="bank" {eq name="where.extract_type" value="bank"}selected="selected"{/eq}>银行卡</option>
+                                <option value="weixin" {eq name="where.extract_type" value="weixin"}selected="selected"{/eq}>微信</option>
                             </select>
                             <div class="input-group">
 

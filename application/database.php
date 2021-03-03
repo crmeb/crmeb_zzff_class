@@ -17,9 +17,9 @@ return [
     // 数据库名
     'database'        => 'kaiyuan',
     // 用户名
-    'username'        => 'kaiyuan',
+    'username'        => 'kaiyuansa',
     // 密码
-    'password'        => 'kaiyuan',
+    'password'        => 'kaiyuansds',
 
     // 端口
     'hostport'        => '3306',

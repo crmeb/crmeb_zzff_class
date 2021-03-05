@@ -26,6 +26,7 @@ class UserBehavior
     {
         Cookie::set('is_login',1);
         $spread_uid=$wechatInfo['spread_uid'];
+        $wechatInfo['nickname']=filter_emoji($wechatInfo['nickname']);
         if(isset($wechatInfo['unionid']) && $wechatInfo['unionid'] != '' && WechatUser::be(['unionid'=>$wechatInfo['unionid']])){
             WechatUser::edit($wechatInfo,$wechatInfo['unionid'],'unionid');
             $uid = WechatUser::where('unionid',$wechatInfo['unionid'])->value('uid');

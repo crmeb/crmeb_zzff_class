@@ -154,7 +154,7 @@ class WechatReply extends ModelBasic
             return self::setErrorInfo('请选择图文消息');
         $siteUrl = SystemConfig::getValue('site_url');
         foreach ($data as $k=>$v){
-            if(empty($v['url'])) $data[$k]['url'] = $siteUrl.Url::build('wap/article/visit',['id'=>$v['id']]);
+            if(empty($v['url'])) $data[$k]['url'] = $siteUrl.Url::build('wap/article/details',['id'=>$v['id']]);
             if($v['image']) $data[$k]['image'] = $v['image'];
         }
         return $data;

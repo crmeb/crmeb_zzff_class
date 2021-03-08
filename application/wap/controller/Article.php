@@ -69,7 +69,7 @@ class Article extends WapBasic
 
     public function visit($id = '')
     {
-        $content = ArticleModel::PreWhere()->where('id', $id)->find();
+        $content = ArticleModel::where(['id' => $id, 'hide' => 0,'is_show'=>1])->find();
         if (!$content) return $this->failed('此文章已经不存在!');
         $content["content"] = Db::name('articleContent')->where('nid', $content["id"])->value('content');
         //增加浏览次数
@@ -81,7 +81,7 @@ class Article extends WapBasic
 
     public function details($id = '')
     {
-        $article = ArticleModel::PreWhere()->where('id', $id)->find();
+        $article = ArticleModel::where(['id'=>$id,'is_show'=>1])->find();
         if (!$article) $this->failed('您查看的文章不存在');
         $article["content"] = Db::name('articleContent')->where('nid', $article["id"])->value('content');
         //增加浏览次数

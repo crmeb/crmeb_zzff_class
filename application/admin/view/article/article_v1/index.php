@@ -80,9 +80,6 @@
                         <a class="layui-btn layui-btn-xs" href="{:Url('add_article',['type'=>2])}?id={{d.id}}">
                             <i class="fa fa-paste"></i> 编辑
                         </a>
-                        <!--<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?article_id={{d.id}}',{h:300,w:400})">
-                            <i class="fa fa-check-circle"></i> 推荐
-                        </button>-->
                         <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event='delete'>
                             <i class="fa fa-warning"></i> 删除
                         </button>
@@ -105,7 +102,6 @@
             {field: 'title', title: '新闻名称',edit:'title',align: 'center'},
             {field: 'cate_name', title: '分类名称',align: 'center'},
             {field: 'image_input', title: '封面图',templet:'#image_input',align: 'center'},
-            /*{field: 'recommend', title: '推荐至',templet:'#recommend',align: 'center'},*/
             {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',align: 'center'},
             {field: 'is_show', title: '是否显示',templet:'#is_show',align: 'center'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'25%'},

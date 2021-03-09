@@ -23,6 +23,7 @@ use app\admin\model\system\Recommend;
 use app\admin\model\system\RecommendRelation;
 use think\Url;
 use service\FormBuilder as Form;
+use app\admin\model\wechat\WechatNewsCategory as WechatNewsCategoryModel;
 
 /**
  * 图文管理
@@ -156,6 +157,9 @@ class ArticleV1 extends AuthController
             $res = $article->delete();
             $res1 = ArticleContent::where('nid', $id)->delete();
             if ($res1 && $res) {
+                if($article['hide']==1){
+                    WechatNewsCategoryModel::where('new_id',$id)->delete();
+                }
                 Article::commitTrans();
                 return Json::successful('删除成功');
             } else {

@@ -24,7 +24,7 @@ use think\Db;
 use think\Request;
 use think\Url;
 use service\WechatService;
-use \app\admin\model\wechat\WechatNewsCategory as WechatNewsCategoryModel;
+use app\admin\model\wechat\WechatNewsCategory as WechatNewsCategoryModel;
 use app\admin\model\article\Article as ArticleModel;
 
 /**
@@ -259,6 +259,7 @@ class WechatNewsCategory extends AuthController
             if ($v['content'] == '') return Json::fail('正文不能为空');
             if ($v['synopsis'] == '') return Json::fail('摘要不能为空');
             $v['status'] = 1;
+            $v['hide'] = 1;
             $v['add_time'] = time();
             if ($v['id']) {
                 $idC = $v['id'];

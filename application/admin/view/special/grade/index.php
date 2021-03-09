@@ -1,65 +1,62 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
+                <div class="layui-card-header">分类管理</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">一级分类</label>
-                                <div class="layui-input-block">
-                                    <select name="cid">
-                                        <option value="">所有一级</option>
-                                        {volist name="grade" id="vo"}
-                                        <option value="{$vo.id}">{$vo.name}</option>
-                                        {/volist}
-                                    </select>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">一级分类</label>
+                                        <div class="layui-input-inline">
+                                            <select name="cid">
+                                                <option value="">所有一级</option>
+                                                {volist name="grade" id="vo"}
+                                                <option value="{$vo.id}">{$vo.name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">分类名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="cate_name" class="layui-input" placeholder="请输入分类名称">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
+                                                <i class="layui-icon">&#xe615;</i>搜索
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">分类名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="cate_name" class="layui-input" placeholder="请输入分类名称">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!--产品列表-->
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">分类列表</div>
-                <div class="layui-card-body">
-                    <div class="alert alert-info" role="alert">
-                        注:名称和排序可进行快速编辑;
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="$eb.createModalFrame(this.innerText,'{:Url('create')}',{h:300,w:400})">
+                                    <i class="layui-icon">&#xe608;</i>添加分类
+                                </button>
+                            </div>
+                            <table class="layui-hide" id="List" lay-filter="List"></table>
+                            <script type="text/html" id="pid">
+                                <a class="layui-btn layui-btn-normal layui-btn-xs" href="{:Url('admin/special.subject/index')}?pid={{d.id}}">查看</a>
+                            </script>
+                            <script type="text/html" id="act">
+                                <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="$eb.createModalFrame('编辑','{:Url('create')}?id={{d.id}}',{h:300,w:400})">
+                                    <i class="layui-icon">&#xe642;</i>编辑
+                                </button>
+                                <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event='delstor'>
+                                    <i class="layui-icon">&#xe640;</i>删除
+                                </button>
+                            </script>
+                        </div>
                     </div>
-                    <div class="layui-btn-container">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick="$eb.createModalFrame(this.innerText,'{:Url('create')}',{h:300,w:400})">添加分类</button>
-                    </div>
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="pid">
-                        <a href="{:Url('admin/special.subject/index')}?pid={{d.id}}">查看</a>
-                    </script>
-                    <script type="text/html" id="act">
-                        <button class="layui-btn layui-btn-xs" onclick="$eb.createModalFrame('编辑','{:Url('create')}?id={{d.id}}',{h:300,w:400})">
-                            <i class="fa fa-paste"></i> 编辑
-                        </button>
-                        <button class="layui-btn layui-btn-xs" lay-event='delstor'>
-                            <i class="fa fa-warning"></i> 删除
-                        </button>
-                    </script>
                 </div>
             </div>
         </div>

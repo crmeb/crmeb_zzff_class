@@ -1,128 +1,129 @@
 {extend name="public/container"}
 {block name="content"}
-<div class="layui-fluid" style="background: #fff">
-    <div class="layui-row layui-col-space15"  id="app">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
+                <div class="layui-card-header">专栏列表</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">专栏名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="store_name" class="layui-input" placeholder="请输入专栏名称,关键字,编号">
-                                    <input type="hidden" name="activity_type" value="{$activity_type}">
-                                    <input type="hidden" name="subject_id" value="{$subject_id}">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">专栏名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="store_name" class="layui-input" placeholder="请输入专栏名称,关键字,编号">
+                                            <input type="hidden" name="activity_type" value="{$activity_type}">
+                                            <input type="hidden" name="subject_id" value="{$subject_id}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">所属二级分类</label>
+                                        <div class="layui-input-inline">
+                                            <select name="subject_id" lay-search="">
+                                                <option value="0">全部</option>
+                                                {volist name='subject_list' id='vo'}
+                                                <option value="{$vo.id}">{$vo.name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">是否显示</label>
+                                        <div class="layui-input-inline">
+                                            <select name="is_show">
+                                                <option value="">全部</option>
+                                                <option value="1">显示</option>
+                                                <option value="0">隐藏</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">时间范围</label>
+                                        <div class="layui-input-inline" style="width: 150px;">
+                                            <input type="text" name="start_time" placeholder="开始时间" id="start_time" class="layui-input">
+                                        </div>
+                                        <div class="layui-form-mid">-</div>
+                                        <div class="layui-input-inline" style="width: 150px;">
+                                            <input type="text" name="end_time" placeholder="结束时间" id="end_time" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
+                                                <i class="layui-icon">&#xe615;</i>搜索
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">所属二级分类</label>
-                                <div class="layui-input-block">
-                                    <select name="subject_id" lay-search="">
-                                        <option value="0">全部</option>
-                                        {volist name='subject_list' id='vo'}
-                                        <option value="{$vo.id}">{$vo.name}</option>
-                                        {/volist}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">是否显示</label>
-                                <div class="layui-input-block">
-                                    <select name="is_show">
-                                        <option value="">全部</option>
-                                        <option value="1">显示</option>
-                                        <option value="0">隐藏</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">时间范围</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="start_time" placeholder="开始时间" id="start_time" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid">-</div>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="end_time" placeholder="结束时间" id="end_time" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                    <!--                                    <button class="layui-btn layui-btn-primary layui-btn-sm export"  lay-submit="export" lay-filter="export">-->
-                                    <!--                                        <i class="fa fa-floppy-o" style="margin-right: 3px;"></i>导出</button>-->
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!--产品列表-->
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-body">
-                    <div class="alert alert-info" role="alert">
-                        列表[专栏专题],[排序]可进行快速修改,双击或者单击进入编辑模式,失去焦点可进行自动保存
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="action.open_add('{:Url('add',['special_type' =>$special_type])}','添加{$special_title}')">
+                                    <i class="layui-icon">&#xe608;</i>添加{$special_title}
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()">
+                                    <i class="layui-icon">&#xe669;</i>刷新
+                                </button>
+                            </div>
+                            <table class="layui-hide" id="List" lay-filter="List"></table>
+                            <script type="text/html" id="recommend">
+                                {{#  layui.each(d.recommend, function(index, item){ }}
+                                <span class="layui-badge layui-bg-blue">{{item}}</span>
+                                {{#  }); }}
+                            </script>
+                            <script type="text/html" id="is_pink">
+                                {{# if(d.is_pink){ }}
+                                <span class="layui-badge layui-bg-green">开启</span>
+                                {{# }else{ }}
+                                <span class="layui-badge">关闭</span>
+                                {{# } }}
+                            </script>
+                            <script type="text/html" id="is_live_goods">
+                                <input type='checkbox' name='is_live_goods' lay-skin='switch' value="{{d.id}}" lay-filter='is_live_goods' lay-text='是|否'  {{ d.is_live_goods == 1 ? 'checked' : '' }}>
+                            </script>
+                            <script type="text/html" id="is_show">
+                                <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
+                            </script>
+                            <script type="text/html" id="image">
+                                <img style="cursor: pointer;" height="50" lay-event='open_image' src="{{d.image}}">
+                            </script>
+                            <script type="text/html" id="act">
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="dropdown(this)">
+                                    <i class="layui-icon">&#xe625;</i>操作
+                                </button>
+                                <ul class="layui-nav-child layui-anim layui-anim-upbit">
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="action.open_add('{:Url('add')}?id={{d.id}}&special_type={$special_type}','编辑专题')" >
+                                            <i class="fa fa-paste"></i> 编辑专题
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{:Url('ump.store_combination/combina_list')}?cid={{d.id}}&special_type={$special_type}" >
+                                            <i class="fa fa-street-view"></i> 查看拼团
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?special_id={{d.id}}',{h:300,w:400})">
+                                            <i class="fa fa-check-circle"></i> 推荐至首页
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-拼团管理','{:Url('pink')}?special_id={{d.id}}',{h:500})">
+                                            <i class="fa fa-users"></i> 拼团设置
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a lay-event='delect' href="javascript:void(0)">
+                                            <i class="fa fa-trash"></i> 删除专题
+                                        </a>
+                                    </li>
+                                </ul>
+                            </script>
+                        </div>
                     </div>
-                    <div class="layui-btn-container">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick="action.open_add('{:Url('add',['special_type' =>$special_type])}','新增{$special_title}')"><i class="layui-icon layui-icon-add-1"></i>新增{$special_title}</button>
-                        <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()"><i class="layui-icon layui-icon-refresh"></i>  刷新</button>
-                    </div>
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="recommend">
-                        {{#  layui.each(d.recommend, function(index, item){ }}
-                        <span class="layui-badge layui-bg-blue">{{item}}</span>
-                        {{#  }); }}
-                    </script>
-                    <script type="text/html" id="is_pink">
-                        {{# if(d.is_pink){ }}
-                        <span class="layui-badge layui-bg-green">拼团开启</span>
-                        {{# }else{ }}
-                        <span class="layui-badge">拼团关闭</span>
-                        {{# } }}
-                    </script>
-                    <script type="text/html" id="is_live_goods">
-                        <input type='checkbox' name='is_live_goods' lay-skin='switch' value="{{d.id}}" lay-filter='is_live_goods' lay-text='是|否'  {{ d.is_live_goods == 1 ? 'checked' : '' }}>
-                    </script>
-                    <script type="text/html" id="is_show">
-                        <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
-                    </script>
-                    <script type="text/html" id="image">
-                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
-                    </script>
-                    <script type="text/html" id="act">
-                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
-                        <ul class="layui-nav-child layui-anim layui-anim-upbit">
-                            <li>
-                                <a href="javascript:void(0)" onclick="action.open_add('{:Url('add')}?id={{d.id}}&special_type={$special_type}','编辑专题')" >
-                                    <i class="fa fa-paste"></i> 编辑专题
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{:Url('ump.store_combination/combina_list')}?cid={{d.id}}&special_type={$special_type}" >
-                                    <i class="fa fa-street-view"></i> 查看拼团
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('recommend')}?special_id={{d.id}}',{h:300,w:400})">
-                                    <i class="fa fa-check-circle"></i> 推荐至首页
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-拼团管理','{:Url('pink')}?special_id={{d.id}}',{h:500})">
-                                    <i class="fa fa-users"></i> 拼团设置
-                                </a>
-                            </li>
-                            <li>
-                                <a lay-event='delect' href="javascript:void(0)">
-                                    <i class="fa fa-trash"></i> 删除专题
-                                </a>
-                            </li>
-                        </ul>
-                    </script>
                 </div>
             </div>
         </div>
@@ -145,7 +146,7 @@
         }
     },"{:Url('list',['subject_id'=>$subject_id, 'special_type'=>$special_type])}",function (){
         return [
-            {field: 'id', title: '编号', sort: true,event:'id',width:'5%',align: 'center'},
+            {field: 'id', title: '编号', width:'5%',align: 'center'},
             {field: 'title', title: '专栏名称',edit:'title',align: 'center'},
             {field: 'subject_name', title: '所属分类',align: 'center'},
             {field: 'image', title: '封面图',templet:'#image',align: 'center'},
@@ -155,8 +156,7 @@
             {field: 'fake_sales', title: '虚拟销量',edit:'fake_sales'},
             {field: 'is_pink', title: '拼团状态',templet:'#is_pink',align: 'center'},
             {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',align: 'center'},
-            /*{field: 'is_live_goods', title: '直播带货',templet:'#is_live_goods',align: 'center'},*/
-            {field: 'is_show', title: '是否显示',templet:'#is_show',align: 'center'},
+            {field: 'is_show', title: '状态',templet:'#is_show',align: 'center'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'10%'},
         ];
     });

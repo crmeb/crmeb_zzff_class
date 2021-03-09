@@ -1,110 +1,87 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid">
-    <!--<div class="layui-tab layui-tab-brief" lay-filter="tab">
-        <ul class="layui-tab-title">
-            <li lay-id="list" {eq name='activity_type' value='1'}class="layui-this" {/eq} >
-            <a href="{eq name='activity_type' value='1'}javascript:;{else}{:Url('index',['activity_type'=>1, 'special_type'=>$special_type])}{/eq}">{$special_title}列表</a>
-            </li>
-            <li lay-id="list" {eq name='activity_type' value='2'}class="layui-this" {/eq}>
-            <a href="{eq name='activity_type' value='2'}javascript:;{else}{:Url('source_index',['activity_type'=>2, 'special_type'=>$special_type])}{/eq}">{$special_title}素材列表</a>
-            </li>
-        </ul>
-    </div>-->
-    <div class="layui-row layui-col-space15"  id="app">
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
-                <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">是否显示</label>
-                                <div class="layui-input-block">
-                                    <select name="is_show">
-                                        <option value="">是否显示</option>
-                                        <option value="1">显示</option>
-                                        <option value="0">不显示</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">素材名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="title" class="layui-input" placeholder="请输入素材名称">
-                                    <input type="hidden" name="coures_id" value="{$coures_id}">
-                                </div>
-                            </div>
-                           <!-- <div class="layui-inline">
-                                <label class="layui-form-label">专题</label>
-                                <div class="layui-input-block">
-                                    <select name="special_id" lay-search="" lay-filter="special_id">
-                                        <option value="0">请选专题</option>
-                                        {volist name='specialList' id='item'}
-                                        <option value="{$item.id}">{$item.title}</option>
-                                        {/volist}
-                                    </select>
-                                </div>
-                            </div>-->
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!--产品列表-->
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">素材列表</div>
                 <div class="layui-card-body">
-                    <div class="alert alert-info" role="alert">
-                        注:课程名称和排序可进行快速编辑;
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">是否显示</label>
+                                        <div class="layui-input-inline">
+                                            <select name="is_show">
+                                                <option value="">是否显示</option>
+                                                <option value="1">显示</option>
+                                                <option value="0">不显示</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">素材名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="title" class="layui-input" placeholder="请输入素材名称">
+                                            <input type="hidden" name="coures_id" value="{$coures_id}">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
+                                                <i class="layui-icon">&#xe615;</i>搜索
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="action.open_add('{:Url('add_source',['special_type' =>$special_type])}','添加{$special_title}素材')">
+                                    <i class="layui-icon">&#xe608;</i>添加{$special_title}素材
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()">
+                                    <i class="layui-icon">&#xe669;</i>刷新
+                                </button>
+                            </div>
+                            <table class="layui-hide" id="List" lay-filter="List"></table>
+                            <script type="text/html" id="image">
+                                <img style="cursor: pointer;" height="50" lay-event='open_image' src="{{d.image}}">
+                            </script>
+                            <script type="text/html" id="is_show">
+                                <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
+                            </script>
+                            <script type="text/html" id="act">
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="dropdown(this)">
+                                    <i class="layui-icon">&#xe625;</i>操作
+                                </button>
+                                <ul class="layui-nav-child layui-anim layui-anim-upbit">
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="action.open_add('{:Url('add_source')}?id={{d.id}}&special_type={$special_type}','编辑')" >
+                                            <i class="fa fa-paste"></i> 编辑
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="$eb.createModalFrame('编辑内容','{:Url('update_content')}?id={{d.id}}&field=content&special_type={$special_type}',{h:600,w:800})">
+                                            <i class="fa fa-paste"></i> 内容
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="$eb.createModalFrame('编辑简介','{:Url('update_content')}?id={{d.id}}&field=detail&special_type={$special_type}',{h:600,w:800})">
+                                            <i class="fa fa-paste"></i> 简介
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a lay-event='delete' href="javascript:void(0)">
+                                            <i class="fa fa-warning"></i> 删除
+                                        </a>
+                                    </li>
+                                </ul>
+                            </script>
+                        </div>
                     </div>
-                    <div class="layui-btn-container">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick="action.open_add('{:Url('add_source',['special_type' =>$special_type])}','新增{$special_title}素材')"><i class="layui-icon layui-icon-add-1"></i>新增{$special_title}素材</button>
-                        <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()"><i class="layui-icon layui-icon-refresh"></i>  刷新</button>
-                    </div>
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <!--<script type="text/html" id="course_name">
-                        <p>{{d.course_name}} {{# if(d.live_id){ }}<span class="layui-badge layui-bg-green">直播</span> {{# } }}</p>
-                    </script>-->
-                    <script type="text/html" id="image">
-                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
-                    </script>
-                    <script type="text/html" id="is_show">
-                        <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
-                    </script>
-                    <script type="text/html" id="act">
-                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
-                        <ul class="layui-nav-child layui-anim layui-anim-upbit">
-                        <li>
-                            <a href="javascript:void(0)" onclick="action.open_add('{:Url('add_source')}?id={{d.id}}&special_type={$special_type}','编辑')" >
-                                <i class="fa fa-paste"></i> 编辑
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" onclick="$eb.createModalFrame('编辑内容','{:Url('update_content')}?id={{d.id}}&field=content&special_type={$special_type}',{h:600,w:800})">
-                                <i class="fa fa-paste"></i> 内容
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" onclick="$eb.createModalFrame('编辑简介','{:Url('update_content')}?id={{d.id}}&field=detail&special_type={$special_type}',{h:600,w:800})">
-                                <i class="fa fa-paste"></i> 简介
-                            </a>
-                        </li>
-                        <li>
-                            <a lay-event='delete' href="javascript:void(0)">
-                                <i class="fa fa-warning"></i> 删除
-                            </a>
-                        </li>
-                        </ul>
-                    </script>
                 </div>
             </div>
         </div>
@@ -119,12 +96,12 @@
     //加载列表
     layList.tableList('List',"{:Url('source_list')}?special_type={$special_type}",function (){
         return [
-            {field: 'id', title: '编号', sort: true,event:'id',align: 'center',width:'8%'},
+            {field: 'id', title: '编号', align: 'center'},
             {field: 'title', title: '素材名称',edit:'title',align: 'center'},
-            {field: 'image', title: '素材封面',templet:'#image',height:100,align: 'center'},
-            {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',width:'10%',align: 'center'},
-            {field: 'is_show', title: '是否显示',templet:'#is_show',width:'10%',align: 'center'},
-            {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'12%'},
+            {field: 'image', title: '素材封面',templet:'#image', align: 'center'},
+            {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort', align: 'center'},
+            {field: 'is_show', title: '状态',templet:'#is_show', align: 'center'},
+            {field: 'right', title: '操作',align:'center',toolbar:'#act'},
         ];
     });
     //下拉框

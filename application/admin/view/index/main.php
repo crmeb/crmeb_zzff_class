@@ -32,12 +32,182 @@
 </style>
 {/block}
 {block name="content"}
-    <div class="row">
+<div class="layui-fluid" id="app" v-cloak>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">订单<span class="layui-badge layuiadmin-badge">数</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$topData.orderDeliveryNum}</p>
+                    <p>总数</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">待提现<span class="layui-badge layuiadmin-badge">待</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$topData.treatedExtract}</p>
+                    <p>待提现</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">订单<span class="layui-badge layuiadmin-badge">昨</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$first_line.d_num.data}</p>
+                    <p>
+                        昨日订单数
+                        <span class="layuiadmin-span-color">
+                        {$first_line.d_num.percent}%
+                        {if condition='$first_line.d_num.is_plus egt 0'}<i class="fa {if condition='$first_line.d_num.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">交易<span class="layui-badge layuiadmin-badge">昨</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$first_line.d_price.data}</p>
+                    <p>
+                        昨日交易额
+                        <span class="layuiadmin-span-color">
+                        {$first_line.d_price.percent}%
+                        {if condition='$first_line.d_price.is_plus egt 0'}<i class="fa {if condition='$first_line.d_price.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">粉丝<span class="layui-badge layuiadmin-badge">今</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$first_line.day.data}</p>
+                    <p>
+                        今日涨粉
+                        <span class="layuiadmin-span-color">
+                        {$first_line.d_price.percent}%
+                        {if condition='$first_line.d_price.is_plus egt 0'}<i class="fa {if condition='$first_line.d_price.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">粉丝<span class="layui-badge layuiadmin-badge">月</span></div>
+                <div class="layui-card-body">
+                    <p class="layuiadmin-big-font">{$first_line.month.data}</p>
+                    <p>
+                        本月涨粉
+                        <span class="layuiadmin-span-color">
+                        {$first_line.month.percent}%
+                        {if condition='$first_line.month.is_plus egt 0'}<i class="fa {if condition='$first_line.month.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    订单
+                    <div class="layui-btn-group layuiadmin-btn-group">
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" :class="{'active': active == 'thirtyday'}" @click="getlist('thirtyday')">30天</button>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" :class="{'active': active == 'week'}" @click="getlist('week')">周</button>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" :class="{'active': active == 'month'}" @click="getlist('month')">月</button>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" :class="{'active': active == 'year'}" @click="getlist('year')">年</button>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md9">
+                            <div class="flot-chart-content echarts" ref="order_echart" id="flot-dashboard-chart1"></div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <ul class="stat-list">
+                                <li>
+                                    <h2 class="no-margins ">{{pre_cycleprice}}</h2>
+                                    <small>{{precyclename}}销售额</small>
+                                </li>
+                                <li>
+                                    <h2 class="no-margins ">{{cycleprice}}</h2>
+                                    <small>{{cyclename}}销售额</small>
+                                    <div class="stat-percent text-navy" v-if='cycleprice_is_plus ===1'>
+                                        {{cycleprice_percent}}%
+                                        <i  class="fa fa-level-up"></i>
+                                    </div>
+                                    <div class="stat-percent text-danger" v-else-if='cycleprice_is_plus === -1'>
+                                        {{cycleprice_percent}}%
+                                        <i class="fa fa-level-down"></i>
+                                    </div>
+                                    <div class="stat-percent" v-else>
+                                        {{cycleprice_percent}}%
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div :style="{width:cycleprice_percent+'%'}" class="progress-bar box"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <h2 class="no-margins ">{{pre_cyclecount}}</h2>
+                                    <small>{{precyclename}}订单总数</small>
+                                </li>
+                                <li>
+                                    <h2 class="no-margins">{{cyclecount}}</h2>
+                                    <small>{{cyclename}}订单总数</small>
+                                    <div class="stat-percent text-navy" v-if='cyclecount_is_plus ===1'>
+                                        {{cyclecount_percent}}%
+                                        <i class="fa fa-level-up"></i>
+                                    </div>
+                                    <div class="stat-percent text-danger" v-else-if='cyclecount_is_plus === -1'>
+                                        {{cyclecount_percent}}%
+                                        <i  class="fa fa-level-down"></i>
+                                    </div>
+                                    <div class="stat-percent " v-else>
+                                        {{cyclecount_percent}}%
+                                    </div>
+                                    <div class="progress progress-mini">
+                                        <div :style="{width:cyclecount_percent+'%'}" class="progress-bar box"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">用户</div>
+                <div class="layui-card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="flot-chart">
+                                <div class="flot-chart-content" ref="user_echart" id="flot-dashboard-chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" >
+        <div class="mask" v-show="masks" @click="masks = false">
+            <img src="{__ADMIN_PATH}images/qrcode.jpeg"/>
+            <span>扫码进入前端页面</span>
+        </div>
+    </div>
+</div>
+    <!-- <div class="row">
         <div class="col-sm-3 ui-sortable">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-danger pull-right">数</span>
-                    <h5>订单</h5>
+                    <h5></h5>
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins">{$topData.orderDeliveryNum}</h1>
@@ -98,8 +268,8 @@
                 <div class="ibox-content">
                     <h1 class="no-margins">{$first_line.day.data}</h1>
                     <div class="stat-percent font-bold text-info">
-                        {$first_line.day.percent}%
-                        {if condition='$first_line.day.is_plus egt 0'}<i class="fa {if condition='$first_line.day.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
+                        {$first_line.d_price.percent}%
+                        {if condition='$first_line.d_price.is_plus egt 0'}<i class="fa {if condition='$first_line.d_price.is_plus eq 1'}fa-level-up{else /}fa-level-down{/if}"></i>{/if}
                     </div>
                     <small>今日新增粉丝</small>
                 </div>
@@ -123,7 +293,7 @@
         </div>
 
     </div>
-<div id="app">
+<div>
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -217,12 +387,12 @@
         </div>
     </div>
     <div class="col-lg-12" >
-        <div class="mask" v-show="masks" @click="masks = false" v-cloak="">
+        <div class="mask" v-show="masks" @click="masks = false">
             <img src="{__ADMIN_PATH}images/qrcode.jpeg"/>
             <span>扫码进入前端页面</span>
         </div>
     </div>
-</div>
+</div> -->
 {/block}
 {block name="script"}
 
@@ -340,28 +510,6 @@
                                 }
                             ],
                             yAxis:[{type : 'value',interval: 1000}],
-//                            yAxis: [
-//                                {
-//                                    type: 'value',
-//                                    name: '',
-//                                    min: 0,
-//                                    max: data.yAxis.maxprice,
-////                                    interval: 0,
-//                                    axisLabel: {
-//                                        formatter: '{value} 元'
-//                                    }
-//                                },
-//                                {
-//                                    type: 'value',
-//                                    name: '',
-//                                    min: 0,
-//                                    max: data.yAxis.maxnum,
-//                                    interval: 5,
-//                                    axisLabel: {
-//                                        formatter: '{value} 个'
-//                                    }
-//                                }
-//                            ],
                             series: data.series
                         };
                     return  this.option;
@@ -415,7 +563,6 @@
                                 }
                             }
                         ],
-//                        series: data.series
                         series : [ {
                             name : '人数',
                             type : 'bar',
@@ -443,14 +590,15 @@
                 }
             },
             mounted:function () {
-                var self = this;
-                this.setChart(self.$refs.order_echart,'order_echart');//订单图表
-                this.setChart(self.$refs.user_echart,'user_echart');//用户图表
-                this.info();
-                this.getlist();
-                if(this.ip=='172.31.152.14'){
-                    this.masks=true;
-                }
+                this.$nextTick(function() {
+                    this.setChart(this.$refs.order_echart, 'order_echart');
+                    this.setChart(this.$refs.user_echart, 'user_echart');
+                    this.info();
+                    this.getlist();
+                    if(this.ip=='172.31.152.14'){
+                        this.masks=true;
+                    }
+                });
             }
         });
     });

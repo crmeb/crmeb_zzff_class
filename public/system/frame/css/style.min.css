@@ -7,11 +7,11 @@ h5{font-size:12px}
 h6{font-size:10px}
 h3,h4,h5{margin-top:5px;font-weight:600}
 a:focus{outline:0}
-.nav>li>a{color:#a7b1c2;font-weight:600;padding:14px 20px 14px 25px}
+.nav>li>a{color:#a7b1c2;padding:14px 20px 14px 25px;font-size:14px;}
 .nav li>a{display:block}
 .nav.navbar-right>li>a{color:#999c9e}
 .nav>li.active>a{color:#fff}
-.navbar-default .nav>li>a:focus,.navbar-default .nav>li>a:hover{background-color:#293846;color:#fff}
+.navbar-default .nav>li>a:focus,.navbar-default .nav>li>a:hover{background-color:#0b355d;color:#fff}
 .nav .open>a,.nav .open>a:focus,.nav .open>a:hover{background:#fff}
 .nav>li>a i{margin-right:6px}
 .navbar{border:0}
@@ -37,7 +37,7 @@ body.body-small .navbar-top-links li:last-child{margin-right:10px}
 .dropdown-alerts li em,.dropdown-messages li em{font-size:10px}
 .nav.navbar-top-links .dropdown-alerts a{font-size:12px}
 .nav-header{padding:20px 25px}
-.nav>li.active{border-left:4px solid #0092DC;background:#293846}
+.nav>li.active{border-left:4px solid #0092DC;background:#000c17;}
 .nav.nav-second-level>li.active{border:none}
 .nav.nav-second-level.collapse[style]{height:auto!important}
 .nav-header a{color:#DFE4ED}
@@ -570,7 +570,7 @@ video{width:100%!important;height:auto!important}
 .inmodal .modal-title{font-size:26px}
 .inmodal .modal-icon{font-size:84px;color:#e2e3e3}
 .modal-footer{margin-top:0}
-#wrapper{width:100%;overflow-x:hidden;background-color:#2f4050}
+#wrapper{width:100%;overflow-x:hidden;background-color:#001529}
 .wrapper{padding:0 15px}
 .wrapper-content{padding:15px}
 #page-wrapper{padding:0 15px;position:inherit;margin:0 0 0 220px}
@@ -1306,7 +1306,6 @@ body.skin-3{background:#3e2c42}
     #content-main{height:calc(100% - 100px)}
     .fixed-nav #content-main{height:calc(100% - 38px)}
 }
-.navbar-static-side{background:#2f4050}
 .nav-close{padding:10px;position:absolute;right:0;top:0;font-size:1.4em;cursor:pointer;z-index:10;display:none;color:rgba(255,255,255,.3)}
 @media (max-width:350px){body.fixed-sidebar.mini-navbar .navbar-static-side{width:0}
     .nav-close{display:block}

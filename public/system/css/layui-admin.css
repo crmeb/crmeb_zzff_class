@@ -100,6 +100,7 @@
 .layui-form-pane .layui-form-label {
     padding: 5px 15px;
     height: 32px;
+    margin-bottom: 0;
 }
 .layui-fluid {
     padding: 0;

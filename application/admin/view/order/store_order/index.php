@@ -1,35 +1,36 @@
 {extend name="public/container"}
 {block name="content"}
-<div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
-        <!--搜索条件-->
+<div class="layui-fluid" id="app" v-cloak>
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
+                <div class="layui-card-header">订单管理</div>
                 <div class="layui-card-body">
                     <div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim="" lay-indicator="inside" lay-arrow="none" style="background:none">
                         <div class="layui-card-body">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-col-lg12">
                                     <label class="layui-form-label">订单状态:</label>
-                                    <div class="layui-input-block" v-cloak="">
-                                        <button class="layui-btn layui-btn-sm" :class="{'layui-btn-primary':where.status!==item.value}" @click="where.status = item.value" type="button" v-for="item in orderStatus">{{item.name}}
-                                            <span v-if="item.count!=undefined" :class="item.class!=undefined ? 'layui-badge': 'layui-badge layui-bg-gray' ">{{item.count}}</span></button>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn layui-btn-sm" :class="{'layui-btn-primary':where.status!==item.value}" @click="where.status = item.value" v-for="item in orderStatus">{{item.name}}
+                                            <span v-if="item.count!=undefined" :class="item.class!=undefined ? 'layui-badge': 'layui-badge layui-bg-gray' ">{{item.count}}</span>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="layui-col-lg12">
                                     <label class="layui-form-label">创建时间:</label>
-                                    <div class="layui-input-block" data-type="data" v-cloak="">
-                                        <button class="layui-btn layui-btn-sm" type="button" v-for="item in dataList" @click="setData(item)" :class="{'layui-btn-primary':where.data!=item.value}">{{item.name}}</button>
-                                        <button class="layui-btn layui-btn-sm" type="button" ref="time" @click="setData({value:'zd',is_zd:true})" :class="{'layui-btn-primary':where.data!='zd'}">自定义</button>
+                                    <div class="layui-input-block" data-type="data">
+                                        <button type="button" class="layui-btn layui-btn-sm"  v-for="item in dataList" @click="setData(item)" :class="{'layui-btn-primary':where.data!=item.value}">{{item.name}}</button>
+                                        <button type="button" class="layui-btn layui-btn-sm" ref="time" @click="setData({value:'zd',is_zd:true})" :class="{'layui-btn-primary':where.data!='zd'}">自定义</button>
                                         <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" v-show="showtime==true" ref="date_time">{$year.0} - {$year.1}</button>
                                     </div>
                                 </div>
                                 <div class="layui-col-lg12">
                                     <label class="layui-form-label">订单类型:</label>
-                                    <div class="layui-input-block" v-cloak="">
-                                        <button class="layui-btn layui-btn-sm" :class="{'layui-btn-primary':where.type!==item.value}" @click="where.type = item.value" type="button" v-for="item in orderType">{{item.name}}
-                                            <span v-if="item.count!=undefined" :class="item.class!=undefined ? 'layui-badge': 'layui-badge layui-bg-gray' ">{{item.count}}</span></button>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn layui-btn-sm" :class="{'layui-btn-primary':where.type!==item.value}" @click="where.type = item.value" v-for="item in orderType">{{item.name}}
+                                            <span v-if="item.count!=undefined" :class="item.class!=undefined ? 'layui-badge': 'layui-badge layui-bg-gray' ">{{item.count}}</span>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="layui-col-lg12">
@@ -41,11 +42,14 @@
                                 <div class="layui-col-lg12">
                                     <div class="layui-input-block">
                                         <button @click="search" type="button" class="layui-btn layui-btn-sm layui-btn-normal">
-                                            <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                        <button @click="excel" type="button" class="layui-btn layui-btn-warm layui-btn-sm export" type="button">
-                                            <i class="fa fa-floppy-o" style="margin-right: 3px;"></i>导出</button>
+                                            <i class="layui-icon layui-icon-search"></i>搜索
+                                        </button>
+                                        <button @click="excel" type="button" class="layui-btn layui-btn-warm layui-btn-sm export">
+                                            <i class="fa fa-floppy-o" style="margin-right: 3px;"></i>导出
+                                        </button>
                                         <button @click="refresh" type="reset" class="layui-btn layui-btn-primary layui-btn-sm">
-                                            <i class="layui-icon layui-icon-refresh" ></i>刷新</button>
+                                            <i class="layui-icon layui-icon-refresh" ></i>刷新
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -54,9 +58,7 @@
                 </div>
             </div>
         </div>
-        <!--end-->
-        <!-- 中间详细信息-->
-        <div :class="item.col!=undefined ? 'layui-col-sm'+item.col+' '+'layui-col-md'+item.col:'layui-col-sm6 layui-col-md3'" v-for="item in badge" v-cloak="" v-if="item.count > 0">
+        <div :class="item.col!=undefined ? 'layui-col-sm'+item.col+' '+'layui-col-md'+item.col:'layui-col-sm6 layui-col-md3'" v-for="item in badge" v-if="item.count > 0">
             <div class="layui-card">
                 <div class="layui-card-header">
                     {{item.name}}
@@ -71,16 +73,13 @@
                 </div>
             </div>
         </div>
-        <!--enb-->
     </div>
-    <!--列表-->
     <div class="layui-row layui-col-space15" >
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">订单列表</div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <!--订单-->
                     <script type="text/html" id="order_id">
                        <h4>{{d.order_id}}</h4>
                        <span style="color: {{d.color}};">{{d.pink_name}}</span>　　
@@ -322,7 +321,6 @@
             </div>
         </div>
     </div>
-    <!--end-->
 </div>
 <script src="{__ADMIN_PATH}js/layuiList.js"></script>
 {/block}
@@ -338,7 +336,6 @@
             {field: 'pay_price', title: '实际支付',width:'8%',align: 'center'},
             {field: 'paid', title: '支付状态',templet:'#paid',width:'8%',align: 'center'},
             {field: 'status', title: '订单状态',templet:'#status',width:'8%',align: 'center'},
-            // {field: 'order_info', title: '详情',templet:'#order_info',width:'8%'},
             {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'10%'},
         ];
     });
@@ -463,9 +460,6 @@
                     spread_type:'',
                 },
                 showtime: false,
-            },
-            watch: {
-
             },
             methods: {
                 setData:function(item){

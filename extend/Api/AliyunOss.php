@@ -4,6 +4,7 @@ namespace Api;
 
 use think\Config;
 use OSS\Model\RefererConfig;
+use service\SystemConfigService;
 
 /**
  * Class AliyunOss
@@ -59,9 +60,17 @@ class AliyunOss extends AliyunSdk
      */
     protected function checkUploadUrl()
     {
+        $site_url=SystemConfigService::get('site_url');
+        $https = "/^https:[\/]{2}[a-z]+[.]{1}[a-z\d\-]+[.]{1}[a-z\d]*[\/]*[A-Za-z\d]*[\/]*[A-Za-z\d]*/";
         if ($this->uploadUrl) {
-            if (strstr($this->uploadUrl, 'http') === false) {
-                $this->uploadUrl = 'http://' . $this->uploadUrl;
+            if (preg_match($https, $site_url)) {
+                if (strstr($this->uploadUrl, 'https') === false) {
+                    $this->uploadUrl = 'https://' . $this->uploadUrl;
+                }
+            }else{
+                if (strstr($this->uploadUrl, 'http') === false) {
+                    $this->uploadUrl = 'http://' . $this->uploadUrl;
+                }
             }
         }
     }

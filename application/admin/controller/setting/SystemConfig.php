@@ -353,6 +353,33 @@ class SystemConfig extends AuthController
                 }
             }
             foreach ($post as $k => $v) {
+                if($k=='site_url'){
+                    $http = "/^(http(s)?:\/\/)([0-9a-z-]{1,}.)?[0-9a-z-]{2,}.([0-9a-z-]{2,}.)?[a-z]{2,}$/i";
+                    if(!preg_match($http,$v) || substr_count($v,'/')>2){
+                        return Json::fail('域名有误！应如：http://crmeb.net');
+                    }
+                }
+                if($k=='extract_min_money'|| $k=='store_brokerage_ratio'|| $k=='store_brokerage_two'|| $k=='barrage_show_time'|| $k=='store_stock'){
+                    if(bcsub($v,0,0)<=0){
+                        switch ($k){
+                            case 'extract_min_money':
+                                return Json::fail('提现最低金额不能小于等于0');
+                                break;
+                            case 'store_brokerage_ratio':
+                                return Json::fail('一级推广人返佣比例不能小于等于0');
+                                break;
+                            case 'store_brokerage_two':
+                                return Json::fail('二级推广人返佣比例不能小于等于0');
+                                break;
+                            case 'barrage_show_time':
+                                return Json::fail('专题弹幕停留时间不能小于等于0');
+                                break;
+                            case 'store_stock':
+                                return Json::fail('警戒库存不能小于等于0');
+                                break;
+                        }
+                    }
+                }
                 ConfigModel::edit(['value' => json_encode($v)], $k, 'menu_name');
             }
             return Json::successful('修改成功');

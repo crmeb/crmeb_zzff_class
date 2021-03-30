@@ -1,1 +1,113 @@
-{extend name="public/container"}{block name="content"}<div class="row">    <div class="col-sm-12">        <div class="ibox float-e-margins">            <div class="ibox-title">                <button type="button" class="btn btn-w-m btn-primary add-filed">添加新闻分类</button>            </div>            <div class="ibox-content">                <div class="row">                    <div class="m-b m-l">                        <form action="" class="form-inline">                            <select name="status" aria-controls="editable" class="form-control input-sm">                                <option value="">是否显示</option>                                <option value="1" {eq name="$where.status" value="1"}selected="selected"{/eq}>显示</option>                                <option value="0" {eq name="$where.status" value="0"}selected="selected"{/eq}>不显示</option>                            </select>                            <div class="input-group" style="margin-top: 5px">                                <input type="text" placeholder="请输入关键词" class="input-sm form-control" name="title" value="{$where.title}">                                <span class="input-group-btn"><button type="submit" class="btn btn-sm btn-primary"> <i class="fa fa-search" ></i>搜索</button> </span>                            </div>                        </form>                    </div>                </div>                <div class="table-responsive">                    <table class="table table-striped  table-bordered">                        <thead>                        <tr>                            <th style="text-align: center">编号</th>                            <th style="text-align: center">分类昵称</th>                            <!--                            <th>分类图片</th>-->                            <th style="text-align: center">状态</th>                            <th style="text-align: center">查看文章</th>                            <th style="text-align: center">操作</th>                        </tr>                        </thead>                        <tbody class="">                        {volist name="list" id="vo"}                        <tr>                            <td class="text-center">                                {$vo.id}                            </td>                            <td class="text-center">                                {$vo.title}                            </td><!--                            <td class="text-center">--><!----><!--                                <img data-image="{$vo.image}" class="image_info" src="{$vo.image}" alt="{$vo.title}" title="{$vo.title}" style="width: 50px;cursor: pointer">--><!----><!--                            </td>-->                            <td class="text-center">                                {if condition="$vo['status'] eq 1"}                                <i class="fa fa-check text-navy"></i>                                {else/}                                <i class="fa fa-close text-danger"></i>                                {/if}                            </td>                            <td class="text-center">                                <a href="{:Url('article.article_v1/index',array('cid'=>$vo['id']))}" style="color: #666;display: block;padding: 5px 0;">查看文章</a>                            </td>                            <td class="text-center">                                <button class="btn btn-info btn-xs" type="button"  onclick="$eb.createModalFrame('编辑','{:Url('edit',array('id'=>$vo['id']))}')"><i class="fa fa-paste"></i> 编辑</button>                                <button class="btn btn-warning btn-xs del_config_tab" data-id="{$vo.id}" type="button" data-url="{:Url('delete',array('id'=>$vo['id']))}" ><i class="fa fa-warning"></i> 删除                                </button>                            </td>                        </tr>                        {/volist}                        </tbody>                    </table>                </div>                {include file="public/inner_page"}            </div>        </div>    </div></div>{/block}{block name="script"}<script>    $('.image_info').on('click',function (e) {        var image_url = $(this).data('image');        $eb.openImage(image_url);    })    $('.add-filed').on('click',function (e) {        $eb.createModalFrame(this.innerText,"{:Url('create')}");    })    $('.del_config_tab').on('click',function(){        var _this = $(this),url =_this.data('url');        $eb.$swal('delete',function(){            $eb.axios.get(url).then(function(res){                if(res.status == 200 && res.data.code == 200) {                    $eb.$swal('success',res.data.msg);                    _this.parents('tr').remove();                }else                    return Promise.reject(res.data.msg || '删除失败')            }).catch(function(err){                $eb.$swal('error',err);            });        })    });    $('.add_filed_base').on('click',function (e) {        $eb.swal({            title: '请选择数据类型',            input: 'radio',            inputOptions: ['文本框','多行文本框','单选框','文件上传','多选框'],            inputValidator: function(result) {                return new Promise(function(resolve, reject) {                    if (result) {                        resolve();                    } else {                        reject('请选择数据类型');                    }                });            }        }).then(function(result) {            if (result) {                $eb.createModalFrame(this.innerText,"{:Url('SystemConfig/create')}?type="+result);            }        })    })</script>{/block}
+{extend name="public/container"}
+{block name="content"}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">新闻分类</div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value="">是否显示</option>
+                                                <option value="1" {eq name="$where.status" value="1"}selected="selected"{/eq}>显示</option>
+                                                <option value="0" {eq name="$where.status" value="0"}selected="selected"{/eq}>不显示</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="title" value="{$where.title}" placeholder="请输入关键词" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layui-btn-normal layui-btn-sm">搜索</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-normal" data-type="add">添加新闻分类</button>
+                            </div>
+                            <table class="layui-table" lay-filter="table">
+                                <thead>
+                                    <tr>
+                                        <th lay-data="{field:'id',align:'center'}">编号</th>
+                                        <th lay-data="{field:'name',align:'center'}">分类昵称</th>
+                                        <th lay-data="{field:'status',align:'center'}">状态</th>
+                                        <th lay-data="{align:'center',toolbar:'#toolbar'}">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {volist name="list" id="vo"}
+                                    <tr>
+                                        <td>{$vo.id}</td>
+                                        <td>{$vo.title}</td>
+                                        <td>
+                                            {if condition="$vo['status'] eq 1"}
+                                            <i class="fa fa-check text-navy"></i>
+                                            {else/}
+                                            <i class="fa fa-close text-danger"></i>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                            {include file="public/inner_page"}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" href="{:Url('article.article_v1/index',array('cid'=>2))}">查看</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+{/block}
+{block name="script"}
+<script>
+    var $ = layui.jquery;
+    var form = layui.form;
+    var table = layui.table;
+
+    form.render();
+    table.init('table');
+
+    table.on('tool(table)', function (obj) {
+        var data = obj.data;
+        var layEvent = obj.event;
+
+        if ('edit' === layEvent) {
+            $eb.createModalFrame('编辑','{:url('edit')}?id=' + data.id);
+        } else if ('del' === layEvent) {
+            $eb.$swal('delete',function(){
+                $eb.axios.get('{:url('delete')}?id=' + data.id).then(function(res){
+                    if(res.status == 200 && res.data.code == 200) {
+                        $eb.$swal('success',res.data.msg);
+                        obj.del();
+                    }else
+                        return Promise.reject(res.data.msg || '删除失败');
+                }).catch(function(err){
+                    $eb.$swal('error',err);
+                });
+            });
+        }
+    });
+
+    $('.layui-btn').on('click', function () {
+        var type = $(this).data('type');
+        if ('add' === type) {
+            $eb.createModalFrame('添加新闻分类',"{:Url('create')}");
+        }
+    });
+</script>
+{/block}

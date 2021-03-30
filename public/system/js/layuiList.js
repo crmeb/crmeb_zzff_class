@@ -125,7 +125,9 @@
             id: boxids,
             elem: '#' + elemOdj,
             url: url,
-            page: true,
+            page: {
+                theme: '#0092dc'
+            },
             limit: limit,
             toolbar: toob,
             cols: [$data],

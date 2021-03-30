@@ -71,11 +71,11 @@
     //加载列表
     layList.tableList('List',"{:Url('get_grade_list')}",function (){
         return [
-            {field: 'id', title: '编号', sort: true,event:'id',width:'8%',align: 'center'},
-            {field: 'name', title: '分类名称',edit:'cate_name',width:'40%',align: 'center'},
-            {field: 'pid', title: '查看子分类',templet:'#pid',align:'center',width:'16%'},
-            {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',width:'14%',align: 'center'},
-            {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'22%'},
+            {field: 'id', title: '编号',width:60,align: 'center'},
+            {field: 'name', title: '分类名称',edit:'cate_name',align: 'center'},
+            {field: 'pid', title: '查看子分类',templet:'#pid',align:'center'},
+            {field: 'sort', title: '排序',align: 'center'},
+            {title: '操作',align:'center',toolbar:'#act'},
         ];
     });
     //自定义方法

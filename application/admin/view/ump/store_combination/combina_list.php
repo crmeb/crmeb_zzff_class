@@ -1,113 +1,108 @@
 {extend name="public/container"}
 {block name="content"}
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
+                <div class="layui-card-header">拼团列表</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">状态</label>
-                                <div class="layui-input-block">
-                                    <select name="status">
-                                        <option value="">全部</option>
-                                        <option value="1">进行中</option>
-                                        <option value="2">已完成</option>
-                                        <option value="3">未完成</option>
-                                    </select>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value="">全部</option>
+                                                <option value="1">进行中</option>
+                                                <option value="2">已完成</option>
+                                                <option value="3">未完成</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">时间范围</label>
+                                        <div class="layui-input-inline" style="width: 200px;">
+                                            <input type="text" name="start_time" placeholder="开始时间" autocomplete="off" id="start_time" class="layui-input">
+                                        </div>
+                                        <div class="layui-form-mid">-</div>
+                                        <div class="layui-input-inline" style="width: 200px;">
+                                            <input type="text" name="end_time" placeholder="结束时间" autocomplete="off" id="end_time" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">搜索</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="nickname" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入ID、订单号、用户昵称" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">搜索</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">时间范围</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="start_time" placeholder="开始时间" autocomplete="off" id="start_time" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid">-</div>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="end_time" placeholder="结束时间" autocomplete="off" id="end_time" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">搜　　索：</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="nickname" lay-verify="nickname" style="width: 100%" autocomplete="off" placeholder="请输入ID,订单号,用户昵称" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!--产品列表-->
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">分类列表</div>
-                <div class="layui-card-body">
-                    <div class="layui-btn-container">
-                        {if $cid}
-                        {if condition = "$special_type eq 4"}
-                        <a type="button" class="layui-btn layui-btn-sm layui-btn-warm" href="{:Url('live.aliyun_live/special_live',['special_type' => $special_type])}">
-                            <i class="layui-icon layui-icon-return"></i> 返回专题</a>
-                        {else/}
-                        <a type="button" class="layui-btn layui-btn-sm layui-btn-warm" href="{:Url('special.special_type/index',['special_type' => $special_type])}">
-                            <i class="layui-icon layui-icon-return"></i> 返回专题</a>
-                        {/if}
-                        {/if}
-                        <button type="button" style="display: none" class="layui-btn layui-btn-sm" onclick="$eb.createModalFrame(this.innerText,'{:Url('create_pink_false')}')">
-                            <i class="layui-icon layui-icon-add-1"></i> 新增虚拟拼团</button>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-group">
+                                {if $cid}
+                                {if condition = "$special_type eq 4"}
+                                <a type="button" class="layui-btn layui-btn-sm layui-btn-warm" href="{:Url('live.aliyun_live/special_live',['special_type' => $special_type])}">
+                                    <i class="layui-icon layui-icon-return"></i> 返回专题</a>
+                                {else/}
+                                <a type="button" class="layui-btn layui-btn-sm layui-btn-warm" href="{:Url('special.special_type/index',['special_type' => $special_type])}">
+                                    <i class="layui-icon layui-icon-return"></i> 返回专题</a>
+                                {/if}
+                                {/if}
+                                <button type="button" class="layui-btn layui-btn-sm layui-hide" onclick="$eb.createModalFrame(this.innerText,'{:Url('create_pink_false')}')">
+                                    <i class="layui-icon layui-icon-add-1"></i> 新增虚拟拼团</button>
+                            </div>
+                            <table id="List" lay-filter="List"></table>
+                            <script type="text/html" id="uid">
+                                <spen>{{d.nickname}}</spen>/<spen>{{d.uid}}</spen>
+                            </script>
+                            <script type="text/html" id="title">
+                                <spen>{{d.title}}</spen>/<spen>{{d.cid}}</spen>
+                            </script>
+                            <script type="text/html" id="people">
+                                <spen>{{d.people}}</spen>/<spen>{{d.count_people}}</spen>
+                            </script>
+                            <script type="text/html" id="status">
+                                {{# if(d.status==1) { }}
+                                <button class="layui-btn layui-btn-normal layui-btn-sm">进行中</button>
+                                {{# }else if(d.status==2){ }}
+                                <button class="layui-btn layui-btn-warm layui-btn-sm">已完成</button>
+                                {{# }else if(d.status==3){ }}
+                                <button class="layui-btn layui-btn-danger layui-btn-sm">未完成</button>
+                                {{# } }}
+                            </script>
+                            <script type="text/html" id="info">
+                                <button class="layui-btn layui-btn-xs" onclick="$eb.createModalFrame('查看详情','{:Url('order_pink')}?id={{d.id}}')">
+                                    <i class="fa fa-eye"></i> 查看详情
+                                </button>
+                            </script>
+                            <script type="text/html" id="act">
+                                {{# if(d.status==1){ }}
+                                <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event='down'>
+                                    <i class="fa fa-level-down" aria-hidden="true"></i> 下架
+                                </button>
+                                <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event='helpe'>
+                                    <i class="fa fa-users" aria-hidden="true"></i> 助力
+                                </button>
+                                {{# }else{ }}
+                                <button class="layui-btn layui-btn-xs layui-btn-disabled">
+                                    <i class="fa fa-level-down" aria-hidden="true"></i> 下架
+                                </button>
+                                <button class="layui-btn layui-btn-xs layui-btn-disabled">
+                                    <i class="fa fa-users" aria-hidden="true"></i> 助力
+                                </button>
+                                {{# }}}
+                                <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event='delete'>
+                                    <i class="fa fa-trash" aria-hidden="true"></i> 删除
+                                </button>
+                            </script>
+                        </div>
                     </div>
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="uid">
-                        <spen>{{d.nickname}}</spen>/<spen>{{d.uid}}</spen>
-                    </script>
-                    <script type="text/html" id="title">
-                        <spen>{{d.title}}</spen>/<spen>{{d.cid}}</spen>
-                    </script>
-                    <script type="text/html" id="people">
-                        <spen>{{d.people}}</spen>/<spen>{{d.count_people}}</spen>
-                    </script>
-                    <script type="text/html" id="status">
-                        {{# if(d.status==1) { }}
-                        <button class="layui-btn layui-btn-normal layui-btn-sm">进行中</button>
-                        {{# }else if(d.status==2){ }}
-                        <button class="layui-btn layui-btn-warm layui-btn-sm">已完成</button>
-                        {{# }else if(d.status==3){ }}
-                        <button class="layui-btn layui-btn-danger layui-btn-sm">未完成</button>
-                        {{# } }}
-                    </script>
-                    <script type="text/html" id="info">
-                        <button class="layui-btn layui-btn-xs" onclick="$eb.createModalFrame('查看详情','{:Url('order_pink')}?id={{d.id}}')">
-                            <i class="fa fa-eye"></i> 查看详情
-                        </button>
-                    </script>
-                    <script type="text/html" id="act">
-                        {{# if(d.status==1){ }}
-                        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event='down'>
-                            <i class="fa fa-level-down" aria-hidden="true"></i> 下架
-                        </button>
-                        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event='helpe'>
-                            <i class="fa fa-users" aria-hidden="true"></i> 助力
-                        </button>
-                        {{# }else{ }}
-                        <button class="layui-btn layui-btn-xs layui-btn-disabled">
-                            <i class="fa fa-level-down" aria-hidden="true"></i> 下架
-                        </button>
-                        <button class="layui-btn layui-btn-xs layui-btn-disabled">
-                            <i class="fa fa-users" aria-hidden="true"></i> 助力
-                        </button>
-                        {{# }}}
-                        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event='delete'>
-                            <i class="fa fa-trash" aria-hidden="true"></i> 删除
-                        </button>
-                    </script>
                 </div>
             </div>
         </div>

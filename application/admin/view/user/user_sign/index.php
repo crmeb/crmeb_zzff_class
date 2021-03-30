@@ -1,38 +1,31 @@
 {extend name="public/container"}
-{block name="head_top"}
-
-{/block}
 {block name="content"}
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
+                <div class="layui-card-header">签到记录</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">昵称/ID</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="title" lay-verify="title" class="layui-input" placeholder="请输入微信昵称、uid">
+                    <div class="layui-row lay-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">昵称/ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="title" lay-verify="title" class="layui-input" placeholder="请输入微信昵称、uid">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">搜索</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">用户签到列表</div>
-                <div class="layui-card-body">
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
+                        <div class="layui-col-md12">
+                            <table id="List" lay-filter="List"></table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

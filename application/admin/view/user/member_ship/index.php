@@ -1,20 +1,12 @@
 {extend name="public/container"}
-{block name="head_top"}
-
-{/block}
 {block name="content"}
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">会员等级列表</div>
+                <div class="layui-card-header">会员等级</div>
                 <div class="layui-card-body">
-<!--                    <script type="text/html" id="too">-->
-<!--                        <div class="layui-btn-container">-->
-<!--                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="add">添加会员等级</button>-->
-<!--                        </div>-->
-<!--                    </script>-->
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
+                    <table id="List" lay-filter="List"></table>
                     <script type="text/html" id="money">
                         <span class="layui-badge">￥{{d.price}}</span>
                     </script>
@@ -37,7 +29,6 @@
                     </script>
                     <script type="text/html" id="act">
                         <button type="button" class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
-<!--                        <button type="button" class="layui-btn layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-edit"></i>删除</button>-->
                     </script>
                 </div>
             </div>
@@ -52,14 +43,14 @@
     layList.form.render();
     layList.tableList({o:'List',t:'too'},layList.U({a:'membership_vip_list'}),function (){
         return [
-            {field: 'id', title: '编号', sort: true,event:'id',align: 'center'},
+            {field: 'id', title: '编号', align: 'center',width:60},
             {field: 'title', title: '会员名',align: 'center'},
             {field: 'vip_day', title: '有效期/天',align: 'center'},
             {field: 'original_price', title: '原价',align: 'center'},
             {field: 'price', title: '优惠价',templet:'#money',align: 'center'},
             {field: 'is_publish', title: '状态',templet:'#is_publish',align: 'center'},
-            {field: 'sort', title: '排序/倒序',align: 'center'},
-            {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'15%'},
+            {field: 'sort', title: '排序',align: 'center'},
+            {field: 'right', title: '操作',align:'center',toolbar:'#act'},
         ];
     });
     //查询

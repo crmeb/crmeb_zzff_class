@@ -1,72 +1,62 @@
 {extend name="public/container"}
-{block name="head_top"}
-
-{/block}
 {block name="content"}
 <div class="layui-fluid">
-    <div class="layui-row layui-col-space15"  id="app">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">搜索条件</div>
+                <div class="layui-card-header">会员记录</div>
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户昵称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="title" lay-verify="title" class="layui-input" placeholder="请输入用户uid｜昵称">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <form class="layui-form layui-form-pane" action="">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">用户昵称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="title" lay-verify="title" class="layui-input" placeholder="请输入用户uid、昵称">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">类别</label>
+                                        <div class="layui-input-inline">
+                                            <select name="type" lay-verify="type">
+                                                <option value=""></option>
+                                                <option value="6">免费</option>
+                                                <option value="1">月卡</option>
+                                                <option value="2">季卡</option>
+                                                <option value="3">年卡</option>
+                                                <option value="4">终身卡</option>
+                                                <option value="5">卡密</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">搜索</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">类别</label>
-                                <div class="layui-input-block">
-                                    <select name="type" lay-verify="type">
-                                        <option value="">全部</option>
-                                        <option value="6">免费</option>
-                                        <option value="1">月卡</option>
-                                        <option value="2">季卡</option>
-                                        <option value="3">年卡</option>
-                                        <option value="4">终身卡</option>
-                                        <option value="5">卡密</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-header">会员获取列表</div>
-                <div class="layui-card-body">
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="money">
-                        <span class="layui-badge">￥{{d.price}}</span>
-                    </script>
-                    <script type="text/html" id="is_permanent">
-                        {{# if(d.is_permanent==0){ }}
-                        <button class="layui-btn layui-btn-xs">非永久</button>
-                        {{# }else{ }}
-                        <button class="layui-btn layui-btn-xs">永久</button>
-                        {{# } }}
-                    </script>
-                    <script type="text/html" id="is_free">
-                        {{# if(d.is_free==0){ }}
-                        <button class="layui-btn layui-btn-xs">收费</button>
-                        {{# }else{ }}
-                        <button class="layui-btn layui-btn-xs">免费</button>
-                        {{# } }}
-                    </script>
-<!--                    <script type="text/html" id="act">-->
-<!--                        <button type="button" class="layui-btn layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-edit"></i>删除</button>-->
-<!--                    </script>-->
+                        <div class="layui-col-md12">
+                            <table id="List" lay-filter="List"></table>
+                            <script type="text/html" id="money">
+                                <span class="layui-badge">￥{{d.price}}</span>
+                            </script>
+                            <script type="text/html" id="is_permanent">
+                                {{# if(d.is_permanent==0){ }}
+                                <button class="layui-btn layui-btn-xs">非永久</button>
+                                {{# }else{ }}
+                                <button class="layui-btn layui-btn-xs">永久</button>
+                                {{# } }}
+                            </script>
+                            <script type="text/html" id="is_free">
+                                {{# if(d.is_free==0){ }}
+                                <button class="layui-btn layui-btn-xs">收费</button>
+                                {{# }else{ }}
+                                <button class="layui-btn layui-btn-xs">免费</button>
+                                {{# } }}
+                            </script>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

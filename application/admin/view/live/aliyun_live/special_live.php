@@ -10,170 +10,168 @@
 </style>
 {/block}
 {block name="content"}
-<div class="layui-fluid" style="background: #fff">
-    <div class="layui-tab layui-tab-brief" lay-filter="tab">
-        <ul class="layui-tab-title">
-            <li lay-id="list" {eq name='type' value='1'}class="layui-this" {/eq} >
-                <a href="{eq name='type' value='1'}javascript:;{else}{:Url('special_live',['special_type'=>4,'type'=>1])}{/eq}">直播列表</a>
-            </li>
-            <li lay-id="list" {eq name='type' value='2'}class="layui-this" {/eq}>
-                <a href="{eq name='type' value='2'}javascript:;{else}{:Url('index',['special_type'=>4,'type'=>2])}{/eq}">直播间管理</a>
-            </li>
-        </ul>
-    </div>
-    <div class="layui-row layui-col-space15"  id="app">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
-                    <form class="layui-form layui-form-pane" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">直播名称</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="store_name" class="layui-input" placeholder="请输入直播名称,关键字,编号">
-                                    <input type="hidden" name="type" value="{$type}">
-                                    <input type="hidden" name="subject_id" value="{$subject_id}">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">所属科目</label>
-                                <div class="layui-input-block">
-                                    <select name="subject_id" lay-search="">
-                                        <option value="0">全部</option>
-                                        {volist name='subject_list' id='vo'}
-                                        <option value="{$vo.id}">{$vo.name}</option>
-                                        {/volist}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">是否显示</label>
-                                <div class="layui-input-block">
-                                    <select name="is_show">
-                                        <option value="">全部</option>
-                                        <option value="1">显示</option>
-                                        <option value="0">隐藏</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">时间范围</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="start_time" placeholder="开始时间" id="start_time" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid">-</div>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                    <input type="text" name="end_time" placeholder="结束时间" id="end_time" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                        <i class="layui-icon layui-icon-search"></i>搜索</button>
+                    <div class="layui-tab layui-tab-brief" lay-filter="tab">
+                        <ul class="layui-tab-title">
+                            <li lay-id="list" {eq name='type' value='1'}class="layui-this" {/eq} >
+                                <a href="{eq name='type' value='1'}javascript:;{else}{:Url('special_live',['special_type'=>4,'type'=>1])}{/eq}">直播列表</a>
+                            </li>
+                            <li lay-id="list" {eq name='type' value='2'}class="layui-this" {/eq}>
+                                <a href="{eq name='type' value='2'}javascript:;{else}{:Url('index',['special_type'=>4,'type'=>2])}{/eq}">直播间管理</a>
+                            </li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-md12">
+                                        <form class="layui-form layui-form-pane" action="">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">直播名称</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="store_name" class="layui-input" placeholder="请输入直播名称、关键字、编号">
+                                                        <input type="hidden" name="type" value="{$type}">
+                                                        <input type="hidden" name="subject_id" value="{$subject_id}">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">所属科目</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="subject_id" lay-search="">
+                                                            <option value="0">全部</option>
+                                                            {volist name='subject_list' id='vo'}
+                                                            <option value="{$vo.id}">{$vo.name}</option>
+                                                            {/volist}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">是否显示</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="is_show">
+                                                            <option value="">全部</option>
+                                                            <option value="1">显示</option>
+                                                            <option value="0">隐藏</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label">时间范围</label>
+                                                    <div class="layui-input-inline" style="width: 200px;">
+                                                        <input type="text" name="start_time" placeholder="开始时间" id="start_time" class="layui-input">
+                                                    </div>
+                                                    <div class="layui-form-mid">-</div>
+                                                    <div class="layui-input-inline" style="width: 200px;">
+                                                        <input type="text" name="end_time" placeholder="结束时间" id="end_time" class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
+                                                        <i class="layui-icon layui-icon-search"></i>搜索
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <div class="layui-btn-group">
+                                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="action.open_add('{:Url('/admin/special.special_type/add',['special_type' =>$special_type])}','添加{$special_title}')">
+                                                <i class="layui-icon layui-icon-add-circle"></i>添加{$special_title}
+                                            </button>
+                                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()">
+                                                <i class="layui-icon layui-icon-refresh"></i>刷新
+                                            </button>
+                                        </div>
+                                        <table id="List" lay-filter="List"></table>
+                                        <script type="text/html" id="recommend">
+                                            {{#  layui.each(d.recommend, function(index, item){ }}
+                                            <span class="layui-badge layui-bg-blue">{{item}}</span>
+                                            {{#  }); }}
+                                        </script>
+                                        <script type="text/html" id="is_pink">
+                                            {{# if(d.is_pink){ }}
+                                            <span class="layui-badge layui-bg-green">拼团开启</span>
+                                            {{# }else{ }}
+                                            <span class="layui-badge">拼团关闭</span>
+                                            {{# } }}
+                                        </script>
+                                        <script type="text/html" id="is_show">
+                                            <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
+                                        </script>
+                                        <script type="text/html" id="image">
+                                            <img style="cursor: pointer;" lay-event='open_image' src="{{d.image}}" height="50">
+                                        </script>
+                                        <script type="text/html" id="act">
+                                            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="dropdown(this)">
+                                                <i class="layui-icon layui-icon-down"></i>操作
+                                            </button>
+                                            <ul class="layui-nav-child layui-anim layui-anim-upbit">
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="action.open_add('{:Url('/admin/special.special_type/add')}?id={{d.id}}&special_type={$special_type}','编辑直播')" >
+                                                        <i class="fa fa-paste"></i>编辑直播
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)" lay-event='go_live'>
+                                                        <i class="fa fa-video-camera"></i>去直播
+                                                    </a>
+                                                </li>
+                                                {if condition='isset($login_role["sign"]) && $login_role["sign"] eq "admin"'}
+                                                <li>
+                                                    <a href="javascript:void(0)" lay-event='move_live_admin'>
+                                                        <i class="fa fa-street-view"></i>直播间转让
+                                                    </a>
+                                                </li>
+                                                {/if}
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('special.special_type/recommend')}?special_id={{d.id}}',{h:300,w:400})">
+                                                        <i class="fa fa-check-circle"></i>推荐至首页
+                                                    </a>
+                                                </li>
+                                                {{# if(d.is_play){ }}
+                                                <li>
+                                                    <a lay-event='recommend' href="javascript:void(0)">
+                                                        <i class="fa fa-check-circle"></i>首页弹窗
+                                                    </a>
+                                                </li>
+                                                {{# } }}
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-拼团管理','{:Url('special.special_type/pink')}?special_id={{d.id}}',{h:500})">
+                                                        <i class="fa fa-users"></i> 拼团设置
+                                                    </a>
+                                                </li>
+                                                {{# if(d.is_pink){ }}
+                                                <li>
+                                                    <a href="{:Url('ump.store_combination/combina_list')}?cid={{d.id}}&special_type={$special_type}" >
+                                                        <i class="fa fa-street-view"></i> 查看拼团
+                                                    </a>
+                                                </li>
+                                                {{# } }}
+                                                <li>
+                                                    <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-直播回放','{:Url('download_list')}?special_id={{d.id}}',{w:1200})">
+                                                        <i class="fa fa-cloud-download"></i> 直播回放
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a lay-event='delect' href="javascript:void(0)">
+                                                        <i class="fa fa-trash"></i> 删除直播
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </script>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <!--产品列表-->
-        <div class="layui-col-md12">
-            <div class="layui-card">
-                <div class="layui-card-body">
-                    <div class="alert alert-info" role="alert">
-                        列表[直播名称],[排序]可进行快速修改,双击或者单击进入编辑模式,失去焦点可进行自动保存
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="layui-btn-container">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick="action.open_add('{:Url('/admin/special.special_type/add',['special_type' =>$special_type])}','新增{$special_title}')"><i class="layui-icon layui-icon-add-1"></i>新增{$special_title}</button>
-                        <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="window.location.reload()"><i class="layui-icon layui-icon-refresh"></i>  刷新</button>
-                    </div>
-                    <table class="layui-hide" id="List" lay-filter="List"></table>
-                    <script type="text/html" id="recommend">
-                        {{#  layui.each(d.recommend, function(index, item){ }}
-                        <span class="layui-badge layui-bg-blue">{{item}}</span>
-                        {{#  }); }}
-                    </script>
-                    <script type="text/html" id="is_pink">
-                        {{# if(d.is_pink){ }}
-                        <span class="layui-badge layui-bg-green">拼团开启</span>
-                        {{# }else{ }}
-                        <span class="layui-badge">拼团关闭</span>
-                        {{# } }}
-                    </script>
-                    <script type="text/html" id="is_show">
-                        <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
-                    </script>
-                    <script type="text/html" id="image">
-                        <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
-                    </script>
-                    <script type="text/html" id="act">
-                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
-                        <ul class="layui-nav-child layui-anim layui-anim-upbit">
-                            <li>
-                                <a href="javascript:void(0)" onclick="action.open_add('{:Url('/admin/special.special_type/add')}?id={{d.id}}&special_type={$special_type}','编辑直播')" >
-                                    <i class="fa fa-paste"></i> 编辑直播
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" lay-event='go_live'>
-                                    <i class="fa fa-video-camera"></i> 去直播
-                                </a>
-                            </li>
-                            {if condition='isset($login_role["sign"]) && $login_role["sign"] eq "admin"'}
-                            <li>
-                                <a href="javascript:void(0)" lay-event='move_live_admin'>
-                                    <i class="fa fa-street-view"></i> 直播间转让
-                                </a>
-                            </li>
-                            {/if}
-                            <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-推荐管理','{:Url('special.special_type/recommend')}?special_id={{d.id}}',{h:300,w:400})">
-                                    <i class="fa fa-check-circle"></i> 推荐至首页
-                                </a>
-                            </li>
-                            {{# if(d.is_play){ }}
-                            <li>
-                                <a lay-event='recommend' href="javascript:void(0)">
-                                    <i class="fa fa-check-circle"></i> 首页弹窗
-                                </a>
-                            </li>
-                            {{# } }}
-                           <!-- <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-关联课程','{:Url('relation_task')}?special_id={{d.id}}',{w:1100})">
-                                    <i class="fa fa-link"></i> 关联课程
-                                </a>
-                            </li>-->
-                            <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-拼团管理','{:Url('special.special_type/pink')}?special_id={{d.id}}',{h:500})">
-                                    <i class="fa fa-users"></i> 拼团设置
-                                </a>
-                            </li>
-                            {{# if(d.is_pink){ }}
-                            <li>
-                                <a href="{:Url('ump.store_combination/combina_list')}?cid={{d.id}}&special_type={$special_type}" >
-                                    <i class="fa fa-street-view"></i> 查看拼团
-                                </a>
-                            </li>
-                            {{# } }}
-                            <li>
-                                <a href="javascript:void(0)" onclick="$eb.createModalFrame('{{d.title}}-直播回放','{:Url('download_list')}?special_id={{d.id}}',{w:1200})">
-                                    <i class="fa fa-cloud-download"></i> 直播回放
-                                </a>
-                            </li>
-
-                            <li>
-                                <a lay-event='delect' href="javascript:void(0)">
-                                    <i class="fa fa-trash"></i> 删除直播
-                                </a>
-                            </li>
-                        </ul>
-                    </script>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 
@@ -213,11 +211,6 @@
                                     </select>
                                 </div>
                             </div>
-                           <!-- <div class="layui-form-item">
-                                <div class="layui-input-block">
-                                    <button class="layui-btn" lay-submit="move_admin" lay-filter="move_admin">确认选择</button>
-                                </div>
-                            </div>-->
                         </form>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 {extend name="public/container"}
 {block name="content"}
-<div class="layui-fluid" id="app" v-cloak>
+<div class="layui-fluid" id="app">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">

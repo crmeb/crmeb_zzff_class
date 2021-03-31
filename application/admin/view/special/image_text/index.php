@@ -50,11 +50,9 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <div class="layui-input-inline">
-                                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
-                                                <i class="layui-icon">&#xe615;</i>搜索
-                                            </button>
-                                        </div>
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="search" lay-filter="search">
+                                            <i class="layui-icon">&#xe615;</i>搜索
+                                        </button>
                                     </div>
                                 </div>
                             </form>

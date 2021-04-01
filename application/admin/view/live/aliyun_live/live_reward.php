@@ -1,13 +1,79 @@
 {extend name="public/container"}
 {block name="content"}
-<div class="layui-fluid" style="background: #fff">
-    <div class="layui-row layui-col-space15"  id="app">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15" id="app">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
                     <div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim="" lay-indicator="inside" lay-arrow="none" style="background:none">
                         <div class="layui-card-body">
-                            <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <form class="layui-form" action="">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">搜索内容</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">直播间</label>
+                                            <div class="layui-input-block">
+                                                <select v-model="where.live_id" name="live_id" class="layui-input">
+                                                    <option value="">全部</option>
+                                                    <option v-for="item in live_studio" :value="item.id">{{ item.live_title }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">创建时间</label>
+                                            <div class="layui-input-block">
+                                                <div class="layui-btn-container">
+                                                    <button v-for="item in dateList" :class="[ where.date != item.value ? 'layui-btn-primary' : 'layui-btn-normal' ]" type="button" class="layui-btn layui-btn-sm">{{ item.name }}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button type="button" @click="search" class="layui-btn layui-btn-normal layui-btn-sm">
+                                                    <i class="layui-icon layui-icon-search"></i>搜索
+                                                </button>
+                                                <button type="reset" @click="refresh" class="layui-btn layui-btn-primary layui-btn-sm">
+                                                    <i class="layui-icon layui-icon-refresh"></i>刷新
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <table id="List" lay-filter="List"></table>
+                                    <script type="text/html" id="is_pink">
+                                        {{# if(d.is_pink){ }}
+                                        <span class="layui-badge layui-bg-blue">拼团开启</span>
+                                        {{# }else{ }}
+                                        <span class="layui-badge">拼团关闭</span>
+                                        {{# } }}
+                                    </script>
+                                    <script type="text/html" id="image">
+                                        <img style="cursor: pointer;" lay-event='open_image' src="{{d.gift_image}}" height="50">
+                                    </script>
+                                    <script type="text/html" id="act">
+                                        <button type="button" class="layui-btn layui-btn-xs" onclick="dropdown(this)">操作 <span class="caret"></span></button>
+                                        <ul class="layui-nav-child layui-anim layui-anim-upbit">
+                                            <li>
+                                                <a lay-event='delect' href="javascript:void(0)">
+                                                    <i class="fa fa-trash"></i> 删除推荐课程
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </script>
+                                </div>
+                            </div>
+
+
+
+
+                            <!-- <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-col-lg12">
                                     <label class="layui-form-label">搜索内容:</label>
                                     <div class="layui-input-block">
@@ -39,7 +105,7 @@
                                             <i class="layui-icon layui-icon-refresh" ></i>刷新</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -108,29 +174,11 @@
 {block name="script"}
 <script>
     //实例化form
-    // layList.form.render();
+    // layui.form.render();
     // layList.date({elem:'#start_time',theme:'#393D49',type:'datetime'});
     // layList.date({elem:'#end_time',theme:'#393D49',type:'datetime'});
     //加载列表
-    layList.tableList({
-        o:'List',
-        done:function () {
-
-        }
-    },"{:Url('live_reward_list',[])}",function (){
-        return [
-            {field: 'id', title: '编号', sort: true,/*event:'live_goods_id',*/width:'5%',align: 'center'},
-            {field: 'live_title', title: '直播间',align: 'center'},
-            {field: 'nickname', title: '用户名',align: 'center'},
-            {field: 'avatar', title: '用户头像',align: 'center',templet: '<p><img class="avatar" style="cursor: pointer" class="open_image" data-image="{{d.avatar}}" src="{{d.avatar}}" alt="{{d.nickname}}"></p>'},
-            {field: 'gift_name', title: '礼物名称'},
-            {field: 'gift_image', title: '礼物图标',templet:'#image',align: 'center'},
-            {field: 'gift_price', title: '礼物单价（{$gold_info["gold_name"]}）'},
-            {field: 'gift_num', title: '礼物数量'},
-            {field: 'total_price', title: '总额（{$gold_info["gold_name"]}）',sort: true, align: 'center'},
-            {field: 'add_time', title: '贡献时间',align: 'center'},
-        ];
-    });
+    
     //下拉框
     $(document).click(function (e) {
         $('.layui-nav-child').hide();
@@ -140,7 +188,7 @@
         oEvent.stopPropagation();
         var offset = $(that).offset();
         var top=offset.top-$(window).scrollTop();
-        var index = $(that).parents('tr').data('index');
+        // var index = $(that).parents('tr').data('index');
         $('.layui-nav-child').each(function (key) {
             if (key != index) {
                 $(this).hide();
@@ -291,6 +339,27 @@
             mounted:function () {
                 var that=this;
                  that.getBadge();
+                 layList.form.render();
+
+                 layList.tableList({
+                        o:'List',
+                        done:function () {
+
+                        }
+                    },"{:Url('live_reward_list',[])}",function (){
+                        return [
+                            {field: 'id', title: '编号', sort: true,/*event:'live_goods_id',*/width:'5%',align: 'center'},
+                            {field: 'live_title', title: '直播间',align: 'center'},
+                            {field: 'nickname', title: '用户名',align: 'center'},
+                            {field: 'avatar', title: '用户头像',align: 'center',templet: '<p><img class="avatar" style="cursor: pointer" class="open_image" data-image="{{d.avatar}}" src="{{d.avatar}}" alt="{{d.nickname}}"></p>'},
+                            {field: 'gift_name', title: '礼物名称'},
+                            {field: 'gift_image', title: '礼物图标',templet:'#image',align: 'center'},
+                            {field: 'gift_price', title: '礼物单价（{$gold_info["gold_name"]}）'},
+                            {field: 'gift_num', title: '礼物数量'},
+                            {field: 'total_price', title: '总额（{$gold_info["gold_name"]}）',sort: true, align: 'center'},
+                            {field: 'add_time', title: '贡献时间',align: 'center'},
+                        ];
+                    });
                 layList.laydate.render({
                     elem:this.$refs.date_time,
                     trigger:'click',

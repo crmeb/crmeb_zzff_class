@@ -453,6 +453,9 @@
                                     break;
                             }
                             var data = res.data.data || {cycle:{count:{},price:{}},pre_cycle:{price:{},count:{}}};
+                            if (!data.length) {
+                                return;
+                            }
                             that.cyclecount = data.cycle.count.data;
                             that.cyclecount_percent = data.cycle.count.percent;
                             that.cyclecount_is_plus = data.cycle.count.is_plus;

@@ -66,7 +66,7 @@
                                     <i class="layui-icon">&#xe669;</i>刷新
                                 </button>
                             </div>
-                            <table class="layui-hide" id="List" lay-filter="List"></table>
+                            <table id="List" lay-filter="List"></table>
                             <script type="text/html" id="recommend">
                                 {{#  layui.each(d.recommend, function(index, item){ }}
                                 <span class="layui-badge layui-bg-blue">{{item}}</span>
@@ -86,7 +86,7 @@
                                 <input type='checkbox' name='id' lay-skin='switch' value="{{d.id}}" lay-filter='is_show' lay-text='显示|隐藏'  {{ d.is_show == 1 ? 'checked' : '' }}>
                             </script>
                             <script type="text/html" id="image">
-                                <img style="cursor: pointer;width: 80px;height: 40px;" lay-event='open_image' src="{{d.image}}">
+                                <img style="cursor: pointer;" lay-event='open_image' src="{{d.image}}" height="50">
                             </script>
                             <script type="text/html" id="act">
                                 <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="dropdown(this)">
@@ -144,7 +144,7 @@
         }
     },"{:Url('list',['subject_id'=>$subject_id, 'special_type'=>$special_type])}",function (){
         return [
-            {field: 'id', title: '编号', sort: true,event:'id',width:'5%',align: 'center'},
+            {field: 'id', title: '编号', width:60,align: 'center'},
             {field: 'title', title: '分类名称',edit:'title',align: 'center'},
             {field: 'subject_name', title: '所属分类',align: 'center'},
             {field: 'image', title: '封面图',templet:'#image',align: 'center'},
@@ -156,7 +156,7 @@
             {field: 'sort', title: '排序',sort: true,event:'sort',edit:'sort',align: 'center'},
             /*{field: 'is_live_goods', title: '直播带货',templet:'#is_live_goods',align: 'center'},*/
             {field: 'is_show', title: '是否显示',templet:'#is_show',align: 'center'},
-            {field: 'right', title: '操作',align:'center',toolbar:'#act',width:'10%'},
+            {title: '操作',align:'center',toolbar:'#act',width:'10%'},
         ];
     });
     //下拉框

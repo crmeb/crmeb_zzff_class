@@ -281,8 +281,4 @@ return [
             'mime' => 'image/jpeg,image/gif,image/png'
         ]
     ],
-
-    'white_phone' => [
-        15594500161
-    ],
 ];

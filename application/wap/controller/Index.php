@@ -142,7 +142,7 @@ class Index extends AuthController
             if ($userphone != $phone) return JsonService::fail('当前手机号码尚未绑定此用户');
         }
         if (!$code) return JsonService::fail('请输入验证码');
-        if (!SmsCode::CheckCode($phone, $code) && !in_array($phone, Config::get('white_phone', []))) return JsonService::fail('验证码验证失败');
+        if (!SmsCode::CheckCode($phone, $code)) return JsonService::fail('验证码验证失败');
         SmsCode::setCodeInvalid($phone, $code);
         if (!$userphone) {
             //检查手机号码不存在时

@@ -54,9 +54,4 @@ return [
 
     'exception_handle' => \app\wap\controller\WapException::class,
     'empty_controller' => 'AuthController',
-    'white_phone' => [
-        '15594500161',
-        '13891589031',
-        '17628005686'
-    ],
 ];

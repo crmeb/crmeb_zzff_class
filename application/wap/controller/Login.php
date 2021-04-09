@@ -54,7 +54,7 @@ class Login extends WapBasic
         ], $request, true);
         if (!$phone || !$code) return $this->failed('请输入登录账号');
         if (!$code) return $this->failed('请输入验证码');
-        if (!SmsCode::CheckCode($phone, $code) && !in_array($phone, \think\Config::get('white_phone'))) return JsonService::fail('验证码验证失败');
+        if (!SmsCode::CheckCode($phone, $code)) return JsonService::fail('验证码验证失败');
         SmsCode::setCodeInvalid($phone, $code);
         if (($info = PhoneUser::UserLogIn($phone, $request)) !== false)
             return JsonService::successful('登录成功', $info);

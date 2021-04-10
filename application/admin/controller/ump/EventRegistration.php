@@ -21,10 +21,7 @@ use app\admin\model\ump\EventRegistration as EventRegistrationModel;
 use app\admin\model\ump\EventSignUp as EventSignUpModel;
 
 class EventRegistration extends AuthController
-
 {
-
-
     /**
      * 分类管理
      * */

@@ -82,6 +82,7 @@ class WechatService
         $server->setMessageHandler(function($message){
             $behavior = MessageBehavior::class;
             HookService::beforeListen('wechat_message',$message,null,true,$behavior);
+            $response='';
             switch ($message->MsgType){
                 case 'event':
                     switch (strtolower($message->Event)){
@@ -132,7 +133,7 @@ class WechatService
                     $response = HookService::resultListen('wechat_message_other',$message,null,true,$behavior);
                     break;
             }
-            
+
             return $response;
         });
     }

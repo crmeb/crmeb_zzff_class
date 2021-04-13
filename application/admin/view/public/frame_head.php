@@ -16,5 +16,3 @@ $eb = parent._mpApi;
 window.controlle="{:getController()}";
 window.module="{:getModule()}";
 </script>
-
-

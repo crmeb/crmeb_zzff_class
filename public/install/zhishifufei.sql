@@ -556,79 +556,6 @@ CREATE TABLE `eb_live_barrage` (
   `is_show` int(11) NOT NULL DEFAULT '1' COMMENT '是否显示 1= 显示，0=隐藏'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='直播间弹幕';
 
---
--- 转存表中的数据 `eb_live_barrage`
---
-
-INSERT INTO `eb_live_barrage` (`id`, `uid`, `to_uid`, `type`, `barrage`, `live_id`, `add_time`, `is_show`) VALUES
-(1, 209, 0, 1, '你好', 10, 1582029381, 1),
-(2, 198, 0, 1, '[qq_12][qq_12][qq_12][qq_12][qq_12]', 10, 1582073756, 1),
-(3, 164, 0, 1, '嘿嘿', 10, 1582077353, 1),
-(4, 164, 0, 1, '[qq_13]', 10, 1582077358, 1),
-(5, 164, 0, 1, '[qq_12][qq_12]', 10, 1582077363, 1),
-(6, 276, 0, 1, '[qq_11][qq_12][qq_12][qq_6][qq_6]', 10, 1582093402, 1),
-(7, 276, 0, 1, '[qq_2][qq_3][qq_4][qq_4][qq_5]', 10, 1582093406, 1),
-(8, 65, 0, 2, 'http://cremb-zsff.oss-cn-beijing.aliyuncs.com/95d75202002191944598419.png', 10, 1582112699, 1),
-(9, 319, 0, 1, '[em_37]', 10, 1582127815, 1),
-(10, 65, 0, 1, 'd', 11, 1582166793, 1),
-(11, 65, 0, 1, 'asd', 11, 1582166828, 1),
-(12, 66, 0, 1, '你是', 11, 1582166839, 1),
-(13, 66, 0, 1, '你是', 11, 1582166854, 1),
-(14, 65, 0, 1, 'asd', 11, 1582166858, 1),
-(15, 65, 0, 1, '咱是', 11, 1582166867, 1),
-(16, 65, 0, 1, '实打实打算啊是大', 11, 1582166921, 1),
-(17, 65, 0, 1, '打发士大夫二', 11, 1582166930, 1),
-(18, 341, 0, 1, '323419323419', 10, 1582205387, 1),
-(19, 326, 0, 1, '[em_25]', 10, 1582284966, 1),
-(20, 503, 0, 1, '回放呢', 10, 1582285233, 1),
-(21, 503, 0, 1, '123', 10, 1582285242, 1),
-(22, 524, 0, 1, '？', 10, 1582285336, 1),
-(23, 574, 0, 1, '[qq_1]', 10, 1582285636, 1),
-(24, 592, 0, 1, '[qq_1]', 10, 1582285835, 1),
-(25, 506, 0, 1, '看不到呀', 10, 1582285963, 1),
-(26, 608, 0, 1, '好棒', 10, 1582286466, 1),
-(27, 680, 0, 1, '直播', 10, 1582287711, 1),
-(28, 680, 0, 1, '[qq_1]', 10, 1582287733, 1),
-(29, 680, 0, 1, '[qq_2]', 10, 1582287742, 1),
-(30, 715, 0, 1, '大家好', 10, 1582289243, 1),
-(31, 759, 0, 1, '63+', 10, 1582290626, 1),
-(32, 759, 0, 1, '错过就感觉到个低功耗', 10, 1582290630, 1),
-(33, 776, 0, 1, '测试', 10, 1582291516, 1),
-(34, 807, 0, 1, '[qq_13]', 10, 1582293831, 1),
-(35, 832, 0, 1, '那么状况', 10, 1582296232, 1),
-(36, 832, 0, 2, 'http://cremb-zsff.oss-cn-beijing.aliyuncs.com/3efd39040238907d69ae.jpg', 10, 1582296253, 1),
-(37, 842, 0, 1, '123', 10, 1582297198, 1),
-(38, 842, 0, 1, '好', 10, 1582297226, 1),
-(39, 842, 0, 2, 'http://cremb-zsff.oss-cn-beijing.aliyuncs.com/417be91ff00706d68f62.jpg', 10, 1582297288, 1),
-(40, 864, 0, 1, '[qq_12]', 10, 1582299228, 1),
-(41, 864, 0, 1, '[qq_5]', 10, 1582299232, 1),
-(42, 864, 0, 1, '[em_3][em_3]', 10, 1582299237, 1),
-(43, 620, 0, 1, '人生的奔跑，不在于瞬间的爆发，而取决于途中的坚持。', 10, 1582306748, 1),
-(44, 918, 0, 1, '测试', 10, 1582329784, 1),
-(45, 182, 0, 1, '测试', 10, 1582330164, 1),
-(46, 835, 0, 1, '？？？？', 10, 1582337896, 1),
-(47, 262, 0, 1, '哈哈', 10, 1582344568, 1),
-(48, 969, 0, 1, '?', 10, 1582349253, 1),
-(49, 969, 0, 2, 'http://cremb-zsff.oss-cn-beijing.aliyuncs.com/edf24f679abab08d7ee1.jpg', 10, 1582349281, 1),
-(50, 972, 0, 1, '[qq_1]', 10, 1582350217, 1),
-(51, 972, 0, 1, '111', 10, 1582350254, 1),
-(52, 848, 0, 1, '开下', 13, 1582350596, 1),
-(53, 952, 0, 1, '[qq_6]', 10, 1582360627, 1),
-(54, 1060, 0, 1, '111', 12, 1582389437, 1),
-(55, 1060, 0, 1, '2222', 12, 1582389439, 1),
-(56, 1060, 0, 1, '3333', 12, 1582389441, 1),
-(57, 1060, 0, 1, '5555555', 12, 1582389443, 1),
-(58, 1060, 0, 1, '11111111111', 12, 1582389448, 1),
-(59, 1060, 0, 1, '[qq_11]', 12, 1582389476, 1),
-(60, 1060, 0, 1, '[qq_12][qq_12][qq_12][qq_12][qq_12]', 12, 1582389479, 1),
-(61, 1060, 0, 1, '[qq_20][qq_20]', 12, 1582389496, 1),
-(62, 1060, 0, 1, '111', 12, 1582389514, 1),
-(63, 1060, 0, 1, '33333333333', 12, 1582389524, 1),
-(64, 1060, 0, 1, '11111111', 12, 1582389575, 1),
-(65, 65, 0, 1, 'wer', 10, 1582433799, 1),
-(66, 65, 0, 1, '1', 10, 1582434761, 1);
-
--- --------------------------------------------------------
 
 --
 -- 表的结构 `eb_live_honoured_guest`
@@ -864,21 +791,6 @@ CREATE TABLE `eb_routine_template` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信模板';
 
---
--- 转存表中的数据 `eb_routine_template`
---
-
-INSERT INTO `eb_routine_template` (`id`, `tempkey`, `name`, `content`, `tempid`, `add_time`, `status`) VALUES
-(12, 'AT0177', '订单配送通知', '订单编号{{keyword1.DATA}}\n配送员{{keyword2.DATA}}\n联系电话{{keyword3.DATA}}\n配送时间{{keyword4.DATA}}\n备注{{keyword5.DATA}}', 'PPDexF5trJG2H9XuEcfrcV6V0Nk1X9S0mWDva_bEjF8', '1534469109', 1),
-(13, 'AT0007', '订单发货提醒', '订单号{{keyword1.DATA}}\n快递公司{{keyword2.DATA}}\n快递单号{{keyword3.DATA}}\n发货时间{{keyword4.DATA}}\n备注{{keyword5.DATA}}', 'rgb_ATfivS_vx7u6AnYXpQH-BxIABq8yJpMnGwhAzaE', '1534469928', 0),
-(14, 'AT0787', '退款成功通知', '订单号{{keyword1.DATA}}\n退款时间{{keyword2.DATA}}\n退款金额{{keyword3.DATA}}\n退款方式{{keyword4.DATA}}\n备注{{keyword5.DATA}}', 'g3Fu-ljOUwtNHo7ISRNovemB5LIDsPfgiYUukwadymA', '1534469993', 1),
-(15, 'AT0009', '订单支付成功通知', '单号{{keyword1.DATA}}\n下单时间{{keyword2.DATA}}\n订单状态{{keyword3.DATA}}\n支付金额{{keyword4.DATA}}\n支付方式{{keyword5.DATA}}', '6HxCNpsDXqhzGd_7QioQgWCJlIgzmLbcoE2d8uluEaQ', '1534470043', 1),
-(16, 'AT1173', '砍价成功通知', '商品名称{{keyword1.DATA}}\n砍价金额{{keyword2.DATA}}\n底价{{keyword3.DATA}}\n砍掉价格{{keyword4.DATA}}\n支付金额{{keyword5.DATA}}\n备注{{keyword6.DATA}}', 'DCt_nV9uo2bJdGMg19zr6ao_x8MGo3lRX6BqsVFY2zw', '1534470085', 0),
-(17, 'AT0036', '退款通知', '订单编号{{keyword1.DATA}}\n退款原因{{keyword2.DATA}}\n退款时间{{keyword3.DATA}}\n退款金额{{keyword4.DATA}}\n退款方式{{keyword5.DATA}}', 'kJ5jTVzV4ecNUDucKUATjBOIKJVzrPAm9peXYD13BxY', '1534470134', 1),
-(18, 'AT0035', '收益到账通知', '订单号{{keyword1.DATA}}\n商品名称{{keyword2.DATA}}\n金额{{keyword3.DATA}}\n收益来源{{keyword4.DATA}}', 'OaCSnkkFi7GFomOCTCDe5w9qaNAWS2REAVZ3epWlxA0', '1541814979', 1),
-(19, 'AT0146', '审核结果通知', '审核结果{{keyword1.DATA}}\r\n审核人员{{keyword2.DATA}}\r\n联系电话{{keyword3.DATA}}\r\n审核时间{{keyword4.DATA}}\r\n备注{{keyword5.DATA}}\r\n申请用户{{keyword6.DATA}}\r\n未通过原因{{keyword7.DATA}}', 'wzc5lXn4llgOgX7zH7l90rh4szlPZdjYPRTRo5OnzTs', '1543545827', 1);
-
--- --------------------------------------------------------
 
 --
 -- 表的结构 `eb_search`
@@ -2462,7 +2374,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (270, 269, '', '小程序配置', 'admin', 'setting.systemConfig', 'index_alone', '{\"type\":\"2\",\"tab_id\":\"7\"}', 0, 1, 1),
 (273, 286, '', '秒杀管理', 'admin', '', '', '[]', 0, 0, 1),
 (276, 21, '', '附件管理', 'admin', 'widget.images', 'index', '[]', 0, 0, 1),
-(278, 498, '', '清除数据', 'admin', 'system.system_cleardata', 'index', '[]', 271, 1, 1),
+-- (278, 498, '', '清除数据', 'admin', 'system.system_cleardata', 'index', '[]', 271, 1, 1),
 (286, 0, 'paper-plane', '营销', 'admin', '', '', '[]', 105, 1, 1),
 (287, 0, 'money', '财务', 'admin', '', '', '[]', 103, 1, 1),
 (289, 0, 'gear', '设置', 'admin', '', '', '[]', 90, 1, 1),
@@ -2815,13 +2727,6 @@ CREATE TABLE `eb_user_notice` (
   `send_time` int(11) NOT NULL DEFAULT '0' COMMENT '发送时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户通知表';
 
---
--- 转存表中的数据 `eb_user_notice`
---
-
-INSERT INTO `eb_user_notice` (`id`, `uid`, `type`, `user`, `title`, `content`, `add_time`, `is_send`, `send_time`) VALUES
-(1, ',6,', 2, '系统管理员', '请开通会员但未提供收货地址的会员联系客服', '请开通会员但未提供收货地址的会员联系客服', 1541742986, 1, 1541743080);
-
 -- --------------------------------------------------------
 
 --
@@ -2870,13 +2775,6 @@ CREATE TABLE `eb_wechat_media` (
   `temporary` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否永久或者临时 0永久1临时',
   `add_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信回复表';
-
---
--- 转存表中的数据 `eb_wechat_media`
---
-
-INSERT INTO `eb_wechat_media` (`id`, `type`, `path`, `media_id`, `url`, `temporary`, `add_time`) VALUES
-(12, 'image', '/public/uploads/wechat/image/5b042ca618139.jpg', '6sFx6PzPF2v_Lv4FGOMzzwcwmM2wuoA63ZMSxiN-7DY', 'http://mmbiz.qpic.cn/mmbiz_jpg/xVkDhuiaGm78WOdUXuPE1oYLnU4J0LCEiaSuLhwwSrfdyINspibXsllaj8rOMSs5estAv0qhGuGniaqhb6HftecPuw/0?wx_fmt=jpeg', 0, 1527000231);
 
 -- --------------------------------------------------------
 

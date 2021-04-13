@@ -1,7 +1,7 @@
 {extend name="public/container"}
 {block name="content"}
-<div class="layui-fluid" id="app">
-    <div class="layui-row layui-col-space15">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15" id="app">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">订单管理</div>

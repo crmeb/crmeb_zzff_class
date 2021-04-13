@@ -96,13 +96,12 @@ class SystemAdmin extends AuthController
         ], $request);
         if (!$data['account']) return Json::fail('请输入管理员账号');
         if (!$data['roles']) return Json::fail('请选择至少一个管理员身份');
-        if (!$data['phone']) return Json::fail('请填写前端登录电话');
-        $user = User::where('phone',$data['phone'])->find();
-        if (!$user) return Json::fail('请至前端-个人中心-点击头像补充个人资料');
         foreach ($data['roles'] as $v) {
             $role = SystemRole::where('id',$v)->find();
             if ($role && $role['sign'] == 'verification') {
-                if (!$data['phone']) return Json::fail('请选择至少一个管理员身份');
+                if (!$data['phone']) return Json::fail('请填写前端登录电话');
+                $user = User::where('phone',$data['phone'])->find();
+                if (!$user) return Json::fail('请至前端-个人中心-点击头像补充个人资料');
             }
         }
         if (!$data['pwd']) return Json::fail('请输入管理员登陆密码');

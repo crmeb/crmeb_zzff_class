@@ -1,0 +1,73 @@
+<div>
+    <div :class="{ mask: !payment }" @touchmove.prevent></div>
+    <div :class="{ on: !payment }" class="dialog-payment">
+        <div class="dialog-hd">
+            <button @click="onClose"></button>
+            <div class="title">支付方式</div>
+        </div>
+        <div class="dialog-bd">
+            <label v-if="!isIOS && isWechat" class="item">
+                <div class="item-hd icon1"></div>
+                <div class="item-bd">
+                    <div>微信支付</div>
+                    <div></div>
+                </div>
+                <div class="item-ft">
+                    <input v-model="payType" type="radio" name="pay" value="weixin">
+                    <span class="tick"></span>
+                </div>
+            </label>
+            <label v-if="isAlipay" class="item">
+                <div class="item-hd icon2"></div>
+                <div class="item-bd">
+                    <div>支付宝支付</div>
+                </div>
+                <div class="item-ft">
+                    <input v-model="payType" type="radio" name="pay" value="zhifubao">
+                    <span class="tick"></span>
+                </div>
+            </label>
+            <label v-if="isBalance" class="item">
+                <div class="item-hd icon3"></div>
+                <div class="item-bd">
+                    <div>余额支付</div>
+                    <div class="prompt"><span>可用余额：</span><span>￥{{ now_money }}</span></div>
+                </div>
+                <div class="item-ft">
+                    <input v-model="payType" type="radio" name="pay" value="yue">
+                    <span class="tick"></span>
+                </div>
+            </label>
+        </div>
+        <div class="dialog-ft">
+            <div class="total"><span>支付：</span><span class="money">￥{{ money }}</span></div>
+            <wx-open-subscribe
+                v-if="isWechat && templateId"
+                :template="templateId"
+                @success="onSuccess"
+                @error="onError"
+            >
+                <script type="text/wxtag-template" slot="style">
+                    <style>
+                        button {
+                            display: block;
+                            width: 100%;
+                            height: 40px;
+                            border-radius: 20px;
+                            border: none;
+                            background-color: #2c8eff;
+                            font-family: inherit;
+                            font-weight: normal;
+                            font-size: 14px;
+                            color: #fff;
+                        }
+                      </style>
+                </script>
+                <script type="text/wxtag-template">
+                    <button>立即支付</button>
+                </script>
+            </wx-open-subscribe>
+            <button v-else @click="onPay">立即支付</button>
+        </div>
+    </div>
+</div>

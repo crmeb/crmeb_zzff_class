@@ -1,0 +1,67 @@
+{extend name="public/container"}
+{block name="title"}资讯详情{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="news-detail-page">
+        <div class="title">{{ articleDetails.title }}</div>
+        <div class="wrap">
+             <div class="type" v-for="item in articleDetails.label">{{item}}</div>
+            <div class="time">
+                <span class="iconfont iconshijian11"></span>{{ articleDetails.add_time }}
+            </div>
+            <div class="browse">
+                <span class="iconfont iconliulanliang"></span>{{ articleDetails.visit}}
+            </div>
+        </div>
+        <div class="detail" v-html="articleDetails.content"></div>
+    </div>
+    <quick-menu></quick-menu>
+</div>
+<script>
+    var id={$id};
+    require(['vue', 'helper', 'store', 'quick'], function(Vue, $h, api) {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                articleDetails:{},
+                id:id
+            },
+            filters: {
+                format: function (value) {
+                    if (value) {
+                        return value;
+                    } else {
+                        return 0;
+                    }
+                }
+            },
+            mounted: function () {
+                var that = this;
+                that.getArticleDetails();
+            },
+            methods: {
+                getArticleDetails: function () {
+                    var that = this;
+                    if (that.loading || that.finished) {
+                        return;
+                    }
+                    that.loading = true;
+                    $h.loadFFF();
+                    api.baseGet($h.U({
+                        c: 'article',
+                        a: 'articleDetails',
+                        q: {
+                            id: that.id
+                        }
+                    }), function (res) {
+                       that.articleDetails= res.data.data;
+                        $h.loadClear();
+                    }, function (err) {
+                        $h.loadClear();
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,111 @@
+{extend name="public/container"}
+{block name="title"}图文详情{/block}
+{block name="head_top"}
+<style>
+    .page {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .head {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 0.2rem 0.3rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .head .title {
+        -webkit-box-flex: 1;
+        flex: 1;
+        min-width: 0;
+        margin-left: 0.3rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .head .browse {
+        margin-left: 0.3rem;
+        font-size: 0.24rem;
+        color: #999;
+    }
+
+    .head .iconfont {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+        font-size: 0.3rem;
+    }
+
+    .content {
+        -webkit-box-flex: 1;
+        flex: 1;
+        padding: 0.3rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .content p {
+        font-size: 0.3rem;
+        line-height: 1.6;
+    }
+
+    .content img {
+        width: 100%;
+    }
+</style>
+{/block} {block name="content"}
+<div v-cloak id="app">
+    <div class="page">
+        <div class="head">
+            <a class="iconfont iconxiangyou" href="javascript:" @click="goBack"></a>
+            <div class="title">{{ taskInfo.title }}</div>
+            <div class="browse">已浏览 {{ taskInfo.play_count }}</div>
+        </div>
+        <div class="content" v-html="taskInfo.content"></div>
+    </div>
+    <quick-menu></quick-menu>
+</div>
+{/block} {block name="foot"}
+<script>
+    var taskInfo = {$taskInfo},uid={$userInfo['uid'] ? $userInfo['uid']:0};
+    require(['vue', '{__WAP_PATH}zsff/js/quick.js'], function (Vue) {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                taskInfo: taskInfo
+            },
+            mounted: function () {
+                var that=this;
+                mapleWx($jssdk(), function () {
+                    this.onMenuShareAll({
+                        title: that.taskInfo.title,
+                        desc: that.taskInfo.title,
+                        imgUrl: that.taskInfo.image,
+                        link: location.href.indexOf('?') == -1 ? location.href + '?spread_uid=' + uid : location.href + '&spread_uid=' + uid,
+                    });
+                });
+            },
+            methods: {
+                goBack: function () {
+                    history.back();
+                }
+            }
+        });
+    });
+</script>
+{/block}

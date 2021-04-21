@@ -1,0 +1,92 @@
+{extend name="public/container"}
+{block name="title"}新闻{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="news-list-page">
+        <template v-if="newsList.length">
+            <ul>
+                <li v-for="item in newsList" :key="item.id">
+                    <a :href="'{:url('article/news_detail')}?id=' + item.id">
+                        <div class="text">
+                            <div class="name">{{ item.title }}</div>
+                            <div class="wrap">
+                                <div class="hot-wrap">
+                                    <div class="hot" v-for="itm in item.label">{{itm}}</div>
+                                </div>
+                                <div class="browse">
+                                    <span class="iconfont iconliulanliang"></span>{{ item.visit | format }}
+                                </div>
+                            </div>
+                        </div>
+                        <img :src="item.image_input">
+                    </a>
+                </li>
+            </ul>
+            <div v-if="finished" class="prompt">没有更多了~</div>
+        </template>
+        <img v-else-if="!loading && page === 2" class="empty" src="/wap/first/zsff/images/no_data_available.png">
+    </div>
+    <quick-menu></quick-menu>
+</div>
+<script>
+    require(['vue', 'helper', 'store', 'quick'], function (Vue, $h, api) {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                newsList: [],
+                page: 1,
+                limit: 15,
+                loading: false,
+                finished: false
+            },
+            filters: {
+                format: function (value) {
+                    if (value) {
+                        return value;
+                    } else {
+                        return 0;
+                    }
+                }
+            },
+            created: function () {
+                this.getNewsList();
+            },
+            mounted: function () {
+                var that = this;
+                that.$nextTick(function() {
+                    $h.EventUtil.listenTouchDirection(document, function () {
+                        !that.loading && that.getNewsList();
+                    }, false);
+                });
+            },
+            methods: {
+                getNewsList: function () {
+                    var that = this;
+                    if (that.loading || that.finished) {
+                        return;
+                    }
+                    that.loading = true;
+                    $h.loadFFF();
+                    api.baseGet($h.U({
+                        c: 'article',
+                        a: 'get_unifiend_list',
+                        q: {
+                            page: that.page++,
+                            limit: that.limit
+                        }
+                    }), function (res) {
+                        var data = res.data.data;
+                        that.loading = false;
+                        $h.loadClear();
+                        that.newsList = that.newsList.concat(data);
+                        that.finished = that.limit > data.length;
+                    }, function (err) {
+                        that.loading = false;
+                        $h.loadClear();
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,150 @@
+{extend name="public/container"}
+{block name="title"}签到{/block}
+{block name="head_top"}
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+</style>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="sign-in">
+        <div class="header">
+            <div class="cont">
+                <div class="image" @click="myUser">
+                    <img :src="userInfo.avatar" class="img">
+                </div>
+                <div class="text" @click="myUser">
+                    <div class="name" v-html="userInfo.nickname"></div>
+                    <div class="info">{$gold_name}: {{ userInfo.gold_num }}</div>
+                </div>
+                <a class="btn" :href="$h.U({c: 'my', a: 'sign_in_list'})">明细</a>
+            </div>
+        </div>
+        <div class="main">
+            <div class="head">
+                <div class="list">
+                    <div class="item">
+                        <div class="image">
+                            <img :src="isSign ? '{__WAP_PATH}zsff/images/stars2.png' : '{__WAP_PATH}zsff/images/stars1.png'"
+                                class="star">
+                        </div>
+                        <div class="day">每日签到获得{$gold_coin}{$gold_name}</div>
+                    </div>
+                </div>
+                <button class="btn" v-if="isSign" type="button" @click="show_sign_image">已签到</button>
+                <button class="btn" v-else type="button" @click="sign">立即签到</button>
+            </div>
+            <div class="foot">
+                <img src="{__WAP_PATH}zsff/images/lock.png" class="lock">
+                <div class="panel">
+                    <div class="name">已累计签到</div>
+                    <div class="count">
+                        <div class="cont">
+                            <div class="wrap">
+                                <div v-for="(item, index) in updateTotal" :key="index" class="item">{{ item }}</div>
+                            </div>
+                            <div class="unit">天</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="records.length" class="record">
+                    <div v-for="(item, index) in records" :key="index" class="item">
+                        <div class="text">
+                            <div class="name">签到</div>
+                            <div class="time">{{ item.add_time }}</div>
+                        </div>
+                        <div class="num">+{{ item.number }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mask" v-show="is_poster" @click="is_poster = false"></div>
+        <div class="poster" v-show="is_poster">
+            <img :src="filename" />
+            <p>长按保存,分享朋友</p>
+        </div>
+    </div>
+    <quick-menu></quick-menu>
+</div>
+<script>
+    var signed="{$signed}",signCount={$signCount},sign_image = '{$sign_image}';
+    require(['vue', 'helper', 'store', '{__WAP_PATH}zsff/js/quick.js'], function (Vue, $h, app) {
+        new Vue({
+            el: '#app',
+            data: {
+                userInfo: {},
+                total: signCount,
+                isSign: signed ? true : false,
+                records: [],
+                filename: '',
+                is_poster: false
+            },
+            computed: {
+                updateTotal: function () {
+                    let str = '0000',
+                        total = this.total,
+                        len = 0;
+                    if (!total) {
+                        return str;
+                    }
+                    if (typeof total === 'number') {
+                        total = total.toString();
+                    }
+                    len = total.length;
+                    if (len >= 4) {
+                        return total;
+                    }
+                    str += total;
+                    str = str.substring(len);
+                    return str;
+                }
+            },
+            created: function () {
+                this.getUserInfo();
+                this.getUserSign();
+            },
+            methods: {
+                sign: function () {
+                    var that = this;
+                    app.baseGet($h.U({ c: 'auth_api', a: 'user_sign' }), function (res) {
+                        that.isSign = true;
+                        that.is_poster = true;
+                        that.filename = res.data.data;
+                        that.userInfo.gold_num++;
+                        that.total = that.total + 1;
+                        that.getUserSign();
+                        return $h.pushMsg(res.data.msg);
+                    }, function (res) {
+                        that.is_poster = false;
+                        that.isSign = false;
+                    });
+                },
+                show_sign_image: function () {
+                    var that = this;
+                    that.is_poster = true;
+                    that.filename = sign_image;
+                },
+                getUserSign: function () {
+                    app.baseGet($h.U({ c: 'auth_api', a: 'getUserList' }), function (res) {
+                        this.records = res.data.data;
+                    }.bind(this));
+                },
+                myUser: function () {
+                    window.location.href = $h.U({
+                        c: 'my',
+                        a: 'index'
+                    });
+                },
+                getUserInfo: function () {
+                    var that = this;
+                    app.baseGet($h.U({ c: 'auth_api', a: 'userInfo' }), function (res) {
+                        that.userInfo = res.data.data;
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

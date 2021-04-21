@@ -1,0 +1,143 @@
+{extend name="public/container"}
+{block name="title"}{$gold_name}明细{/block}
+{block name="head_top"}
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .section {
+        position: relative;
+    }
+
+    .loading {
+        font-size: .4rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .loaded {
+        font-size: .28rem;
+        line-height: .72rem;
+        text-align: center;
+        color: #999;
+    }
+
+    .nothing {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        width: 4rem;
+        height: 4rem;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+</style>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div class="bills">
+        <div class="header">
+            <div class="cont">
+                {$gold_name}
+                <div class="num">{$userInfo.gold_num}</div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="nav-bar">
+                <div v-for="(item, index) in navs" :key="index" :class="{ active: navActive === index }" class="item"
+                    @click="navActives(index)">{{ item }}</div>
+            </div>
+            <div class="nav-cont">
+                <div class="section">
+                    <div class="list">
+                        <div v-for="(item, index) in billList" :key="index" class="item">
+                            <div class="text">
+                                <div class="name">{{ item.title }}</div>
+                                <div class="time">{{ item.add_time }}</div>
+                            </div>
+                            <div class="nums" v-if="item.pm>0">+{{ item.number }}</div>
+                            <div class="num" v-else>-{{ item.number }}</div>
+                        </div>
+                    </div>
+                    <div v-show="loading" class="loading">
+                        <span class="fa fa-spinner"></span>
+                    </div>
+                    <div v-if="loadend && billList.length" class="loaded">{{loadTitle}}</div>
+                    <div v-if="!billList.length && !loading" >
+                        <img class="nothing"  src="/wap/first/zsff/images/no_data_available.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <quick-menu></quick-menu>
+</div>
+<script>
+    require(['vue', 'store', 'helper', 'quick'], function (Vue, app, helper) {
+            new Vue({
+            el: '#app',
+            data: {
+                navs: ['全部', '支出', '收入'],
+                billList: [],
+                navActive: 0,
+                limit: 20,
+                page: 1,
+                loadend:false,
+                loading:false,
+            },
+            watch: {
+                navActive: function () {
+                    this.index = 1;
+                }
+            },
+            mounted: function () {
+                var that = this;
+                that.getBillList();
+                this.$nextTick(function () {
+                    window.addEventListener('scroll', function () {
+                        var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+                            scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight,
+                            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                        if (clientHeight + scrollTop >= scrollHeight) {
+                            that.getBillList();
+                        }
+                    });
+                });
+            },
+            methods: {
+                navActives:function(index){
+                    var that=this;
+                    that.navActive=index;
+                    that.page=1;
+                    that.loading=false;
+                    that.loadend=false;
+                    that.billList=[];
+                    that.getBillList();
+                },
+                getBillList: function () {
+                    var that = this;
+                    if(this.loadend) return;
+                    if(this.loading) return;
+                    this.loading = true;
+                    app.baseGet($h.U({c:'auth_api',a:'user_gold_num_list',p:{index:that.navActive,first:that.page,limit:that.limit}}), function (res) {
+                        var list=res.data.data;
+                        var billList=$h.SplitArray(list,that.billList);
+                        that.loading=false;
+                        that.loadend=list.length < that.limit;
+                        that.page=that.page + 1;
+                        billList.forEach(value => {
+                            value.number = parseInt(value.number);
+                        });
+                        that.loadTitle = that.loadend ? '已全部加载' : '上拉加载更多';
+                        that.$set(that,'billList',billList);
+                    }, function (params) {
+                        that.loadTitle = '上拉加载更多';
+                        that.loading=false;
+                    });
+                }
+            }
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,454 @@
+{extend name="public/container"}
+{block name="title"}素材详情{/block}
+{block name="head_top"}
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.9.3/skins/default/aliplayer-min.css">
+<script src="https://g.alicdn.com/de/prismplayer/2.9.3/aliplayer-min.js"></script>
+<script src="//g.alicdn.com/de/prismplayer/2.9.3/hls/aliplayer-vod-min.js"></script>
+<style>
+    p {
+        box-sizing: border-box;
+    }
+
+    .prism-player video {
+        object-fit: cover;
+    }
+</style>
+{/block}
+{block name="content"}
+<div v-cloak id="app">
+    <div v-if="source" class="source-detail-page">
+        <img v-if="source.type !== 3" :style="{ height: height }" :src="source.image" class="cover">
+        <div v-if="source.type !== 1" :style="{ height: height }" :hidden="source.type === 2" class="prism-player" id="J_prismPlayer"></div>
+        <div class="title-wrap">
+            <div class="title">{{ source.title }}</div>
+            <div class="wrap">
+                <div class="learn">{{ source.play_count +1  }}次学习</div>
+                <div v-if="isWeiXin" class="share" @click="share = true">
+                    <div class="iconfont iconfenxiang"></div>
+                    分享
+                </div>
+            </div>
+        </div>
+        <div v-if="source.type === 2" class="audio-wrap">
+            <div class="progress">
+                <div class="time">{{ currentTime | format }}</div>
+                <div ref="track" class="track" @click="onSeek">
+                    <div :style="{ width: width + '%' }" class="range" @touchmove.self="onSeeking" @touchend="onSeekEnd">
+                        <div class="thumb"></div>
+                    </div>
+                </div>
+                <div class="time">{{ duration | format }}</div>
+            </div>
+            <div class="handle-wrap">
+                <button class="iconfont iconleft" disabled></button>
+                <button @click="onPlay">
+                    <svg class="icon" aria-hidden="true">
+                        <use :xlink:href="paused ? '#iconbofang1' : '#iconzanting'"></use>
+                    </svg>
+                </button>
+                <button class="iconfont iconright" disabled></button>
+            </div>
+            <audio ref="audio" :src="source.link" @durationchange="onDurationChange" @timeupdate="onTimeUpdate" @ended="onEnded">您的浏览器不支持 H5 audio</audio>
+        </div>
+        <div class="main">
+            <div class="title">详情</div>
+            <div class="wrap" v-html="source.detail"></div>
+        </div>
+        <div class="footer" @touchmove.prevent>
+            <div>
+                <a href="{:url('wap/index/index')}">
+                    <img src="{__WAP_PATH}zsff/images/special01.png">
+                    首页
+                </a>
+            </div>
+            <div @click="customerService">
+                <img src="{__WAP_PATH}zsff/images/special02.png">
+                客服
+            </div>
+            <button v-if="course.length>0" @click="relatedCourses">相关课程</button>
+            <button v-else @click="relatedCourses">更多课程</button>
+        </div>
+        <img v-show="share" class="share-mask" src="{__WAP_PATH}zsff/images/share-info.png" @touchmove.prevent @click="share = false">
+        <div :class="{ mask: dialog }" @touchmove.prevent @click="dialog = false"></div>
+        <div class="dialog" :class="{ active: dialog }" @touchmove.prevent>
+            <ul v-if="course.length">
+                <li v-for="item in course" :key="item.id">
+                    <a :href="'{:url('special/details')}?id=' + item.id">
+                        <div class="figure">
+                            <img :src="item.image">
+                            <span>{{ item.type_name }}</span>
+                        </div>
+                        <div class="figcaption">
+                            <div class="title">{{ item.title }}</div>
+                            <div class="mark">
+                                <span v-for="itm in item.label">{{ itm }}</span>
+                            </div>
+                            <div class="info">
+                                <div class="money">￥<span>{{ item.money }}</span></div>
+                                <div class="lesson">共{{ item.count }}节</div>
+                                <div class="learn">{{ item.record }}次学习</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <img v-else class="empty" src="/wap/first/zsff/images/no_data_available.png">
+        </div>
+    </div>
+    <quick-menu></quick-menu>
+</div>
+<script>
+    var id={$id};
+    require(['vue', 'helper', 'store', 'quick'], function(Vue, $h, api) {
+        var vm = new Vue({
+            el: '#app',
+            filters: {
+                format: function (time) {
+                    if (!time) {
+                        return '00:00';
+                    }
+                    var minutes = Math.floor(time / 60),
+                        seconds = Math.floor(time % 60);
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    return minutes + ':' + seconds;
+                }
+            },
+            data: {
+                id: id,
+                source: null,
+                course: [],
+                dialog: false,
+                appear: true,
+                share: false,
+                width: 0,
+                height: 'auto',
+                track: null,
+                audio: null,
+                currentTime: 0,
+                duration: 0,
+                paused: true,
+                aliplayer: null,
+                isWeiXin: false
+            },
+            created: function () {
+                var ua = navigator.userAgent.toLowerCase();
+                if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                    this.isWeiXin = true;
+                }
+                this.getSourceDetail();
+                this.getRelateCourse();
+            },
+            mounted: function() {
+                var that = this;
+                that.$nextTick(function () {
+                    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                    that.height = clientWidth * 14 / 25 + 'px';
+                });
+            },
+            destroyed: function () {
+                this.aliplayer.dispose();
+            },
+            methods: {
+                relatedCourses:function()
+                {
+                    var that=this;
+                    if(that.course.length>0){
+                        that.dialog = true;
+                    }else{
+                        window.location.href = $h.U({ c: 'special', a: 'special_cate' });
+                    }
+                },
+                // 联系客服
+                customerService: function (){
+                    api.baseGet($h.U({
+                        c: 'index',
+                        a: 'user_login'
+                    }), function (res) {
+                        window.location.href = $h.U({ c: 'service', a: 'service_list' });
+                    }.bind(this), function (res) {
+                        this.appear = false;
+                    }.bind(this));
+                },
+                // 获取素材
+                getSourceDetail: function () {
+                    var that = this;
+                    $h.loadFFF();
+                    api.baseGet($h.U({
+                        c: 'special',
+                        a: 'getSourceDetail',
+                        q: {
+                            source_id: id
+                        }
+                    }), function (res) {
+                        $h.loadClear();
+                        that.source = res.data.data;
+                        // 音频
+                        if (that.source.type === 2) {
+                            that.$nextTick(function () {
+                                that.track = that.$refs.track;
+                            });
+                            if (that.source.videoId) {
+                                $h.loadFFF();
+                                api.baseGet($h.U({
+                                    c: 'special',
+                                    a: 'get_video_playback_credentials',
+                                    q: {
+                                        type: 2,
+                                        videoId: that.source.videoId
+                                    }
+                                }), function (res) {
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.onreadystatechange = function () {
+                                        $h.loadClear();
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                            var data = JSON.parse(xhr.responseText);
+                                            that.$nextTick(function () {
+                                                that.aliplayer = new Aliplayer({
+                                                    id: 'J_prismPlayer',
+                                                    vid: data.VideoMeta.VideoId,
+                                                    playauth: data.PlayAuth,
+                                                    format: 'mp3',
+                                                    mediaType: 'audio',
+                                                    encryptType: 1,
+                                                    autoplay: false
+                                                }, function (player) {
+                                                    console.log('播放器创建好了。');
+                                                });
+                                                that.aliplayer.on('ready', function () {
+                                                    that.duration = data.VideoMeta.Duration;
+                                                });
+                                                that.aliplayer.on('ended', function () {
+                                                    that.paused = false;
+                                                });
+                                                that.aliplayer.on('timeupdate', function () {
+                                                    that.currentTime = that.aliplayer.getCurrentTime();
+                                                    that.width = Math.floor(that.aliplayer.getCurrentTime() / that.aliplayer.getDuration() * 100);
+                                                });
+                                                that.aliplayer.on('error', function (event) {
+                                                    console.error(event);
+                                                });
+                                            });
+                                        }
+                                    };
+                                    xhr.open('GET', res.data.msg);
+                                    xhr.send();
+                                }, function () {
+                                    $h.loadClear();
+                                });
+                            } else {
+                                that.$nextTick(function () {
+                                    that.audio = that.$refs.audio;
+                                });
+                            }
+                        }
+                        // 视频
+                        if (that.source.type === 3) {
+                            if (that.source.videoId) {
+                                $h.loadFFF();
+                                api.baseGet($h.U({
+                                    c: 'special',
+                                    a: 'get_video_playback_credentials',
+                                    p: {
+                                        type: 2,
+                                        videoId: that.source.videoId
+                                    }
+                                }), function (res) {
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.onreadystatechange = function () {
+                                        $h.loadClear();
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                            var data = JSON.parse(xhr.responseText);
+                                            that.$nextTick(function () {
+                                                that.aliplayer = new Aliplayer({
+                                                    id: 'J_prismPlayer',
+                                                    width: '100%',
+                                                    autoplay: false,
+                                                    vid: data.VideoMeta.VideoId,
+                                                    playauth: data.PlayAuth,
+                                                    cover: that.source.image,
+                                                    playsinline: true,
+                                                    x5_type: 'h5',
+                                                    skinLayout: [
+                                                        { name: "bigPlayButton", align: "cc" },
+                                                        {
+                                                            name: "H5Loading", align: "cc"
+                                                        },
+                                                        { name: "errorDisplay", align: "tlabs", x: 0, y: 0 },
+                                                        { name: "infoDisplay" },
+                                                        { name: "tooltip", align: "blabs", x: 0, y: 56 },
+                                                        { name: "thumbnail" },
+                                                        {
+                                                            name: "controlBar", align: "blabs", x: 0, y: 0,
+                                                            children: [
+                                                                { name: "progress", align: "blabs", x: 0, y: 44 },
+                                                                { name: "playButton", align: "tl", x: 15, y: 12 },
+                                                                { name: "timeDisplay", align: "tl", x: 10, y: 7 },
+                                                                { name: "fullScreenButton", align: "tr", x: 10, y: 12 },
+                                                                { name: "subtitle", align: "tr", x: 15, y: 12 },
+                                                                { name: "setting", align: "tr", x: 15, y: 12 },
+                                                                { name: "volume", align: "tr", x: 5, y: 10 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }, function (player) {
+                                                    console.log('播放器创建好了。');
+                                                });
+                                            });
+                                        }
+                                    };
+                                    xhr.open('GET', res.data.msg);
+                                    xhr.send();
+                                }, function () {
+                                    $h.loadClear();
+                                });
+                            } else {
+                                that.$nextTick(function () {
+                                    that.aliplayer = new Aliplayer({
+                                        id: 'J_prismPlayer',
+                                        width: '100%',
+                                        autoplay: false,
+                                        source: that.source.link,
+                                        cover: that.source.image,
+                                        playsinline: true,
+                                        x5_type: 'h5',
+                                        skinLayout: [
+                                            { name: "bigPlayButton", align: "cc" },
+                                            {
+                                                name: "H5Loading", align: "cc"
+                                            },
+                                            { name: "errorDisplay", align: "tlabs", x: 0, y: 0 },
+                                            { name: "infoDisplay" },
+                                            { name: "tooltip", align: "blabs", x: 0, y: 56 },
+                                            { name: "thumbnail" },
+                                            {
+                                                name: "controlBar", align: "blabs", x: 0, y: 0,
+                                                children: [
+                                                    { name: "progress", align: "blabs", x: 0, y: 44 },
+                                                    { name: "playButton", align: "tl", x: 15, y: 12 },
+                                                    { name: "timeDisplay", align: "tl", x: 10, y: 7 },
+                                                    { name: "fullScreenButton", align: "tr", x: 10, y: 12 },
+                                                    { name: "subtitle", align: "tr", x: 15, y: 12 },
+                                                    { name: "setting", align: "tr", x: 15, y: 12 },
+                                                    { name: "volume", align: "tr", x: 5, y: 10 }
+                                                ]
+                                            }
+                                        ]
+                                    }, function (player) {
+                                        console.log('播放器创建好了。');
+                                    });
+                                });
+                            }
+                        }
+                    }, function (err) {
+                        $h.loadClear();
+                    });
+                },
+                // 获取关联课程
+                getRelateCourse: function () {
+                    var that = this;
+                    $h.loadFFF();
+                    api.baseGet($h.U({
+                        c: 'Special',
+                        a: 'relatedCourses',
+                        q: {
+                            source_id: that.id
+                        }
+                    }), function (res) {
+                        var course = res.data.data;
+                        course.forEach(function (item) {
+                            switch (item.type) {
+                                case 1:
+                                    item.type_name = '图文';
+                                    break;
+                                case 2:
+                                    item.type_name = '音频';
+                                    break;
+                                default:
+                                    item.type_name = '视频';
+                                    break;
+                            }
+                        });
+                        that.course = course;
+                        $h.loadClear();
+                    }, function () {
+                        $h.loadClear();
+                    });
+                },
+                // 音频播放/暂停
+                onPlay: function () {
+                    this.paused = !this.paused;
+                    if (this.source.videoId) {
+                        this.paused ? this.aliplayer.pause() : this.aliplayer.play();
+                    } else {
+                        this.paused ? this.audio.pause() : this.audio.play();
+                    }
+                },
+                // 音频时长
+                onDurationChange: function (event) {
+                    this.duration = event.target.duration;
+                },
+                // 音频正在播放
+                onTimeUpdate: function (event) {
+                    var target = event.target,
+                    currentTime = target.currentTime;
+                    this.currentTime = currentTime;
+                    this.width = Math.floor(currentTime / target.duration * 100);
+                },
+                // 音频播放结束
+                onEnded: function () {
+                    this.paused = true;
+                },
+                // 点击音频进度条
+                onSeek: function (event) {
+                    this.paused = false;
+                    if (this.source.videoId) {
+                        var width = event.offsetX / this.track.offsetWidth,
+                            currentTime = this.aliplayer.getDuration() * width;
+                        this.width = width * 100;
+                        this.aliplayer.seek(currentTime);
+                        this.aliplayer.play();
+                    } else {
+                        var width = event.offsetX / this.track.offsetWidth,
+                        currentTime = this.duration * width;
+                        this.width = width * 100;
+                        this.audio.currentTime = currentTime;
+                        this.paused ? this.audio.pause() : this.audio.play();
+                    }
+                },
+                // 拖动音频进度条
+                onSeeking: function (event) {
+                    var width = (event.targetTouches[0].pageX - event.target.offsetLeft) / this.track.offsetWidth * 100;
+                    this.paused = true;
+                    if (width > 100) {
+                        width = 100;
+                    }
+                    this.width = width;
+                    if (this.source.videoId) {
+                        this.aliplayer.pause();
+                    } else {
+                        this.paused ? this.audio.pause() : this.audio.play();
+                    }
+                },
+                // 停止拖动音频进度条
+                onSeekEnd: function () {
+                    this.paused = false;
+                    if (this.source.videoId) {
+                        var time = this.aliplayer.getDuration() * this.width / 100;
+                        this.aliplayer.seek(time);
+                        this.aliplayer.play();
+                    } else {
+                        this.currentTime = this.duration * this.width / 100;
+                        this.audio.currentTime = this.currentTime;
+                        this.paused ? this.audio.pause() : this.audio.play();
+                    }
+                }
+            }
+        });
+    });
+</script>
+{/block}

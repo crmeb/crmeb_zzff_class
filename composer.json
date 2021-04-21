@@ -31,7 +31,9 @@
         "guzzle/stream": "^3.9",
         "alibabacloud/dysmsapi": "^1.8",
         "workerman/gateway-worker": "^3.0",
-        "phpoffice/phpexcel": "^1.8"
+        "phpoffice/phpexcel": "^1.8",
+        "intervention/image": "^2.5",
+        "topthink/think-queue": "1.1.*"
     },
     "extra": {
         "think-path": "thinkphp"
